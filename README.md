@@ -1,7 +1,7 @@
 # Seedsow Lua Editor
 
 > [!IMPORTANT]
-> **You need a modded/hacked original Nintendo Switch (Switch 1) for the first installation.**
+> **You need an unbanned modded/hacked original Nintendo Switch (Switch 1) for the first installation.**
 > It must already be able to run homebrew apps. You will install JKSV on that
 > console, restore the ready-made save there, then transfer it to Switch 2.
 > **Your Switch 2 does not need to be modded. A Switch 2 by itself is not enough.**
