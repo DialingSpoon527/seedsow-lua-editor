@@ -66,10 +66,16 @@ the starter over programs you want to keep.
    versions need compatibility testing; US-only compatibility is not established.
 3. On both consoles, link the intended save user to the same Nintendo Account.
    On Switch 1, use the online-capable system environment described above.
-4. On Switch 1, start the demo as that user and reach its title screen so it
-   creates save data.
-5. Press **HOME**, highlight the game, press **X**, and choose **Close**.
+4. On Switch 1, start the demo as the user whose save you will transfer, then
+   choose **New Game**.
+5. Hold **R** for a while to fast-forward through the opening dialogue.
+6. Release **R**, then press **ZL** to make a save. Wait for saving to finish.
+7. Press **HOME**, highlight the game, press **X**, and choose **Close**.
    Leave the game closed while working in JKSV.
+
+**Make this first in-game save before opening JKSV.** JKSV will only recognize
+the game's save for that user after a save has been made; simply reaching the
+title screen is not enough.
 
 ## 2. Download two files on your computer
 
@@ -108,6 +114,10 @@ above for the initial installation.
 You have installed JKSV. You have not restored the editor save yet.
 
 ## 4. Open JKSV and back up the demo
+
+If the demo does not appear in JKSV, go back to step 1 and make the first
+in-game save: **New Game > hold R to fast-forward > release R > press ZL**.
+Close the game, then reopen JKSV under that same user.
 
 1. Open your Switch 1's **homebrew menu**. On many setups, opening **Album** from
    HOME opens it. Other setups use holding **R** while starting an installed

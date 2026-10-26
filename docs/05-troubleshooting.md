@@ -1,5 +1,16 @@
 # Troubleshooting
 
+## The demo does not appear in JKSV
+
+Make a save inside the game first. On Switch 1, start the demo as the intended
+save user, choose **New Game**, and hold **R** for a while to fast-forward through
+the opening dialogue. Release **R**, then press **ZL** to make a save and wait
+for it to finish. Close the game and reopen JKSV under the same user.
+
+JKSV only recognizes the game's save after that first save has been made.
+Reaching the title screen alone is not enough. Then continue with
+[backing up the demo](01-console-install.md#4-open-jksv-and-back-up-the-demo).
+
 ## The Windows app does not open
 
 Install Python 3.10 or newer from python.org with Tcl/Tk and the Python launcher.
