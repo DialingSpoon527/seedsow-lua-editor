@@ -1,4 +1,16 @@
-# Seedsow Lua Editor 0.1.1
+# Seedsow Lua Editor 0.1.2
+
+**Maintenance release: existing users do not need to reinstall, restore a save,
+or update the console editor.** The prepared save ZIP is byte-identical to 0.1.1.
+This release updates the companion/source bundle, installation guidance and
+repository organization. Do not overwrite an existing save containing programs
+you want to keep.
+
+Changes include clearer prebuilt-save installation, corrected account/networking
+and compatibility guidance, console screenshots, and 0BSD licensing (no credit
+required for project-owned code and documentation). General save tools remain
+accessible; original starter validation and release infrastructure are separated
+under `maintainer/`. Other game editions still need compatibility testing.
 
 ## Main download: Seedsow-Lua-Editor-Save.zip
 
@@ -10,7 +22,7 @@ save building or Raspberry Pi is required for the initial setup.**
 Your Switch 2 does not need to be modded. The beginner guide covers installing
 JKSV, making a backup, copying the ready-made ZIP, restoring it and transferring.
 
-[Step-by-step installation guide](https://github.com/DialingSpoon527/seedsow-lua-editor/blob/main/docs/01-console-install.md)
+[Step-by-step installation guide](https://github.com/DialingSpoon527/seedsow-lua-editor/blob/v0.1.2/docs/01-console-install.md)
 
 If you only want to future-proof, get the save onto Switch 2 and confirm it
 loads after restarting the game. Everything else can wait. Keep the game, save,
@@ -30,7 +42,7 @@ emuMMC normally blocks those servers. This is a workflow choice, not a physical
 NAND restriction of the transfer feature, and CFW on sysNAND is not ban-proof.
 Running the installed editor afterward requires no Nintendo connection.
 
-## Optional download: seedsow-lua-editor-0.1.1.zip
+## Optional download: seedsow-lua-editor-0.1.2.zip
 
 This is the PC companion and source bundle. Download it if you want the optional
 Pi uploader, development tools or later update-building tools. The installed

@@ -110,11 +110,38 @@ def uploaded_asset_matches(asset,path):
             and asset.get('digest')=='sha256:'+hashlib.sha256(path.read_bytes()).hexdigest())
 
 
-def publish(expected_head=None):
+def verify_ci_tag(tag, head):
+    version = (ROOT/'VERSION').read_text().strip()
+    if not re.fullmatch(r'v\d+\.\d+\.\d+',tag) or tag != 'v'+version:
+        raise RuntimeError('The release tag must match VERSION exactly.')
+    required = {'GITHUB_ACTIONS':'true', 'GITHUB_REPOSITORY':REPOSITORY,
+                'GITHUB_REF':'refs/tags/'+tag, 'GITHUB_SHA':head}
+    if any(os.environ.get(key)!=value for key,value in required.items()):
+        raise RuntimeError('CI publication requires the matching repository tag event and commit.')
+    refs = dict((line.split()[1],line.split()[0]) for line in
+                git('ls-remote','origin','refs/tags/'+tag,'refs/tags/'+tag+'^{}').splitlines())
+    if refs.get('refs/tags/'+tag+'^{}',refs.get('refs/tags/'+tag)) != head:
+        raise RuntimeError('Remote release tag does not match the checked-out commit.')
+    try:
+        git('merge-base','--is-ancestor',head,'origin/main')
+    except RuntimeError:
+        raise RuntimeError('Release tag must point to a commit already on main.') from None
+
+
+def publish(expected_head=None, ci_tag=None):
     if git('remote','get-url','origin') != REMOTE_URL:
         raise RuntimeError('origin is not the intended release repository.')
     if git('status','--porcelain'):
         raise RuntimeError('Commit or discard local source changes before publishing.')
+    if ci_tag:
+        if expected_head:
+            raise RuntimeError('CI tag publication cannot replace branch history.')
+        head = git('rev-parse','HEAD')
+        verify_ci_tag(ci_tag,head)
+        token = os.environ.get('GITHUB_TOKEN')
+        if not token:
+            raise RuntimeError('The workflow repository token is missing.')
+        return publish_assets(head,token)
     if git('branch','--show-current') != 'main':
         raise RuntimeError('Check out the prepared main branch first.')
     head = git('rev-parse','HEAD')
@@ -139,11 +166,15 @@ def publish(expected_head=None):
         print('Remote main already matches the prepared commit.',flush=True)
     if git('ls-remote','origin','refs/heads/main').split()[0] != head:
         raise RuntimeError('Remote verification did not match the release commit.')
+    return publish_assets(head)
+
+
+def publish_assets(head, token=None):
     print('Building the companion/source ZIP...',flush=True)
     info = package()
     version = (ROOT/'VERSION').read_text().strip()
     tag = 'v'+version
-    token = credential()
+    token = token or credential()
     base = '/repos/'+REPOSITORY
     notes = (ROOT/'maintainer/RELEASE_NOTES.md').read_text(encoding='utf-8')
     existing = request(token,base+'/releases/tags/'+tag,optional=True)
@@ -197,12 +228,14 @@ def publish(expected_head=None):
 
 if __name__=='__main__':
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--expected-head',help='Exact known old main SHA, authorizing its replacement')
+    mode = parser.add_mutually_exclusive_group()
+    mode.add_argument('--expected-head',help='Exact known old main SHA, authorizing its replacement')
+    mode.add_argument('--ci-tag',help='Publish a matching GitHub Actions tag event using its repository token')
     args = parser.parse_args()
     if args.expected_head and not re.fullmatch('[0-9a-f]{40}',args.expected_head):
         parser.error('--expected-head must be a full commit SHA.')
     try:
-        publish(args.expected_head)
+        publish(args.expected_head,args.ci_tag)
     except KeyboardInterrupt:
         parser.exit(130,'Publishing stopped. Run the same command again to resume the draft.\n')
     except (RuntimeError,OSError) as error:

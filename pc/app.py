@@ -15,7 +15,7 @@ from tkinter import filedialog, messagebox, ttk
 from client import BridgeClient, load_settings, save_settings, settings_path, upload_request
 
 ROOT = Path(__file__).resolve().parent.parent
-VERSION = '0.1.1'
+VERSION = '0.1.2'
 
 
 class App:

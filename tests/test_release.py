@@ -3,6 +3,7 @@ import sys
 import struct
 import tempfile
 import hashlib
+import os
 import unittest
 from pathlib import Path
 from unittest.mock import patch
@@ -94,6 +95,55 @@ class PublishingGuards(unittest.TestCase):
             with self.assertRaisesRegex(RuntimeError,'stop before API'):
                 publish_release.publish()
         self.assertEqual(state['pushes'],[('push','-u','origin','HEAD:main')])
+
+
+class TaggedPublication(unittest.TestCase):
+    def setUp(self):
+        self.tag = 'v'+(ROOT/'VERSION').read_text().strip()
+        self.head = 'a'*40
+        self.env = {'GITHUB_ACTIONS':'true', 'GITHUB_REPOSITORY':publish_release.REPOSITORY,
+                    'GITHUB_REF':'refs/tags/'+self.tag, 'GITHUB_SHA':self.head,
+                    'GITHUB_TOKEN':'dummy-test-workflow-token'}
+
+    def fake_git(self, *args, **kwargs):
+        if args==('remote','get-url','origin'):return publish_release.REMOTE_URL
+        if args==('status','--porcelain'):return ''
+        if args==('rev-parse','HEAD'):return self.head
+        if args==('ls-remote','origin','refs/tags/'+self.tag,'refs/tags/'+self.tag+'^{}'):
+            return self.head+'\trefs/tags/'+self.tag
+        if args==('merge-base','--is-ancestor',self.head,'origin/main'):return ''
+        raise AssertionError('Unexpected Git operation: '+repr(args))
+
+    def test_valid_tag_publishes_without_credentials_or_branch_push(self):
+        with patch.dict(os.environ,self.env), patch.object(publish_release,'git',side_effect=self.fake_git), \
+             patch.object(publish_release,'credential') as credential, \
+             patch.object(publish_release,'publish_assets',return_value='published') as assets:
+            self.assertEqual(publish_release.publish(ci_tag=self.tag),'published')
+        credential.assert_not_called()
+        assets.assert_called_once_with(self.head,'dummy-test-workflow-token')
+
+    def test_wrong_tag_or_event_never_publishes(self):
+        with patch.dict(os.environ,self.env), patch.object(publish_release,'git',side_effect=self.fake_git), \
+             patch.object(publish_release,'publish_assets') as assets:
+            with self.assertRaisesRegex(RuntimeError,'match VERSION'):
+                publish_release.publish(ci_tag='v999.0.0')
+            with patch.dict(os.environ,{'GITHUB_REF':'refs/heads/main'}):
+                with self.assertRaisesRegex(RuntimeError,'matching repository tag event'):
+                    publish_release.publish(ci_tag=self.tag)
+            with self.assertRaisesRegex(RuntimeError,'cannot replace branch history'):
+                publish_release.publish(expected_head='b'*40,ci_tag=self.tag)
+        assets.assert_not_called()
+
+    def test_remote_tag_and_main_ancestry_are_required(self):
+        with patch.dict(os.environ,self.env), patch.object(publish_release,'git',return_value='b'*40+'\trefs/tags/'+self.tag):
+            with self.assertRaisesRegex(RuntimeError,'Remote release tag'):
+                publish_release.verify_ci_tag(self.tag,self.head)
+        def unrelated(*args,**kwargs):
+            if args[0]=='merge-base':raise RuntimeError('unrelated commit')
+            return self.fake_git(*args,**kwargs)
+        with patch.dict(os.environ,self.env), patch.object(publish_release,'git',side_effect=unrelated):
+            with self.assertRaisesRegex(RuntimeError,'already on main'):
+                publish_release.verify_ci_tag(self.tag,self.head)
 
 
 if __name__=='__main__':

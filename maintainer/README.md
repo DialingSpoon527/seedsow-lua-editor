@@ -123,6 +123,35 @@ made from personal backups, generated outputs and connection files stay private.
 
 ## Publish a new GitHub release
 
+### Preferred: push a version tag
+
+The [release workflow](../.github/workflows/release.yml) publishes a pushed
+`vMAJOR.MINOR.PATCH` tag using GitHub Actions' short-lived repository token.
+It requires no personal token or access to a Windows credential store. Update
+`VERSION`, the PC version label, release notes and changelog, commit and push
+`main`, then tag that reviewed commit:
+
+```powershell
+git tag v0.1.2
+git push origin v0.1.2
+```
+
+Use the actual new version for later releases; do not move a published tag.
+The workflow downloads the reviewed 0.1.1 starter and checks its fixed ZIP hash,
+runs unit/Lua/starter/GUI/Pi checks, packages the new source, and uses the same
+draft/resume/published-asset guards as the local publisher. The unchanged starter
+is uploaded byte-for-byte with its existing checksum and manifest. A future
+console-payload release must separately review and update that baseline; this
+maintenance workflow does not silently rebuild or retarget it.
+
+CI publication requires a matching tag event, `VERSION`, checked-out SHA, remote
+tag and a commit already on `main`. It does not push branch changes. The workflow
+grants release publication only `contents: write`; its token is not printed or
+stored in release assets. Follow progress in the repository's Actions tab. A
+failed draft can be resumed by rerunning the workflow without changing the tag.
+
+### Alternative: publish from a signed-in local terminal
+
 Prepare the reviewed save ZIP above, choose a new version in `VERSION` and the
 PC version label, update the [release notes](RELEASE_NOTES.md) and changelog,
 commit the source to `main`, then use a regular signed-in terminal:

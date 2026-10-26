@@ -1,6 +1,9 @@
 # Changelog
 
-## Unreleased
+## 0.1.2 - 2026-10-26
+
+Maintenance release: the prepared console save is byte-identical to 0.1.1.
+Existing users do not need to reinstall or restore anything.
 
 - Lead with the prepared-save installation and console editing; clarify account,
   Nintendo connectivity, sysMMC/emuMMC and optional PC/Pi requirements.
@@ -11,6 +14,9 @@
   starter-specific regressions from general compatible-save checks.
 - Share a target-aware JKSV metadata encoder while preserving the reviewed
   starter's exact target, native hashes, launcher checks and installed bytes.
+- Include console screenshots and 0BSD licensing with no attribution requirement
+  for project-owned code and documentation.
+- Publish tagged releases through GitHub Actions using its repository token.
 
 ## 0.1.1 — 2026-10-26
 

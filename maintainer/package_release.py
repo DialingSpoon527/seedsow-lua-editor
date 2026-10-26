@@ -8,6 +8,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 PUBLIC_FILES = (
+    '.github/workflows/release.yml',
     '.gitattributes', '.gitignore', 'README.md', 'LICENSE', 'VERSION', 'CHANGELOG.md',
     'THIRD_PARTY_NOTICES.md', 'START WINDOWS.cmd', 'requirements-dev.txt',
     'docs/01-console-install.md', 'docs/02-pi-setup.md', 'docs/03-send-files.md',
