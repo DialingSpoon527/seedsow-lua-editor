@@ -1,0 +1,148 @@
+"""Publish the prepared source release using command-line Git authentication.
+
+Run from a normal signed-in Windows terminal. Credentials stay in memory and
+the configured Git credential helper; no token is printed or written here.
+"""
+import argparse
+import json
+import os
+import re
+import shutil
+import subprocess
+import sys
+from pathlib import Path
+from urllib.error import HTTPError
+from urllib.parse import quote
+from urllib.request import Request, urlopen
+
+ROOT = Path(__file__).resolve().parent.parent
+REPOSITORY = 'DialingSpoon527/seedsow-lua-editor'
+REMOTE_URL = 'https://github.com/'+REPOSITORY+'.git'
+from package_release import package
+
+
+def git_executable():
+    if os.name == 'nt':
+        candidate = Path(os.environ.get('ProgramFiles',r'C:\Program Files'))/'Git/cmd/git.exe'
+        if candidate.is_file():
+            return str(candidate)
+    candidate = shutil.which('git')
+    if not candidate:
+        raise RuntimeError('Install Git, then run this command again.')
+    return candidate
+
+
+def git(*args, capture=True, input_text=None):
+    result = subprocess.run([git_executable(),'-C',str(ROOT),*args],
+                            input=input_text,text=True,capture_output=capture)
+    if result.returncode:
+        raise RuntimeError((result.stderr or 'Git command failed.').strip())
+    return result.stdout.strip() if capture else ''
+
+
+def credential():
+    # Never emit this subprocess result; it may contain an OAuth token.
+    result = subprocess.run([git_executable(),'-C',str(ROOT),'credential','fill'],
+                            input='protocol=https\nhost=github.com\n\n',
+                            capture_output=True,text=True)
+    if result.returncode:
+        raise RuntimeError('GitHub sign-in failed. Run this from your regular Windows terminal '
+                           'so Git can use your credential manager, then retry.')
+    values = dict(line.split('=',1) for line in result.stdout.splitlines() if '=' in line)
+    token = values.get('password')
+    if not token:
+        raise RuntimeError('Git did not supply a GitHub credential. Sign in through Git first.')
+    return token
+
+
+def request(token, path, data=None, method='GET', content_type='application/json', optional=False):
+    url = path if path.startswith('https://') else 'https://api.github.com'+path
+    body = json.dumps(data).encode() if data is not None and content_type=='application/json' else data
+    req = Request(url,data=body,method=method,headers={
+        'Authorization':'Bearer '+token, 'Accept':'application/vnd.github+json',
+        'X-GitHub-Api-Version':'2022-11-28', 'Content-Type':content_type,
+        'User-Agent':'seedsow-lua-editor-release'})
+    try:
+        with urlopen(req,timeout=60) as response:
+            return json.load(response)
+    except HTTPError as error:
+        if optional and error.code==404:
+            return None
+        # Response headers and request credentials must never be included in errors.
+        try:
+            message = json.loads(error.read()).get('message','Request rejected.')
+        except ValueError:
+            message = 'Request rejected.'
+        raise RuntimeError(f'GitHub HTTP {error.code}: {message}') from None
+
+
+def publish(expected_head=None):
+    if git('remote','get-url','origin') != REMOTE_URL:
+        raise RuntimeError('origin is not the intended release repository.')
+    if git('status','--porcelain'):
+        raise RuntimeError('Commit or discard local source changes before publishing.')
+    if git('branch','--show-current') != 'main':
+        raise RuntimeError('Check out the prepared main branch first.')
+    head = git('rev-parse','HEAD')
+    remote = git('ls-remote','origin','refs/heads/main').split()
+    remote_head = remote[0] if remote else None
+    if remote_head != head:
+        if not expected_head or remote_head != expected_head:
+            raise RuntimeError('Remote main changed. Inspect it before publishing; no force update was attempted.')
+        if int(git('rev-list','--count','HEAD')) != 1:
+            raise RuntimeError('Replacing the first commit requires a prepared single-commit local history.')
+        print('Replacing the known first commit with the prepared release commit.',flush=True)
+        git('push','--force-with-lease=refs/heads/main:'+expected_head,'-u','origin','HEAD:main',capture=False)
+    else:
+        print('Remote main already matches the prepared commit.',flush=True)
+    if git('ls-remote','origin','refs/heads/main').split()[0] != head:
+        raise RuntimeError('Remote verification did not match the release commit.')
+    info = package()
+    version = (ROOT/'VERSION').read_text().strip()
+    tag = 'v'+version
+    token = credential()
+    base = '/repos/'+REPOSITORY
+    notes = (ROOT/'RELEASE_NOTES.md').read_text(encoding='utf-8')
+    existing = request(token,base+'/releases/tags/'+tag,optional=True)
+    if existing and not existing.get('draft'):
+        raise RuntimeError('This version is already published. Choose a new version rather than replacing its assets.')
+    data = {'tag_name':tag,'target_commitish':head,'name':'Seedsow Lua Editor '+version,
+            'body':notes,'draft':True,'prerelease':False}
+    if existing:
+        release = request(token,base+'/releases/'+str(existing['id']),data,'PATCH')
+    else:
+        release = request(token,base+'/releases',data,'POST')
+    assets = {a['name'] for a in request(token,base+'/releases/'+str(release['id'])+'/assets')}
+    archive = Path(info['zip'])
+    for path,kind in [(archive,'application/zip'),(archive.with_suffix('.zip.sha256'),'text/plain'),
+                       (archive.with_suffix('.manifest.json'),'application/json')]:
+        if path.name in assets:
+            raise RuntimeError('Draft already contains '+path.name+'. Inspect its assets before retrying.')
+        url = 'https://uploads.github.com/repos/'+REPOSITORY+'/releases/'+str(release['id'])+'/assets?name='+quote(path.name)
+        # Raw bytes, including JSON manifests, are sent unchanged.
+        req = Request(url,data=path.read_bytes(),method='POST',headers={
+            'Authorization':'Bearer '+token,'Content-Type':kind,
+            'Accept':'application/vnd.github+json','User-Agent':'seedsow-lua-editor-release'})
+        try:
+            with urlopen(req,timeout=120) as response:
+                asset = json.load(response)
+        except HTTPError as error:
+            raise RuntimeError(f'Asset upload failed (HTTP {error.code}); release remains a draft.') from None
+        if asset.get('state')!='uploaded' or asset.get('size')!=path.stat().st_size:
+            raise RuntimeError('Asset verification failed; release remains a draft.')
+        print('Uploaded '+path.name,flush=True)
+    release = request(token,base+'/releases/'+str(release['id']),{'draft':False,'make_latest':'true'},'PATCH')
+    print('Published '+release['html_url'],flush=True)
+    return release['html_url']
+
+
+if __name__=='__main__':
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('--expected-head',help='Exact known old main SHA, authorizing its replacement')
+    args = parser.parse_args()
+    if args.expected_head and not re.fullmatch('[0-9a-f]{40}',args.expected_head):
+        parser.error('--expected-head must be a full commit SHA.')
+    try:
+        publish(args.expected_head)
+    except (RuntimeError,OSError) as error:
+        parser.exit(1,'Release not completed: '+str(error)+'\n')

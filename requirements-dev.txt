@@ -1,0 +1,2 @@
+# Only needed for the Lua stand-in regression suite, not the Windows app.
+lupa==2.8
