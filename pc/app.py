@@ -8,6 +8,7 @@ import sys
 import threading
 import time
 import tkinter as tk
+import webbrowser
 from pathlib import Path
 from tkinter import filedialog, messagebox, ttk
 
@@ -54,7 +55,7 @@ class App:
         for tab,title in [(self.install_tab,'Install save & updates'),(self.connect_tab,'Optional: connect Pi'),
                           (self.send_tab,'Optional: send files'),(self.control_tab,'Controller')]:
             self.tabs.add(tab,text=title)
-        self.status = tk.StringVar(value='Start with the installation guide. Console editing and local package building need no Pi.')
+        self.status = tk.StringVar(value='For installation, download the prepared save and follow the guide. Builders below are optional.')
         ttk.Label(frame,textvariable=self.status,wraplength=1020,padding=(0,12)).pack(fill='x')
         self.progress = ttk.Progressbar(frame,mode='determinate')
         self.progress.pack(fill='x')
@@ -145,11 +146,17 @@ class App:
 
     def install_page(self):
         page = self.install_tab
-        self.label(page,'Build an installation ZIP from your own backup')
-        self.hint(page,'First install the editor save, then transfer it to Switch 2. The Pi is optional. '
-                  'For a new installation, choose a compatible Seedsow US demo 1.0.0 backup. '
-                  'For an existing editor, choose its newest backup so user programs are retained. '
-                  'The builder leaves the input ZIP untouched and creates a new private ZIP in build/.')
+        self.label(page,'Start here: install the already-built save')
+        self.hint(page,'Download the prepared save, restore it with JKSV on a homebrew-capable Switch 1, then use Nintendo save transfer to Switch 2. '
+                  'No backup-building step or Pi is needed. See the guide for account and online-transfer requirements.')
+        row = ttk.Frame(page)
+        row.pack(fill='x',pady=(0,8))
+        ttk.Button(row,text='Download prepared save',command=lambda:webbrowser.open(
+            'https://github.com/DialingSpoon527/seedsow-lua-editor/releases/latest/download/Seedsow-Lua-Editor-Save.zip')).pack(side='left')
+        ttk.Button(row,text='Step-by-step installation',command=lambda:self.open_doc('01-console-install.md')).pack(side='left',padx=8)
+        self.label(page,'Optional: build a custom compatible save')
+        self.hint(page,'For developers or custom saves: choose your own compatible backup. Existing editor backups retain user programs. '
+                  'Input stays unchanged; output is a new private ZIP in build/.')
         self.base_zip = tk.StringVar()
         row = ttk.Frame(page)
         row.pack(fill='x')
@@ -158,8 +165,7 @@ class App:
         self.allow_install = tk.BooleanVar()
         ttk.Checkbutton(page,text='First installation: I have a backup and allow replacing slots 1–3',variable=self.allow_install).pack(anchor='w',pady=12)
         ttk.Button(page,text='Build installation ZIP',command=self.build_installer).pack(anchor='w')
-        ttk.Button(page,text='Read installation steps',command=lambda:self.open_doc('01-console-install.md')).pack(anchor='w',pady=8)
-        ttk.Separator(page).pack(fill='x',pady=18)
+        ttk.Separator(page).pack(fill='x',pady=10)
         self.label(page,'Build an editor update for another slot')
         self.hint(page,'This creates a small Lua upload from your installed editor base and the source in this repo. '
                   'Upload it to a fresh slot; keep original slots 1–3 and your last working version. '
@@ -170,9 +176,9 @@ class App:
         ttk.Label(row,text='New editor slot').pack(side='left')
         ttk.Entry(row,textvariable=self.update_slot,width=6).pack(side='left',padx=10)
         ttk.Button(row,text='Build update & open for sending',command=self.build_update).pack(side='left')
-        ttk.Button(page,text='Update & recovery guide',command=lambda:self.open_doc('04-updates-recovery.md')).pack(anchor='w',pady=12)
+        ttk.Button(page,text='Update & recovery guide',command=lambda:self.open_doc('04-updates-recovery.md')).pack(anchor='w',pady=(6,4))
         self.build_info = tk.StringVar(value='Generated save ZIPs and updates are private build outputs, excluded from Git and source releases.')
-        ttk.Label(page,textvariable=self.build_info,wraplength=960,style='Hint.TLabel').pack(anchor='w',pady=12)
+        ttk.Label(page,textvariable=self.build_info,wraplength=860,style='Hint.TLabel').pack(anchor='w',pady=(4,0))
 
     def control_page(self):
         page = self.control_tab

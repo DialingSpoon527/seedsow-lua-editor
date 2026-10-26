@@ -9,10 +9,11 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 PUBLIC_FILES = (
     '.gitattributes', '.gitignore', 'README.md', 'LICENSE', 'VERSION', 'CHANGELOG.md',
-    'THIRD_PARTY_NOTICES.md', 'START WINDOWS.cmd', 'requirements-dev.txt', 'RELEASE_NOTES.md',
+    'THIRD_PARTY_NOTICES.md', 'START WINDOWS.cmd', 'requirements-dev.txt',
     'docs/01-console-install.md', 'docs/02-pi-setup.md', 'docs/03-send-files.md',
     'docs/04-updates-recovery.md', 'docs/05-troubleshooting.md', 'docs/06-development.md',
     'docs/07-console-editor.md',
+    'docs/compatibility.md', 'tools/README.md', 'tools/jksv_metadata.py',
     'docs/images/console-editor.jpg', 'docs/images/save-menu.jpg', 'docs/images/included-example.jpg',
     'editor/build.py', 'editor/build_side_editor.py', 'editor/editor.lua',
     'editor/input.lua', 'editor/storage.lua', 'editor/transfer.lua',
@@ -22,10 +23,11 @@ PUBLIC_FILES = (
     'pi/export_connection.py', 'pi/seedsow-input.service',
     'tests/check.py', 'tests/check_v3.py', 'tests/check_side_editor.py',
     'tests/test_pc.py', 'tests/run_checks.py', 'tests/smoke_gui.py',
-    'tests/test_release.py',
-    'tools/asb.py', 'tools/indexed_save.py', 'tools/save_globals.py', 'tools/package_release.py',
-    'tools/publish_release.py',
-    'tools/package_save.py',
+    'tests/test_release.py', 'tests/test_layout.py', 'tests/test_metadata.py',
+    'tools/asb.py', 'tools/indexed_save.py', 'tools/save_globals.py',
+    'maintainer/README.md', 'maintainer/RELEASE_NOTES.md',
+    'maintainer/package_release.py', 'maintainer/publish_release.py',
+    'maintainer/package_save.py', 'maintainer/check_starter.py',
 )
 
 

@@ -79,8 +79,8 @@ def launcher_template(files):
             edits.append(Edit(root[key], string(name), string('')))
         return IndexedSave(save.apply(edits))
     except (KeyError, ValueError) as error:
-        raise ValueError('Unsupported clean-demo autosave. Use a backup from the US demo 1.0.0 '
-                         'at its initial title-screen autosave, with a manual save in slot 1. '
+        raise ValueError('Unsupported initial autosave layout. The tested reference is demo 1.0.0 '
+                         'from the US eShop at its initial title-screen autosave, with a manual save in slot 1. '
                          'Your input ZIP has not been changed.') from error
 
 

@@ -28,7 +28,7 @@ def release_assets(info):
     source = Path(info['zip'])
     save = ROOT/'dist/Seedsow-Lua-Editor-Save.zip'
     if not save.is_file():
-        raise RuntimeError('Prepare dist/Seedsow-Lua-Editor-Save.zip with tools/package_save.py first.')
+        raise RuntimeError('Prepare dist/Seedsow-Lua-Editor-Save.zip with maintainer/package_save.py first.')
     reviewed = starter_files(save)
     with zipfile.ZipFile(save) as archive:
         if set(archive.namelist())!=set(reviewed) or any(archive.read(n)!=b for n,b in reviewed.items()):
@@ -145,7 +145,7 @@ def publish(expected_head=None):
     tag = 'v'+version
     token = credential()
     base = '/repos/'+REPOSITORY
-    notes = (ROOT/'RELEASE_NOTES.md').read_text(encoding='utf-8')
+    notes = (ROOT/'maintainer/RELEASE_NOTES.md').read_text(encoding='utf-8')
     existing = request(token,base+'/releases/tags/'+tag,optional=True)
     if existing is None:
         drafts = [r for r in request(token,base+'/releases?per_page=100') if r.get('tag_name')==tag]

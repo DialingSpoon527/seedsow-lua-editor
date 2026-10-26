@@ -26,11 +26,15 @@ with tempfile.TemporaryDirectory() as temp:
     assert str(app.text['state'])=='disabled'
     app.quick_proof()
     assert app.raw is None and str(app.text['state'])=='normal'
-    for tab in (app.connect_tab,app.send_tab,app.install_tab,app.control_tab):
-        app.tabs.select(tab)
-        root.update_idletasks()
-        for child in tab.winfo_children():
-            if child.winfo_manager()=='pack':
-                assert child.winfo_y()+child.winfo_height() <= tab.winfo_height()+2, (str(tab),str(child),'clipped')
+    for geometry in ('1120x830','940x720'):
+        root.geometry(geometry)
+        root.update()
+        for tab in (app.connect_tab,app.send_tab,app.install_tab,app.control_tab):
+            app.tabs.select(tab)
+            root.update()
+            for child in tab.winfo_children():
+                if child.winfo_manager()=='pack':
+                    assert child.winfo_ismapped(), (geometry,str(tab),str(child),'hidden')
+                    assert child.winfo_y()+child.winfo_height() <= tab.winfo_height()+2, (geometry,str(tab),str(child),'clipped')
     app.close()
 print('Desktop smoke check passed: four tabs, binary preservation, fresh proof and visible page layout.')

@@ -20,25 +20,52 @@ The editor save is already made for you.
 - Your Switch 2.
 - A computer and a way to read the Switch 1's microSD card on it. A microSD card
   reader or SD adapter is enough. The file-copy steps below use Windows names.
-- Seedsow Lullaby **US demo 1.0.0** installed on both consoles.
+- The same Seedsow Lullaby demo edition installed on both consoles. The tested
+  reference is **demo 1.0.0 obtained from the US eShop**; other regions and
+  editions remain untested, not proven incompatible.
 - The same Nintendo Account linked to the user you will use on each console.
 - Internet access on both consoles for the save-transfer step.
 
-The source console must be able to use Nintendo's save-transfer feature with
-that account. Having homebrew alone does not supply that connection.
-[Nintendo's transfer requirements](https://www.nintendo.com/en-gb/Support/Troubleshooting/How-to-Transfer-Your-Save-Data-To-a-Nearby-Console-1549113.html).
+The matching account is for the **save users and Nintendo's transfer process**.
+It is not inherently required that this account downloaded the demo. Each selected
+user must be able to launch the installed demo.
+
+### Check the source setup before restoring
+
+The documented workflow uses an **online-capable sysNAND/sysMMC** (the original
+console's internal system storage) with a real linked Nintendo Account. The
+restored save must be in the same system environment used for transfer. An
+isolated **emuMMC** (a separate system environment usually on the SD card) normally
+blocks Nintendo servers and cannot complete the official transfer in that state.
+Restoring into emuMMC does not also restore into sysMMC.
+
+This describes the workflow, **not a technical requirement that the transfer
+feature itself run on physical NAND**. If you only have an isolated emuMMC,
+understand your setup before proceeding rather than taking it online blindly.
+CFW on sysNAND is not ban-proof; an unbanned console is not a guarantee against
+a future ban.
+
+Both consoles need Nintendo connectivity and account verification for the initial
+transfer. **Blocking Nintendo servers beforehand can prevent it.** Nintendo also
+specifies current system software for transfer; if prompted to update, decide
+whether to proceed before continuing. This project cannot guarantee ongoing
+transfer availability. After installation, the editor runs without Nintendo
+connectivity. See [Nintendo's requirements](https://www.nintendo.com/sg/support/switch/secondary/transfer.html)
+and [compatibility notes](compatibility.md).
 
 If you already installed this editor, keep your existing save. Do not restore
 the starter over programs you want to keep.
 
 ## 1. Get the demo on both consoles
 
-1. Boot Switch 1 into its usual modded setup. Open **Nintendo eShop** with the
-   Nintendo Account you will also use on Switch 2.
-2. Search for **Seedsow Lullaby** and download the **demo**. This package supports
-   the US demo version **1.0.0**. Highlight the demo on HOME and press **+**
-   to see its version. Other releases have not been established as compatible.
-3. On Switch 2, use the same Nintendo Account to download that same demo.
+1. On both consoles, make sure you can open the same Seedsow Lullaby **demo**.
+   If needed, obtain it through Nintendo eShop using an account with access.
+   The download account need not be the user whose save will be transferred.
+2. Highlight the demo on HOME and press **+** to see its version. This project
+   tested **1.0.0 from the US eShop**. Other regions, full-game editions and
+   versions need compatibility testing; US-only compatibility is not established.
+3. On both consoles, link the intended save user to the same Nintendo Account.
+   On Switch 1, use the online-capable system environment described above.
 4. On Switch 1, start the demo as that user and reach its title screen so it
    creates save data.
 5. Press **HOME**, highlight the game, press **X**, and choose **Close**.
@@ -76,7 +103,7 @@ above for the initial installation.
 
 6. Eject the SD card in Windows, remove it from the reader, and put it back into
    the powered-off Switch 1.
-7. Boot back into your usual modded setup.
+7. Boot the same homebrew-capable system environment you will use for the save transfer.
 
 You have installed JKSV. You have not restored the editor save yet.
 
@@ -86,7 +113,8 @@ You have installed JKSV. You have not restored the editor save yet.
    HOME opens it. Other setups use holding **R** while starting an installed
    game. Use the homebrew entry method your modded setup provides.
 2. Select **JKSV** and press **A** to open it.
-3. Select your regular user icon, then select the **Seedsow Lullaby demo**.
+3. Select the user linked to the Nintendo Account you will use for transfer,
+   then select the **Seedsow Lullaby demo**.
 4. In the backup list, highlight **New** and press **A**. If it asks for a name,
    enter **Before Lua Editor**. If it names the backup automatically, note the
    name it gives you. Confirm and wait for it to finish.
@@ -118,7 +146,7 @@ JKSV's buttons are shown at the bottom of its screen. In the current version,
    ```
 
 5. Leave your original backup in place. Eject the card in Windows, return it to
-   the powered-off Switch 1, and boot back into the modded setup.
+   the powered-off Switch 1, and boot back into that same system environment.
 
 If you cannot find the game folder, search the SD card for the name of your
 new backup. The folder containing that backup is where the downloaded ZIP
@@ -148,7 +176,9 @@ than someone else's account details.
 ## 7. Move the demo save to Switch 2
 
 Keep the consoles near each other, with both connected to the internet and
-the same Nintendo Account linked to the intended user.
+the same Nintendo Account linked to the intended save user on each console.
+The source must be in the environment where you restored the save, with Nintendo
+servers reachable; an isolated emuMMC with blocked servers cannot complete this.
 
 1. On **Switch 1**, open **System Settings > Data Management > Transfer Your
    Save Data > Send Save Data to Another Console**. Select the intended user
@@ -177,7 +207,9 @@ Availability depends on the installed software and current transfer support.
 > Python, coding knowledge or an editor update right now. Keep the game and its
 > save, retain recovery slots 1-3, and keep your backup.
 
-Ordinary editing, saving and running now happen on Switch 2. You do not need
+Ordinary editing, saving and running now happen on Switch 2 **without a Nintendo
+connection**. The optional Windows/Pi upload path is only a convenience, not a
+requirement for running Lua. You do not need
 Switch 1 for each new program. You can learn the
 [console editor controls](07-console-editor.md), add
 [optional PC uploads](02-pi-setup.md), or install

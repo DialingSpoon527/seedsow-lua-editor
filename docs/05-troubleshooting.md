@@ -56,13 +56,27 @@ have arrived. Transfer results/errors are recorded in
 `ssedit-transfer-report.txt` in the game's save. Windows completion is not
 console acknowledgement; look for **PC FILE SAVED** on the console.
 
-## The installer rejects my backup
+## I only want to install the downloaded save
 
-Check US demo **1.0.0**, a manual save in slot 1 with both thumbnails, and one
-whole backup per ZIP. New installations also need the recognized initial
-title-screen autosave state. This builder deliberately supports that established
-layout and existing editor backups; arbitrary autosave positions are not covered.
-It leaves your input file unchanged when rejecting a backup.
+Follow the [beginner guide](01-console-install.md). Restore the already-built
+save ZIP with JKSV; do not open the custom builder. No clean autosave, developer
+hashes or Python installation is required for that path.
+
+## Nintendo's save transfer will not complete
+
+Both intended save users must be linked to the same Nintendo Account, and both
+consoles must reach Nintendo for the initial transfer. The account that downloaded
+the demo need not be that user. Check that you restored into the same environment
+you are trying to transfer from: sysMMC and emuMMC have separate saves. An isolated
+emuMMC normally blocks Nintendo servers. A banned or blocked source cannot finish
+this documented online route. SysNAND CFW is not ban-proof. See the
+[setup prerequisites](01-console-install.md#check-the-source-setup-before-restoring).
+The installed editor itself does not require Nintendo connectivity afterward.
+
+## The optional custom-save builder rejects my backup
+
+The downloaded installer does not use this builder. For custom builds, see
+[compatible-save inputs and troubleshooting](06-development.md#troubleshooting-a-custom-build).
 
 If you already have the editor installed, keep it. The new PC app accepts the existing
 Pi service and does not require a new console save installation.

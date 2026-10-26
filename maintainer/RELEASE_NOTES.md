@@ -18,7 +18,17 @@ recovery slots and a backup intact.
 
 The ready-made starter contains the editor, recovery entries and two examples.
 Personal account identifiers, calibration, reports, sessions and personal
-programs are excluded. Portable JKSV restore metadata has blank personal fields. Supported game: **Seedsow Lullaby US demo 1.0.0**.
+programs are excluded. Portable JKSV restore metadata has blank personal fields.
+Tested reference: **Seedsow Lullaby demo 1.0.0 from the US eShop**. Other regional
+demos, the full game and other versions remain untested, not proven incompatible.
+
+The matching Nintendo Account is required for the save users in the official
+transfer, not inherently for downloading the demo. Both consoles need Nintendo
+connectivity for that initial transfer; blocking Nintendo servers beforehand can
+prevent it. The documented source is online-capable sysNAND/sysMMC; an isolated
+emuMMC normally blocks those servers. This is a workflow choice, not a physical
+NAND restriction of the transfer feature, and CFW on sysNAND is not ban-proof.
+Running the installed editor afterward requires no Nintendo connection.
 
 ## Optional download: seedsow-lua-editor-0.1.1.zip
 
@@ -26,6 +36,10 @@ This is the PC companion and source bundle. Download it if you want the optional
 Pi uploader, development tools or later update-building tools. The installed
 console editor works with its controller/character grid or a wired USB keyboard
 without any of those extras.
+
+Windows and Raspberry Pi describe the implemented uploader, not a fundamental
+Lua runtime requirement. General save tools remain in `tools/` and `editor/`;
+reviewed-starter and release infrastructure is in `maintainer/`.
 
 **Vibecoded:** built with AI assistance and hands-on console testing. The core
 editor/save/restart flow has real-console results, including Switch 2. The new

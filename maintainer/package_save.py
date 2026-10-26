@@ -9,7 +9,6 @@ import hashlib
 import json
 import re
 import sys
-import struct
 import zipfile
 from pathlib import Path
 
@@ -18,6 +17,9 @@ sys.path.insert(0,str(ROOT/'editor'))
 from build import core_source, bootstrap, load_backup
 from indexed_save import IndexedSave, Edit, string
 from asb import decode_asb
+from jksv_metadata import portable_account_metadata
+
+STARTER_TITLE_ID = 0x010042D022AEA000
 
 STARTER_HASHES = {
     'saveg.dat':'c06dad53e67daa2a7c7c3758c80aee623e65c4cc16c74551cd8478f8a519235f',
@@ -39,9 +41,8 @@ def portable_metadata():
     Existing-save restore uses the target save and recorded data/journal sizes:
     https://github.com/J-D-K/JKSV/blob/rewrite/source/fs/SaveMetaData.cpp
     """
-    game = 0x010042D022AEA000
-    return struct.pack('<IBQ16sQBBHQQIqqQB',0x56534B4A,1,game,bytes(16),0,
-                       1,0,0,game,0,0,32*1024*1024,32*1024*1024,0,1)
+    return portable_account_metadata(STARTER_TITLE_ID, owner_id=STARTER_TITLE_ID,
+                                     data_size=32*1024*1024, journal_size=32*1024*1024)
 
 
 def starter_files(base):

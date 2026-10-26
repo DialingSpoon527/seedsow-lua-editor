@@ -4,6 +4,10 @@ The working hardware path uses a Pi as a Bluetooth Pro Controller. Once set up,
 the Windows app handles pairing, calibration, sending and manual controller
 buttons. You do not need an open Pi desktop.
 
+Windows and Raspberry Pi describe the implemented uploader, not requirements for
+running Lua. After the initial Nintendo save transfer, this path needs only the
+PC/Pi LAN connection and console Bluetooth; it does not contact Nintendo servers.
+
 ## Before you start
 
 This is optional. Install and verify the console editor first; you can keep
