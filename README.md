@@ -1,5 +1,14 @@
 # Seedsow Lua Editor
 
+## JUST FUTURE-PROOFING? GET THE SAVE ONTO SWITCH 2 FIRST.
+
+> **If you don't know what the rest of this means and just want to keep your
+> options open, focus on [installing the editor save on Switch 2](docs/01-console-install.md).**
+> Confirm that the editor and a saved program load after restarting the game.
+> **Everything else can wait until later.** You do not need to learn Lua, set up
+> a Raspberry Pi, configure PC uploads or install editor updates right now.
+> Keep the game, its save and recovery slots intact, and keep a backup.
+
 **First, get the editor save onto your Switch 2.** Build the save on your PC,
 restore it to an original Switch using JKSV, then move that game's save to
 Switch 2 with **System Settings > Data Management > Transfer Your Save Data**.
@@ -15,6 +24,11 @@ the game and save intact, retain the recovery slots, and keep a backup.
 
 > **Vibecoded:** this project was built with AI assistance, with hands-on testing
 > on real consoles. Expect rough edges; it is a community project.
+
+**About future exploits:** this project runs Lua inside the game; it has not
+confirmed an Artemis-based path to a broader exploit. Artemis-related research
+is worth following, but installing this editor does **not** guarantee that such
+a path will work or become available.
 
 ## Start here
 
