@@ -26,7 +26,8 @@ with tempfile.TemporaryDirectory() as temp:
     assert str(app.text['state'])=='disabled'
     app.quick_proof()
     assert app.raw is None and str(app.text['state'])=='normal'
-    for geometry in ('1120x830','940x720'):
+    minimum = '%dx%d' % root.minsize()
+    for geometry in ('1120x830',minimum):
         root.geometry(geometry)
         root.update()
         for tab in (app.connect_tab,app.send_tab,app.install_tab,app.control_tab):

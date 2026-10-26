@@ -17,6 +17,8 @@ Existing users do not need to reinstall or restore anything.
 - Include console screenshots and 0BSD licensing with no attribution requirement
   for project-owned code and documentation.
 - Publish tagged releases through GitHub Actions using its repository token.
+- Size the companion's minimum window from the host theme/fonts so controls
+  remain visible with larger fallback fonts.
 
 ## 0.1.1 — 2026-10-26
 

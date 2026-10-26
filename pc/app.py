@@ -64,6 +64,9 @@ class App:
         self.install_page()
         self.control_page()
         self.quick_proof()
+        # Tk themes and fallback fonts need different vertical space on each host.
+        root.update_idletasks()
+        root.minsize(940,max(720,root.winfo_reqheight()))
         try:
             config = load_settings()
             if config:
