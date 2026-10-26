@@ -2,6 +2,8 @@
 
 > [!IMPORTANT]
 > **JUST FUTURE-PROOFING? GET THE EDITOR SAVE ONTO SWITCH 2 FIRST.**
+> This is not an exploit! It is a foothold to any possible Lua/Artemis exploit that 
+> Nintendo cant take away from you once it does come out!
 > Follow the [beginner installation guide](docs/01-console-install.md), then check
 > that the editor loads after fully restarting the game. **Everything else can
 > wait.** Keep the game, its save, recovery slots and a backup.
