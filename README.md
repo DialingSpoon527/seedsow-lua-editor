@@ -164,6 +164,20 @@ Controller uploads are slow: a small proof takes around a minute, and a 5.6 KB
 editor update can take roughly 25-36 minutes. Files can be up to 1 MiB, though
 that is a storage limit rather than a practical controller-upload size.
 
-[MIT license](LICENSE) · [Third-party notices](THIRD_PARTY_NOTICES.md).
+## License
+
+**No credit required.** Project-owned code and documentation are available under
+the [BSD Zero Clause license (0BSD)](LICENSE). You may use, modify, share or sell
+them without naming the author or keeping this project's copyright or license
+notice. The software is provided as-is, without warranty.
+
+This 0BSD permission also applies to project-owned code and documentation in
+earlier commits and releases, including versions originally published under MIT.
+Existing MIT permissions remain available.
+
+Third-party components and game content retain their own licenses and rights;
+see [Third-party notices](THIRD_PARTY_NOTICES.md). For example, NXBT's MIT notice
+must still be preserved when distributing NXBT.
+
 The release includes a reviewed starter save and a separate companion/source
 ZIP. Keep your own later backups and connection files private.

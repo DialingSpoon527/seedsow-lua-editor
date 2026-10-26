@@ -1,5 +1,9 @@
 # Third-party notices
 
+The project's 0BSD license and no-credit permission apply to project-owned code
+and documentation, including earlier revisions. They do not relicense the
+third-party components, game content or other material described below.
+
 The Pi bridge uses [NXBT](https://github.com/Brikwerk/nxbt), copyright Reece Walsh
 and contributors, under the MIT license. The installer downloads the pinned
 revision `ec4b800ad6c55de96bb6c7f9f84b5bdc59a4c975` and applies the controller
