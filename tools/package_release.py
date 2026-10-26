@@ -13,6 +13,7 @@ PUBLIC_FILES = (
     'docs/01-console-install.md', 'docs/02-pi-setup.md', 'docs/03-send-files.md',
     'docs/04-updates-recovery.md', 'docs/05-troubleshooting.md', 'docs/06-development.md',
     'docs/07-console-editor.md',
+    'docs/images/console-editor.jpg', 'docs/images/save-menu.jpg', 'docs/images/included-example.jpg',
     'editor/build.py', 'editor/build_side_editor.py', 'editor/editor.lua',
     'editor/input.lua', 'editor/storage.lua', 'editor/transfer.lua',
     'examples/hello.lua', 'examples/blue.lua', 'licenses/NXBT-MIT.txt',
@@ -34,9 +35,11 @@ def source_files():
         path = ROOT/name
         if path.is_symlink() or not path.resolve().is_relative_to(ROOT) or not path.is_file():
             raise ValueError('Missing or linked public source file: '+name)
-        data = path.read_bytes().replace(b'\r\n', b'\n')
-        if name.endswith('.cmd'):
-            data = data.replace(b'\n',b'\r\n')
+        data = path.read_bytes()
+        if path.suffix.lower() not in ('.jpg','.jpeg','.png','.gif','.webp'):
+            data = data.replace(b'\r\n', b'\n')
+            if name.endswith('.cmd'):
+                data = data.replace(b'\n',b'\r\n')
         if re.search(rb'-----BEGIN [A-Z ]*PRIVATE KEY-----',data):
             raise ValueError('Private key material in '+name)
         files[name] = data

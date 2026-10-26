@@ -80,6 +80,28 @@ controller and the included PC app handles pairing, calibration and sending.
 You can add this at any time after installing the editor. Console editing needs
 no Pi, PC connection, Wi-Fi or ongoing internet access.
 
+## On the console
+
+<p align="center">
+  <a href="docs/images/console-editor.jpg"><img src="docs/images/console-editor.jpg" alt="Console Lua editor showing a program, file controls and the on-screen character grid" width="900"></a>
+</p>
+<p align="center"><em>Edit, run and save Lua directly on the console.</em></p>
+
+<table>
+  <tr>
+    <td align="center" width="50%">
+      <a href="docs/images/save-menu.jpg"><img src="docs/images/save-menu.jpg" alt="Game load menu showing the editor, recovery entries and saved Lua programs" width="400"></a><br>
+      <strong>Editor and program slots</strong><br>
+      <sub>Open the editor or load a saved program from the game's menu.</sub>
+    </td>
+    <td align="center" width="50%">
+      <a href="docs/images/included-example.jpg"><img src="docs/images/included-example.jpg" alt="Included Lua example running a blue screen with animated shapes and an elapsed-time counter" width="400"></a><br>
+      <strong>Included example</strong><br>
+      <sub>The blue animation runs inside the game.</sub>
+    </td>
+  </tr>
+</table>
+
 ## What you need
 
 ### For the initial installation
