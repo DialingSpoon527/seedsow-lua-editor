@@ -64,10 +64,15 @@ def git(*args, capture=True, input_text=None):
 
 
 def credential():
-    # Never emit this subprocess result; it may contain an OAuth token.
-    result = subprocess.run([git_executable(),'-C',str(ROOT),'credential','fill'],
-                            input='protocol=https\nhost=github.com\n\n',
-                            capture_output=True,text=True)
+    # Keep credential stdout private, while allowing sign-in instructions on stderr.
+    print('Checking GitHub sign-in. Complete any browser or sign-in window that opens.',flush=True)
+    try:
+        result = subprocess.run([git_executable(),'-C',str(ROOT),'credential','fill'],
+                                input='protocol=https\nhost=github.com\n\n',
+                                stdout=subprocess.PIPE,text=True,timeout=180,
+                                env=dict(os.environ,GCM_TRACE='false',GCM_TRACE_SECRETS='false'))
+    except subprocess.TimeoutExpired:
+        raise RuntimeError('GitHub sign-in did not finish within three minutes. Retry and complete its sign-in prompt.') from None
     if result.returncode:
         raise RuntimeError('GitHub sign-in failed. Run this from your regular Windows terminal '
                            'so Git can use your credential manager, then retry.')
@@ -87,7 +92,8 @@ def request(token, path, data=None, method='GET', content_type='application/json
         'User-Agent':'seedsow-lua-editor-release'})
     try:
         with urlopen(req,timeout=60) as response:
-            return json.load(response)
+            payload = response.read()
+            return json.loads(payload) if payload else None
     except HTTPError as error:
         if optional and error.code==404:
             return None
@@ -97,6 +103,11 @@ def request(token, path, data=None, method='GET', content_type='application/json
         except ValueError:
             message = 'Request rejected.'
         raise RuntimeError(f'GitHub HTTP {error.code}: {message}') from None
+
+
+def uploaded_asset_matches(asset,path):
+    return (asset.get('state')=='uploaded' and asset.get('size')==path.stat().st_size
+            and asset.get('digest')=='sha256:'+hashlib.sha256(path.read_bytes()).hexdigest())
 
 
 def publish(expected_head=None):
@@ -128,6 +139,7 @@ def publish(expected_head=None):
         print('Remote main already matches the prepared commit.',flush=True)
     if git('ls-remote','origin','refs/heads/main').split()[0] != head:
         raise RuntimeError('Remote verification did not match the release commit.')
+    print('Building the companion/source ZIP...',flush=True)
     info = package()
     version = (ROOT/'VERSION').read_text().strip()
     tag = 'v'+version
@@ -135,19 +147,36 @@ def publish(expected_head=None):
     base = '/repos/'+REPOSITORY
     notes = (ROOT/'RELEASE_NOTES.md').read_text(encoding='utf-8')
     existing = request(token,base+'/releases/tags/'+tag,optional=True)
+    if existing is None:
+        drafts = [r for r in request(token,base+'/releases?per_page=100') if r.get('tag_name')==tag]
+        if len(drafts)>1:
+            raise RuntimeError('Multiple draft releases use '+tag+'. Inspect them before publishing.')
+        existing = drafts[0] if drafts else None
     if existing and not existing.get('draft'):
         raise RuntimeError('This version is already published. Choose a new version rather than replacing its assets.')
+    print('Checking the ready-made save and download checksums...',flush=True)
     prepared_assets = release_assets(info)
     data = {'tag_name':tag,'target_commitish':head,'name':'Seedsow Lua Editor '+version,
             'body':notes,'draft':True,'prerelease':False}
     if existing:
+        print('Resuming draft release '+tag+'...',flush=True)
         release = request(token,base+'/releases/'+str(existing['id']),data,'PATCH')
     else:
+        print('Creating draft release '+tag+'...',flush=True)
         release = request(token,base+'/releases',data,'POST')
-    assets = {a['name'] for a in request(token,base+'/releases/'+str(release['id'])+'/assets')}
+    if not release.get('draft'):
+        raise RuntimeError('Only draft release assets can be uploaded or replaced.')
+    assets = {a['name']:a for a in request(token,base+'/releases/'+str(release['id'])+'/assets?per_page=100')}
+    if set(assets)-{p.name for p,_ in prepared_assets}:
+        raise RuntimeError('The draft contains additional assets. Inspect them before making it public.')
     for path,kind in prepared_assets:
         if path.name in assets:
-            raise RuntimeError('Draft already contains '+path.name+'. Inspect its assets before retrying.')
+            if uploaded_asset_matches(assets[path.name],path):
+                print('Already uploaded and verified '+path.name,flush=True)
+                continue
+            print('Replacing an incomplete or outdated draft asset: '+path.name,flush=True)
+            request(token,base+'/releases/assets/'+str(assets[path.name]['id']),method='DELETE')
+        print('Uploading '+path.name+' ('+str(path.stat().st_size)+' bytes)...',flush=True)
         url = 'https://uploads.github.com/repos/'+REPOSITORY+'/releases/'+str(release['id'])+'/assets?name='+quote(path.name)
         # Raw bytes, including JSON manifests, are sent unchanged.
         req = Request(url,data=path.read_bytes(),method='POST',headers={
@@ -174,5 +203,7 @@ if __name__=='__main__':
         parser.error('--expected-head must be a full commit SHA.')
     try:
         publish(args.expected_head)
+    except KeyboardInterrupt:
+        parser.exit(130,'Publishing stopped. Run the same command again to resume the draft.\n')
     except (RuntimeError,OSError) as error:
         parser.exit(1,'Release not completed: '+str(error)+'\n')

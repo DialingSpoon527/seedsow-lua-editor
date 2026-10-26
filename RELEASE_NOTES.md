@@ -2,9 +2,13 @@
 
 ## Main download: Seedsow-Lua-Editor-Save.zip
 
-**The save is already built. Download it, restore it on an original Switch
+**The save is already built. Download it, restore it on a modded/hacked Switch 1
 using JKSV, then transfer the game's save to Switch 2. No Python, compiling,
 save building or Raspberry Pi is required for the initial setup.**
+
+**A modded/hacked Switch 1 with homebrew is required for the initial restore.**
+Your Switch 2 does not need to be modded. The beginner guide covers installing
+JKSV, making a backup, copying the ready-made ZIP, restoring it and transferring.
 
 [Step-by-step installation guide](https://github.com/DialingSpoon527/seedsow-lua-editor/blob/main/docs/01-console-install.md)
 

@@ -45,6 +45,16 @@ def main(base):
             'save_files':{n:hashlib.sha256(b).hexdigest() for n,b in files.items()}}))
         check(starter)
         check_v3(starter)
+        # A different compression encoding of the same native fields is portable.
+        import zlib
+        from indexed_save import IndexedSave
+        variant = dict(files)
+        native = variant['ssseed020.bin']
+        variant['ssseed020.bin'] = native[:12]+zlib.compress(IndexedSave(native).body,1)
+        variant_zip = Path(temp)/'different-compression.zip'
+        with zipfile.ZipFile(variant_zip,'w') as z:
+            for name,data in variant.items():z.writestr(name,data)
+        package_save(variant_zip,Path(temp)/'portable-compression')
         rebuilt = Path(temp)/'rebuilt'
         build(archive,rebuilt)
         with zipfile.ZipFile(rebuilt/'Seedsow-Lua-Editor-Save.zip') as z:
@@ -56,7 +66,6 @@ def main(base):
         program = payload(source,updated,30,'local-check')
         target = side/'Side-Editor-V3B-slot-30.lua'
         target.write_bytes(program)
-        import zlib
         (side/'manifest.json').write_text(json.dumps({'lua_file':str(target),'base_save':str(archive),
                                                       'source_adler32':zlib.adler32(updated)}))
         check_side(side)

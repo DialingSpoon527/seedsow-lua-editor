@@ -1,6 +1,8 @@
 """Release publishing must refuse unexpected remote history or published assets."""
 import sys
 import struct
+import tempfile
+import hashlib
 import unittest
 from pathlib import Path
 from unittest.mock import patch
@@ -24,6 +26,16 @@ class StarterMetadata(unittest.TestCase):
 
 
 class PublishingGuards(unittest.TestCase):
+    def test_resumed_asset_requires_matching_bytes_and_completed_state(self):
+        with tempfile.TemporaryDirectory() as temp:
+            path = Path(temp)/'asset.zip'
+            path.write_bytes(b'expected test asset')
+            asset = {'state':'uploaded','size':path.stat().st_size,
+                     'digest':'sha256:'+hashlib.sha256(path.read_bytes()).hexdigest()}
+            self.assertTrue(publish_release.uploaded_asset_matches(asset,path))
+            for change in ({'state':'starter'},{'size':1},{'digest':'sha256:wrong'},{'digest':None}):
+                self.assertFalse(publish_release.uploaded_asset_matches(dict(asset,**change),path))
+
     def fake_git(self, remote, count='1'):
         local = 'a'*40
         state = {'remote':remote, 'pushes':[]}

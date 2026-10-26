@@ -58,7 +58,13 @@ def starter_files(base):
     for slot in range(1,121):
         script = f'sed{slot:02d}.asb' if slot<=3 else f'ss{slot:03d}.asb'
         seed = template.apply([Edit(caret[3],string('save:/sed01.asb'),string('save:/'+script))])
-        if files.get(f'ssseed{slot:03d}.bin')!=seed:
+        name = f'ssseed{slot:03d}.bin'
+        if name not in files:
+            raise ValueError('Missing native launcher template for slot '+str(slot))
+        actual,expected = IndexedSave(files[name]),IndexedSave(seed)
+        # Different zlib versions may encode the same native save differently.
+        # Compare its complete decoded contents and index, retaining reviewed bytes.
+        if actual.fields!=expected.fields or actual.groups!=expected.groups:
             raise ValueError('Unexpected native launcher template for slot '+str(slot))
         launch = files.get(script,b'')
         commands = decode_asb(launch)
@@ -69,7 +75,7 @@ def starter_files(base):
         import zlib
         if launch!=bootstrap(slot,zlib.adler32(core),match[1]):
             raise ValueError('Unexpected launcher code in '+script)
-        result[f'ssseed{slot:03d}.bin'] = seed
+        result[name] = files[name]
         result[script] = launch
         if slot<=3:
             result[f'ssboot{slot}.bin'] = launch

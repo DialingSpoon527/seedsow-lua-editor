@@ -1,5 +1,11 @@
 # Seedsow Lua Editor
 
+> [!IMPORTANT]
+> **You need a modded/hacked original Nintendo Switch (Switch 1) for the first installation.**
+> It must already be able to run homebrew apps. You will install JKSV on that
+> console, restore the ready-made save there, then transfer it to Switch 2.
+> **Your Switch 2 does not need to be modded. A Switch 2 by itself is not enough.**
+
 ## JUST FUTURE-PROOFING? GET THE SAVE ONTO SWITCH 2 FIRST.
 
 > **If you don't know what the rest of this means and just want to keep your
@@ -33,11 +39,25 @@ a path will work or become available.
 
 ## Start here
 
-1. [Download **Seedsow-Lua-Editor-Save.zip**](https://github.com/DialingSpoon527/seedsow-lua-editor/releases/latest/download/Seedsow-Lua-Editor-Save.zip).
-   **It is already built. No Python, compiling or save-building step is needed.**
-2. [Install the editor save on Switch 2](docs/01-console-install.md).
-3. [Write and save your first program on the console](docs/07-console-editor.md).
-4. If you have a Raspberry Pi, optionally [set up PC uploads](docs/02-pi-setup.md).
+**Only have a hacked Switch 1 and no idea what to do next? Follow the
+[complete beginner installation guide](docs/01-console-install.md).** It covers
+downloading JKSV, copying it to the SD card, backing up the demo, restoring the
+ready-made save, and transferring it to Switch 2. You do not need to know Lua.
+
+The short version:
+
+1. Put **JKSV.nro** on the hacked Switch 1's SD card and open it through homebrew.
+2. Make a backup of the Seedsow demo's save.
+3. [Download **Seedsow-Lua-Editor-Save.zip**](https://github.com/DialingSpoon527/seedsow-lua-editor/releases/latest/download/Seedsow-Lua-Editor-Save.zip)
+   and copy that ZIP alongside the backup. **It is already built.**
+4. Restore it in JKSV on Switch 1, then use Nintendo's save-transfer menus to
+   move the demo save to Switch 2.
+5. Load editor slot **1** on Switch 2, restart the game, and load it again.
+   **If you only want to future-proof, you can stop here.**
+
+Learn the [console controls](docs/07-console-editor.md) or add the
+[optional Pi uploader](docs/02-pi-setup.md) later. No Python, compiling or
+save-building step is needed to install the ready-made save.
 
 ## The editor works on its own
 
@@ -58,8 +78,8 @@ no Pi, PC connection, Wi-Fi or ongoing internet access.
 ### For the initial installation
 
 - **Seedsow Lullaby US demo 1.0.0** on the source Switch and Switch 2.
-- An original Switch with a working save manager such as
-  [JKSV](https://github.com/J-D-K/JKSV).
+- A **modded/hacked Switch 1 that can run homebrew**. The beginner guide explains
+  how to add [JKSV](https://github.com/J-D-K/JKSV), the app used to restore the save.
 - Your Nintendo Account linked to the relevant user on both consoles, and
   internet access for Nintendo's one-time save transfer.
 - A way to copy the extracted save folder onto the original Switch's SD card.
