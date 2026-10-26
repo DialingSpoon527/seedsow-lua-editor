@@ -7,6 +7,7 @@
 > Follow the [beginner installation guide](docs/01-console-install.md), then check
 > that the editor loads after fully restarting the game. **Everything else can
 > wait.** Keep the game, its save, recovery slots and a backup.
+> If you already have smileBasic, this is not neccesary!
 
 Write, save and run Lua inside Seedsow Lullaby on Switch 1 or Switch 2. The editor
 works with a controller and on-screen character grid, or a wired USB keyboard.
