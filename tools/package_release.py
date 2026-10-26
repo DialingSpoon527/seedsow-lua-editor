@@ -24,6 +24,7 @@ PUBLIC_FILES = (
     'tests/test_release.py',
     'tools/asb.py', 'tools/indexed_save.py', 'tools/save_globals.py', 'tools/package_release.py',
     'tools/publish_release.py',
+    'tools/package_save.py',
 )
 
 

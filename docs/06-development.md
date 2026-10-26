@@ -65,19 +65,21 @@ the saved source selected by the slot's `.ref` file.
 python tools/package_release.py
 ```
 
-This writes `dist/seedsow-lua-editor-0.1.0.zip`, its SHA-256 file, and a member
+This writes `dist/seedsow-lua-editor-0.1.1.zip`, its SHA-256 file, and a member
 manifest. The packager uses an explicit file allowlist and validates the ZIP
 after writing. It excludes `.git`, `build`, credentials, private save files,
 downloaded dependencies and unlisted files even if present in the repository.
 
-Share the source ZIP or the curated Git repository. Generated installation
-ZIPs contain the owner's save data and should stay private. Build outputs and
+The source ZIP contains tools; the separately packaged starter save is the
+ready-to-restore user download. Custom installation ZIPs made from personal
+backups should stay private. Build outputs and
 local settings are ignored by Git. Do not add a whole archived workspace to
 the repository.
 
 ## Publish a GitHub release from the command line
 
-After committing the prepared source to `main`, run from a regular signed-in
+Prepare `dist/Seedsow-Lua-Editor-Save.zip` with the reviewed starter packager,
+then commit the source to `main` and run from a regular signed-in
 terminal:
 
 ```powershell
@@ -85,7 +87,8 @@ python tools/publish_release.py
 ```
 
 The tool uses Git's configured credential helper, verifies the remote commit,
-builds the ZIP, uploads the ZIP/checksum/manifest to a draft release, and then
+builds the source ZIP, uploads both downloads with their checksums/manifests to
+a draft release, and then
 publishes it. It does not print or save a plaintext token. Existing published
 versions are not overwritten. To replace the repository's initial commit, first
 prepare a single-commit local history and pass `--expected-head` with the full
@@ -98,3 +101,16 @@ and loading it after a full game restart. Test the new Pi installer separately
 from compatibility with an already-working Pi. Test a side editor in a fresh
 slot while retaining base recovery entries. Record these as new results; a
 prior hardware result does not establish that later packaging changes passed.
+
+## Prepare the ready-made starter save
+
+```powershell
+python tools/package_save.py --base "REVIEWED_STARTER_SAVE.zip"
+```
+
+This is a maintainer step, not an end-user requirement. The tool only accepts
+the reviewed native starter state and matching editor code, clears personal
+account fields and removes all unlisted files, and supplies only the included examples. It
+rejects altered native saves rather than publishing someone's personal backup.
+A previously released starter ZIP can be used as input. The output includes
+the ready-to-restore ZIP, SHA-256 checksum and member manifest.

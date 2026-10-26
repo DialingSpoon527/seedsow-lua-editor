@@ -4,12 +4,14 @@ Run from a normal signed-in Windows terminal. Credentials stay in memory and
 the configured Git credential helper; no token is printed or written here.
 """
 import argparse
+import hashlib
 import json
 import os
 import re
 import shutil
 import subprocess
 import sys
+import zipfile
 from pathlib import Path
 from urllib.error import HTTPError
 from urllib.parse import quote
@@ -19,6 +21,27 @@ ROOT = Path(__file__).resolve().parent.parent
 REPOSITORY = 'DialingSpoon527/seedsow-lua-editor'
 REMOTE_URL = 'https://github.com/'+REPOSITORY+'.git'
 from package_release import package
+
+
+def release_assets(info):
+    from package_save import starter_files
+    source = Path(info['zip'])
+    save = ROOT/'dist/Seedsow-Lua-Editor-Save.zip'
+    if not save.is_file():
+        raise RuntimeError('Prepare dist/Seedsow-Lua-Editor-Save.zip with tools/package_save.py first.')
+    reviewed = starter_files(save)
+    with zipfile.ZipFile(save) as archive:
+        if set(archive.namelist())!=set(reviewed) or any(archive.read(n)!=b for n,b in reviewed.items()):
+            raise RuntimeError('The save ZIP contains unreviewed files or bytes; it is not cleared for publication.')
+    result = []
+    for archive in (save,source):
+        checksum = archive.with_suffix('.zip.sha256')
+        manifest = archive.with_suffix('.manifest.json')
+        digest = hashlib.sha256(archive.read_bytes()).hexdigest()
+        if checksum.read_text().split()[0]!=digest or json.loads(manifest.read_text())['sha256']!=digest:
+            raise RuntimeError('Asset checksum or manifest does not match '+archive.name)
+        result.extend([(archive,'application/zip'),(checksum,'text/plain'),(manifest,'application/json')])
+    return result
 
 
 def git_executable():
@@ -87,12 +110,20 @@ def publish(expected_head=None):
     remote = git('ls-remote','origin','refs/heads/main').split()
     remote_head = remote[0] if remote else None
     if remote_head != head:
-        if not expected_head or remote_head != expected_head:
-            raise RuntimeError('Remote main changed. Inspect it before publishing; no force update was attempted.')
-        if int(git('rev-list','--count','HEAD')) != 1:
-            raise RuntimeError('Replacing the first commit requires a prepared single-commit local history.')
-        print('Replacing the known first commit with the prepared release commit.',flush=True)
-        git('push','--force-with-lease=refs/heads/main:'+expected_head,'-u','origin','HEAD:main',capture=False)
+        if expected_head:
+            if remote_head != expected_head:
+                raise RuntimeError('Remote main changed. Inspect it before publishing; no force update was attempted.')
+            if int(git('rev-list','--count','HEAD')) != 1:
+                raise RuntimeError('Replacing the first commit requires a prepared single-commit local history.')
+            print('Replacing the known first commit with the prepared release commit.',flush=True)
+            git('push','--force-with-lease=refs/heads/main:'+expected_head,'-u','origin','HEAD:main',capture=False)
+        else:
+            try:
+                git('merge-base','--is-ancestor',remote_head or '',head)
+            except RuntimeError:
+                raise RuntimeError('Remote main is not an ancestor of the prepared commit. No history was replaced.') from None
+            print('Pushing the new release commit normally.',flush=True)
+            git('push','-u','origin','HEAD:main',capture=False)
     else:
         print('Remote main already matches the prepared commit.',flush=True)
     if git('ls-remote','origin','refs/heads/main').split()[0] != head:
@@ -106,6 +137,7 @@ def publish(expected_head=None):
     existing = request(token,base+'/releases/tags/'+tag,optional=True)
     if existing and not existing.get('draft'):
         raise RuntimeError('This version is already published. Choose a new version rather than replacing its assets.')
+    prepared_assets = release_assets(info)
     data = {'tag_name':tag,'target_commitish':head,'name':'Seedsow Lua Editor '+version,
             'body':notes,'draft':True,'prerelease':False}
     if existing:
@@ -113,9 +145,7 @@ def publish(expected_head=None):
     else:
         release = request(token,base+'/releases',data,'POST')
     assets = {a['name'] for a in request(token,base+'/releases/'+str(release['id'])+'/assets')}
-    archive = Path(info['zip'])
-    for path,kind in [(archive,'application/zip'),(archive.with_suffix('.zip.sha256'),'text/plain'),
-                       (archive.with_suffix('.manifest.json'),'application/json')]:
+    for path,kind in prepared_assets:
         if path.name in assets:
             raise RuntimeError('Draft already contains '+path.name+'. Inspect its assets before retrying.')
         url = 'https://uploads.github.com/repos/'+REPOSITORY+'/releases/'+str(release['id'])+'/assets?name='+quote(path.name)

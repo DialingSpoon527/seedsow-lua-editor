@@ -18,8 +18,9 @@ An editor update is itself a Lua program. Put it in a **fresh user slot**, such
 as 30, keeping recovery slots 1-3 and your last working editor intact.
 
 1. Extract the new release on your PC and open **START WINDOWS.cmd**.
-2. In **Install save & updates**, choose a backup matching the editor base
-   installed on your console.
+2. In **Install save & updates**, choose the original starter ZIP you installed,
+   or a backup matching that editor base. A new export from Switch 2 is not
+   needed just to build an update for that same retained base.
 3. Choose a fresh **New editor slot** and click **Build update & open for sending**.
 4. If you use a Pi, follow the [file-upload guide](03-send-files.md) to send the
    update to that slot. Expect roughly 25-36 minutes for a 5.6 KB file.

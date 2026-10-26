@@ -12,6 +12,8 @@ installed dependencies under their respective licenses. Lupa is an optional
 development dependency and is not bundled.
 
 Seedsow Lullaby and its game engine belong to their respective owners. This
-source release includes no game dump, game assets or save backup. Installation
-packages are generated locally from the user's compatible backup. This project
+source-code ZIP includes no game dump or save backup. A separate ready-to-restore
+starter save includes the editor and example programs, with personal account
+identifiers and personal files excluded. Its portable JKSV metadata contains
+the public game attributes and blank personal fields. This project
 is an independent tool and is not affiliated with the game publisher or Nintendo.

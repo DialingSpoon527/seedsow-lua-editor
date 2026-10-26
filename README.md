@@ -9,7 +9,8 @@
 > a Raspberry Pi, configure PC uploads or install editor updates right now.
 > Keep the game, its save and recovery slots intact, and keep a backup.
 
-**First, get the editor save onto your Switch 2.** Build the save on your PC,
+**First, get the editor save onto your Switch 2.**
+[Download the ready-to-restore save ZIP](https://github.com/DialingSpoon527/seedsow-lua-editor/releases/latest/download/Seedsow-Lua-Editor-Save.zip),
 restore it to an original Switch using JKSV, then move that game's save to
 Switch 2 with **System Settings > Data Management > Transfer Your Save Data**.
 The [installation guide](docs/01-console-install.md) walks through each step.
@@ -32,8 +33,8 @@ a path will work or become available.
 
 ## Start here
 
-1. [Download the release](https://github.com/DialingSpoon527/seedsow-lua-editor/releases/latest)
-   and extract `seedsow-lua-editor-0.1.0.zip` on your PC.
+1. [Download **Seedsow-Lua-Editor-Save.zip**](https://github.com/DialingSpoon527/seedsow-lua-editor/releases/latest/download/Seedsow-Lua-Editor-Save.zip).
+   **It is already built. No Python, compiling or save-building step is needed.**
 2. [Install the editor save on Switch 2](docs/01-console-install.md).
 3. [Write and save your first program on the console](docs/07-console-editor.md).
 4. If you have a Raspberry Pi, optionally [set up PC uploads](docs/02-pi-setup.md).
@@ -58,11 +59,11 @@ no Pi, PC connection, Wi-Fi or ongoing internet access.
 
 - **Seedsow Lullaby US demo 1.0.0** on the source Switch and Switch 2.
 - An original Switch with a working save manager such as
-  [JKSV](https://github.com/J-D-K/JKSV), plus a compatible backup to build from.
+  [JKSV](https://github.com/J-D-K/JKSV).
 - Your Nintendo Account linked to the relevant user on both consoles, and
   internet access for Nintendo's one-time save transfer.
-- A PC with **Python 3.10+**, including Tcl/Tk, to build the installation save.
-  On Windows, double-click **START WINDOWS.cmd**; no pip packages or WSL are needed.
+- A way to copy the extracted save folder onto the original Switch's SD card.
+  Download the ready-made ZIP; you do not need the source tools for this step.
 
 ### For using the installed editor
 
@@ -75,6 +76,8 @@ numbered slot whenever you want to run it.
 A Bluetooth-capable Raspberry Pi running compatible Debian/Raspberry Pi OS,
 plus Windows and the Pi on the same LAN. A **Pi 3B** was used in testing.
 The console only needs Bluetooth for this route; it does not need Wi-Fi.
+For the optional PC app, download the companion/source ZIP, install Python
+3.10+ with Tcl/Tk, and double-click **START WINDOWS.cmd**.
 
 ## Where things are saved
 
@@ -112,6 +115,6 @@ Controller uploads are slow: a small proof takes around a minute, and a 5.6 KB
 editor update can take roughly 25-36 minutes. Files can be up to 1 MiB, though
 that is a storage limit rather than a practical controller-upload size.
 
-[MIT license](LICENSE) > [Third-party notices](THIRD_PARTY_NOTICES.md).
-Installation ZIPs are built from your own save and should stay private; share
-the source release instead.
+[MIT license](LICENSE) · [Third-party notices](THIRD_PARTY_NOTICES.md).
+The release includes a reviewed starter save and a separate companion/source
+ZIP. Keep your own later backups and connection files private.

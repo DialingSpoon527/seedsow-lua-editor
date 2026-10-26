@@ -1,5 +1,6 @@
 """Release publishing must refuse unexpected remote history or published assets."""
 import sys
+import struct
 import unittest
 from pathlib import Path
 from unittest.mock import patch
@@ -7,6 +8,19 @@ from unittest.mock import patch
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0,str(ROOT/'tools'))
 import publish_release
+from package_save import portable_metadata
+
+
+class StarterMetadata(unittest.TestCase):
+    def test_jksv_layout_retains_game_sizes_and_blanks_personal_fields(self):
+        data = portable_metadata()
+        self.assertEqual(len(data),86)
+        self.assertEqual(data[:5],b'JKSV\x01')
+        self.assertEqual(struct.unpack_from('<Q',data,5)[0],0x010042D022AEA000)
+        self.assertEqual(data[13:29],bytes(16))
+        self.assertEqual(data[49:57],bytes(8))
+        self.assertEqual(data[77:85],bytes(8))
+        self.assertEqual(struct.unpack_from('<qq',data,61),(33554432,33554432))
 
 
 class PublishingGuards(unittest.TestCase):
@@ -20,6 +34,7 @@ class PublishingGuards(unittest.TestCase):
             if args==('rev-parse','HEAD'):return local
             if args==('ls-remote','origin','refs/heads/main'):return state['remote']+'\trefs/heads/main'
             if args==('rev-list','--count','HEAD'):return count
+            if args==('merge-base','--is-ancestor',state['remote'],local):return ''
             if args[0]=='push':
                 state['pushes'].append(args)
                 state['remote']=local
@@ -59,6 +74,14 @@ class PublishingGuards(unittest.TestCase):
                 publish_release.publish()
         self.assertEqual(state['pushes'],[])
         self.assertEqual(request.call_count,1)
+
+    def test_followup_release_uses_a_normal_push(self):
+        run,state = self.fake_git('b'*40,count='3')
+        with patch.object(publish_release,'git',side_effect=run), patch.object(publish_release,'package',return_value={}), \
+             patch.object(publish_release,'credential',side_effect=RuntimeError('stop before API')):
+            with self.assertRaisesRegex(RuntimeError,'stop before API'):
+                publish_release.publish()
+        self.assertEqual(state['pushes'],[('push','-u','origin','HEAD:main')])
 
 
 if __name__=='__main__':

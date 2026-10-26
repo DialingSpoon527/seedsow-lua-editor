@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.1.1 — 2026-10-26
+
+- Adds a ready-to-restore starter save as the main download. Users no longer
+  need to build a save or install Python to complete the initial console setup.
+- Clears personal account fields and limits the starter to reviewed editor
+  assets and included examples.
+- Makes source tools and Pi uploads optional in the installation instructions.
+
 ## 0.1.0 - 2026-10-26
 
 Initial release of this vibecoded, AI-assisted console Lua editor.
