@@ -8,9 +8,9 @@
 
 > [!IMPORTANT]
 > # This project only runs Lua inside the game
-> it has notconfirmed an Artemis-based path to a broader exploit. 
+> it has **not** confirmed an Artemis-based path to a broader exploit. 
 > Artemis entrypoints are being searched, but installing this 
-> editor does **not** guarantee that sucha path will work or
+> editor does **not** guarantee that such a path will work or
 > become available. But if it does, you will be able to use it!
 
 ## JUST FUTURE-PROOFING? GET THE SAVE ONTO SWITCH 2 FIRST.
