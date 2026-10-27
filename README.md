@@ -88,6 +88,11 @@ the Windows companion sends files over your LAN to a Pi, which acts as a Bluetoo
 controller. The console uses Bluetooth input; its Wi-Fi and Nintendo servers are
 not used for these uploads. A real wired USB keyboard can also enter text directly.
 
+**Airplane mode can stay ON, including during pairing.** Enable only its
+Bluetooth/controller exception and leave console Wi-Fi OFF. Pairing, calibration
+and uploads do not require turning airplane mode off. Nintendo's initial official
+save transfer is a separate step that requires internet connectivity.
+
 For the optional companion, download the companion/source ZIP, keep its folders
 together, install Python 3.10+ with Tcl/Tk on Windows, and open **START WINDOWS.cmd**.
 Follow [Pi setup](docs/02-pi-setup.md), then [send a file](docs/03-send-files.md).

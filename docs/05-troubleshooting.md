@@ -33,8 +33,10 @@ The app's saved settings are at
 
 ## The Pi will not pair or disconnects on returning to the game
 
-1. Leave airplane mode off for the initial test. Controller Bluetooth must remain
-   enabled after leaving the pairing screen.
+1. **Airplane mode can stay ON.** Enable its Bluetooth/controller exception and
+   leave **Wi-Fi OFF**. Keep controller Bluetooth enabled after leaving the
+   pairing screen. Initial pairing, calibration and uploads do not require
+   turning airplane mode off.
 2. Put other nearby consoles to sleep and open **Change Grip/Order** on the
    intended console before clicking **Pair controller**.
 3. Make the Pi **Player 1**. Seedsow input from a different player may be ignored.

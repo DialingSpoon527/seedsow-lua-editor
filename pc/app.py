@@ -88,7 +88,7 @@ class App:
         page = self.connect_tab
         self.label(page,'Connect to your Raspberry Pi')
         self.hint(page,'Install the bridge on the Pi once, then import its private connection file. '
-                  'Windows and the Pi need the same LAN. The console needs Bluetooth; console Wi-Fi is not used.')
+                  'Windows and the Pi need the same LAN. Keep console airplane mode ON with controller Bluetooth enabled and Wi-Fi OFF, including during pairing.')
         row = ttk.Frame(page)
         row.pack(fill='x',pady=(0,12))
         ttk.Button(row,text='Open setup guide',command=lambda:self.open_doc('02-pi-setup.md')).pack(side='left')

@@ -73,8 +73,9 @@ public internet. No SSH password is stored by the Windows app.
 
 ## Pair as Player 1
 
-1. For the initial test, turn airplane mode **off** on the console. Later you
-   can use airplane mode with its Bluetooth controller exception enabled.
+1. **Keep airplane mode ON.** In the console's airplane-mode settings, enable
+   Bluetooth/controller communication while leaving **Wi-Fi OFF**. You do not
+   need to turn airplane mode off for initial pairing, calibration or uploads.
 2. Put other nearby paired consoles to sleep so the Pi connects to the intended one.
 3. On the target console, open **Controllers → Change Grip/Order**.
 4. In the PC app, click **Pair controller**.
@@ -83,6 +84,11 @@ public internet. No SSH password is stored by the Windows app.
    controller is occupying Player 1.
 6. Return to Seedsow. The **Controller** tab in Windows provides D-pad, face
    and shoulder buttons if you need them to navigate.
+
+Keep the Bluetooth/controller exception enabled after leaving the pairing screen.
+The Windows PC and Pi still need their LAN connection; the console does not need
+Wi-Fi. Nintendo's initial official save transfer is separate and requires internet
+connectivity, as explained in the [installation guide](01-console-install.md).
 
 ## Calibrate once
 
