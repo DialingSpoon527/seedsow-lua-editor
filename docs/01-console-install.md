@@ -20,9 +20,11 @@ The editor save is already made for you.
 - Your Switch 2.
 - A computer and a way to read the Switch 1's microSD card on it. A microSD card
   reader or SD adapter is enough. The file-copy steps below use Windows names.
-- The same Seedsow Lullaby demo edition installed on both consoles. The tested
-  reference is **demo 1.0.0 obtained from the US eShop**; other regions and
-  editions remain untested, not proven incompatible.
+- The same Seedsow Lullaby edition installed on both consoles. The tested
+  reference used in this guide is **demo 1.0.0 obtained from the US eShop**.
+  There are also user-reported working cases for the **Japanese demo**,
+  **UK demo** and **US full game**; see [compatibility notes](compatibility.md)
+  for the distinction between reference testing and community reports.
 - The same Nintendo Account linked to the user you will use on each console.
 - Internet access on both consoles for the save-transfer step.
 
@@ -62,8 +64,10 @@ the starter over programs you want to keep.
    If needed, obtain it through Nintendo eShop using an account with access.
    The download account need not be the user whose save will be transferred.
 2. Highlight the demo on HOME and press **+** to see its version. This project
-   tested **1.0.0 from the US eShop**. Other regions, full-game editions and
-   versions need compatibility testing; US-only compatibility is not established.
+   tested **1.0.0 from the US eShop**. Working cases have also been reported for
+   the **Japanese demo**, **UK demo** and **US full game**, without exact version
+   or feature details. These reports have not been independently reproduced by
+   the maintainer. This guide follows the demo reference workflow.
 3. On both consoles, link the intended save user to the same Nintendo Account.
    On Switch 1, use the online-capable system environment described above.
 4. On Switch 1, start the demo as the user whose save you will transfer, then

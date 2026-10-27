@@ -10,7 +10,7 @@ Changes include clearer prebuilt-save installation, corrected account/networking
 and compatibility guidance, console screenshots, and 0BSD licensing (no credit
 required for project-owned code and documentation). General save tools remain
 accessible; original starter validation and release infrastructure are separated
-under `maintainer/`. Other game editions still need compatibility testing.
+under `maintainer/`.
 
 ## Main download: Seedsow-Lua-Editor-Save.zip
 
@@ -31,8 +31,12 @@ recovery slots and a backup intact.
 The ready-made starter contains the editor, recovery entries and two examples.
 Personal account identifiers, calibration, reports, sessions and personal
 programs are excluded. Portable JKSV restore metadata has blank personal fields.
-Tested reference: **Seedsow Lullaby demo 1.0.0 from the US eShop**. Other regional
-demos, the full game and other versions remain untested, not proven incompatible.
+Tested reference: **Seedsow Lullaby demo 1.0.0 from the US eShop**.
+**Compatibility update (2026-10-27):** working cases have also been reported by
+users for the **Japanese demo**, **UK demo** and **US full game**. These have not
+been independently reproduced by the maintainer; exact versions and feature
+coverage were not recorded. Other configurations remain untested, not proven
+incompatible. See the [current compatibility notes](https://github.com/DialingSpoon527/seedsow-lua-editor/blob/main/docs/compatibility.md).
 
 The matching Nintendo Account is required for the save users in the official
 transfer, not inherently for downloading the demo. Both consoles need Nintendo

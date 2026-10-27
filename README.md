@@ -24,7 +24,8 @@ availability.
 homebrew and can complete Nintendo's online save transfer.** Your Switch 2 does
 not need to be modded. A Switch 2 alone cannot perform the initial JKSV restore.
 
-1. Have the same Seedsow Lullaby demo edition installed on both consoles. Link
+1. Have the same Seedsow Lullaby edition installed on both consoles. The demo is
+   the tested reference; see the compatibility reports below for other editions. Link
    the intended save user on each console to the **same Nintendo Account**.
    The account used to download the demo need not itself be that save user.
 2. [Download **Seedsow-Lua-Editor-Save.zip**](https://github.com/DialingSpoon527/seedsow-lua-editor/releases/latest/download/Seedsow-Lua-Editor-Save.zip).
@@ -59,7 +60,8 @@ Once installed, editing, saving and running Lua require no Nintendo connection.
 | Status | Configuration | What is established |
 | --- | --- | --- |
 | Tested | Demo 1.0.0 obtained from the US eShop; Switch 1 and Switch 2 | Console editing, save/reload after a full restart, and the original PC/controller upload path worked on hardware. |
-| Plausible, untested | Other regional demos, full game, other game versions | Not established as compatible or incompatible. The US copy is a tested reference, not a proven requirement. |
+| Reported working by users | Japanese demo, UK demo, US full game | Working cases reported as of 2026-10-27; not independently reproduced by the maintainer. Exact versions and feature coverage were not recorded. |
+| Plausible, untested | Other regions, editions and game versions without reports | Not established as compatible or incompatible. The US demo is a tested reference, not a requirement. |
 | Local checks only | Current PC/Pi packaging and alongside-editor update | Automated checks pass; a fresh hardware trial is pending. |
 | Cannot complete this installation route | Stock Switch 1 for JKSV restore; source unable to contact Nintendo for official transfer | These block particular installation steps, not Lua execution in an already-installed editor. |
 
