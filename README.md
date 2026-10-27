@@ -30,9 +30,10 @@ not need to be modded. A Switch 2 alone cannot perform the initial JKSV restore.
 2. [Download **Seedsow-Lua-Editor-Save.zip**](https://github.com/DialingSpoon527/seedsow-lua-editor/releases/latest/download/Seedsow-Lua-Editor-Save.zip).
    **It is already built.** You do not need Python, a clean autosave, developer
    hashes, the source bundle or a Raspberry Pi.
-3. On Switch 1, start **New Game**, hold **R** for a while to fast-forward, then
-   release **R** and press **ZL** to make the first save. **JKSV will not recognize
-   the game's save until you do this.** Close the game, use **JKSV** to back up
+3. On Switch 1, start **New Game** and hold **R** to skip until you reach normal
+   dialogue. Release **R**, press **ZL** to open the **save menu**, then choose an
+   empty slot and save. **JKSV will only recognize the game for that user after
+   you have made at least one save.** Close the game, use **JKSV** to back up
    that user's save, then restore the downloaded ZIP. Start the demo and load
    **editor slot 1**.
 4. Close the game. On both consoles, use **System Settings > Data Management >

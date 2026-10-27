@@ -2,13 +2,17 @@
 
 ## The demo does not appear in JKSV
 
-Make a save inside the game first. On Switch 1, start the demo as the intended
-save user, choose **New Game**, and hold **R** for a while to fast-forward through
-the opening dialogue. Release **R**, then press **ZL** to make a save and wait
-for it to finish. Close the game and reopen JKSV under the same user.
+Make at least one save inside the game first:
 
-JKSV only recognizes the game's save after that first save has been made.
-Reaching the title screen alone is not enough. Then continue with
+1. On Switch 1, start the demo as the intended save user and choose **New Game**.
+2. Hold **R** to skip until you reach normal dialogue, then release **R**.
+3. Press **ZL** to open the **save menu**.
+4. Choose an empty slot, confirm **Save**, and wait for saving to finish.
+5. Close the game and reopen JKSV under the same user.
+
+**JKSV will only recognize the game after at least one save has been made for
+that user.** Reaching the title screen or opening the save menu alone is not
+enough. Then continue with
 [backing up the demo](01-console-install.md#4-open-jksv-and-back-up-the-demo).
 
 ## The Windows app does not open
