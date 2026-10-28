@@ -112,8 +112,8 @@ including line movement, scrolling and a visible insertion cursor. Older
 installations can add it in a fresh user slot using the [update guide](docs/04-updates-recovery.md).
 The current fresh-save build was reported working on console on 2026-10-27.
 That report does not establish a complete regression pass for every feature.
-These changes await release publication; the existing released download still
-contains the earlier editor.
+Release 0.1.3 includes this editor in the prepared Switch save. Existing
+installations can keep their programs and use the update methods linked above.
 
 ## Optional uploads from a computer
 

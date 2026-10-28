@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 0.1.3 - 2026-10-27
 
 - Record the user's successful console report for the current fresh-save build
   on 2026-10-27; detailed feature coverage and new PC/Pi trials remain unrecorded.

@@ -129,8 +129,8 @@ It requires no personal token or access to a Windows credential store. Update
 `main`, then tag that reviewed commit:
 
 ```powershell
-git tag v0.1.2
-git push origin v0.1.2
+git tag v0.1.3
+git push origin v0.1.3
 ```
 
 Use the actual new version for later releases; do not move a published tag.
