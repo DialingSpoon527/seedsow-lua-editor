@@ -1,5 +1,22 @@
 # Beginner guide: get the editor save onto Switch 2
 
+> [!IMPORTANT]
+> **Firmware checkpoint — 2026-10-27:** this preparation guide targets
+> **23.0.1 on both Switch 1 and Switch 2**, while it is the latest firmware.
+> Nintendo requires current firmware for the official save transfer.
+> **If a newer firmware has been released, stop before updating and get updated
+> project guidance.** A later update may change the future filesystem (FS)
+> preparation path even if this Lua editor continues to run.
+> On Switch 1, check that your CFW and bootloader support 23.0.1 before updating.
+>
+> **Accounts:** add or use a user on each console linked online to the **same
+> Nintendo Account**. These are the users whose game save will be transferred.
+
+Version sources, checked 2026-10-27:
+[Switch 1](https://www.nintendo.com/au/support/articles/system-update-information-for-nintendo-switch/),
+[Switch 2](https://www.nintendo.com/au/support/articles/system-update-information-for-nintendo-switch-2/).
+See [Nintendo's save-transfer requirements](https://www.nintendo.com/en-gb/Support/Troubleshooting/How-to-Transfer-Your-Save-Data-To-a-Nearby-Console-1549113.html).
+
 ## Read this first
 
 **A modded/hacked Switch 1 is required.** It must already be able to open the
@@ -16,42 +33,64 @@ The editor save is already made for you.
 
 ## What to have ready
 
+Choose a transfer route before downloading the game:
+
+| Route | Switch 1 source | Switch 2 target | Nintendo Switch Online membership |
+| --- | --- | --- | --- |
+| **Nearby/local save transfer — beginner path below** | Demo | Same demo | **Not required** |
+| **NSO Save Data Cloud — reported alternative** | Demo or full game | **Full game required** | **Required** |
+
+**You do not need the full game for nearby/local transfer.** The demo works on
+both consoles. **Local does not mean offline:** both consoles still need an
+internet connection to Nintendo's servers and matching Nintendo Account users.
+The cloud route also needs Nintendo connectivity and the same account.
+
+The demo/full-game cloud route was reported by users on 2026-10-27; the maintainer
+has not independently reproduced it. See [step 7](#7-transfer-the-save-to-switch-2)
+for both methods and [compatibility evidence](compatibility.md#transfer-routes)
+for the limits of that report.
+
 - Your hacked Switch 1, including its microSD card and working homebrew menu.
 - Your Switch 2.
 - A computer and a way to read the Switch 1's microSD card on it. A microSD card
   reader or SD adapter is enough. The file-copy steps below use Windows names.
-- The same Seedsow Lullaby edition installed on both consoles. The tested
+- For the nearby route, the same Seedsow Lullaby edition installed on both consoles. The tested
   reference used in this guide is **demo 1.0.0 obtained from the US eShop**.
   There are also user-reported working cases for the **Japanese demo**,
-  **UK demo** and **US full game**; see [compatibility notes](compatibility.md)
+  **EU demo** and **US full game**; see [compatibility notes](compatibility.md)
   for the distinction between reference testing and community reports.
 - The same Nintendo Account linked to the user you will use on each console.
 - Internet access on both consoles for the save-transfer step.
 
 The matching account is for the **save users and Nintendo's transfer process**.
 It is not inherently required that this account downloaded the demo. Each selected
-user must be able to launch the installed demo.
+user must be able to launch the installed software.
 
 ### Check the source setup before restoring
 
-The documented workflow uses an **online-capable sysNAND/sysMMC** (the original
-console's internal system storage) with a real linked Nintendo Account. The
-restored save must be in the same system environment used for transfer. An
-isolated **emuMMC** (a separate system environment usually on the SD card) normally
-blocks Nintendo servers and cannot complete the official transfer in that state.
-Restoring into emuMMC does not also restore into sysMMC.
+**Use sysNAND/sysMMC, not emuNAND/emuMMC, for this installation.** All Switch 1
+stages use the console's internal system storage. **Stock is also sysNAND**;
+you only need to boot **CFW on sysNAND to use JKSV**. Download the game, link the
+account, check the editor and transfer or upload the save in stock mode.
+The boot mode changes while the underlying saves stay the same:
 
-This describes the workflow, **not a technical requirement that the transfer
-feature itself run on physical NAND**. If you only have an isolated emuMMC,
-understand your setup before proceeding rather than taking it online blindly.
+| Stage on Switch 1 | Boot mode |
+| --- | --- |
+| Download the demo, link the account and make the first save | **Stock sysMMC**, without CFW |
+| Back up and restore with JKSV | **CFW sysMMC**, on that same internal storage |
+| Check the editor, transfer locally or upload an NSO cloud backup | **Stock sysMMC**, without CFW |
+
+An **emuNAND/emuMMC** is a separate system environment, usually on the SD card,
+with separate saves. Restoring into emuMMC does not put the editor into the
+stock sysNAND save you will transfer. Your bootloader's profile names may differ;
+choose **CFW sysNAND/sysMMC** for JKSV, then return to **stock sysNAND/sysMMC**.
 CFW on sysNAND is not ban-proof; an unbanned console is not a guarantee against
 a future ban.
 
 Both consoles need Nintendo connectivity and account verification for the initial
-transfer. **Blocking Nintendo servers beforehand can prevent it.** Nintendo also
-specifies current system software for transfer; if prompted to update, decide
-whether to proceed before continuing. This project cannot guarantee ongoing
-transfer availability. After installation, the editor runs without Nintendo
+transfer. **Blocking Nintendo servers beforehand can prevent it.** Follow the
+firmware checkpoint above before accepting an update. This project cannot
+guarantee ongoing transfer availability. After installation, the editor runs without Nintendo
 connectivity. See [Nintendo's requirements](https://www.nintendo.com/sg/support/switch/secondary/transfer.html)
 and [compatibility notes](compatibility.md).
 
@@ -60,16 +99,33 @@ the starter over programs you want to keep.
 
 ## 1. Get the demo on both consoles
 
-1. On both consoles, make sure you can open the same Seedsow Lullaby **demo**.
+These steps follow the nearby demo-to-demo route. For the optional **NSO cloud
+route**, install the **full game on Switch 2** instead; Switch 1 can use the demo
+or full game. If using the full game on Switch 1, use that game's own save and
+JKSV backup entry throughout steps 1–6. Check the [compatibility notes](compatibility.md)
+before restoring to another edition; the prepared ZIP retains the reference
+demo's metadata. A cloud-transfer report does not change that restore target.
+
+### 1.A — Get the demo on Switch 2
+
+1. On Switch 2, make sure you can open the Seedsow Lullaby **demo**.
    If needed, obtain it through Nintendo eShop using an account with access.
    The download account need not be the user whose save will be transferred.
-2. Highlight the demo on HOME and press **+** to see its version. This project
+2. Add or use the intended save user and link it online to the same Nintendo
+   Account you will use for that user's save on Switch 1.
+3. Check that this user can open the demo, then close it.
+
+### 1.B — Get the demo and make the first save on Switch 1
+
+1. Boot Switch 1 into **stock sysNAND/sysMMC, without CFW**.
+2. Download the same demo edition as on Switch 2 if needed. Highlight it on HOME
+   and press **+** to see its version. This project
    tested **1.0.0 from the US eShop**. Working cases have also been reported for
-   the **Japanese demo**, **UK demo** and **US full game**, without exact version
+   the **Japanese demo**, **EU demo** and **US full game**, without exact version
    or feature details. These reports have not been independently reproduced by
    the maintainer. This guide follows the demo reference workflow.
-3. On both consoles, link the intended save user to the same Nintendo Account.
-   On Switch 1, use the online-capable system environment described above.
+3. Add or use the intended save user and link it online to the same Nintendo
+   Account used for the receiving user on Switch 2.
 4. On Switch 1, start the demo as the user whose save you will transfer, then
    choose **New Game**.
 5. Hold **R** to skip through the opening until you reach normal dialogue.
@@ -91,8 +147,11 @@ screen or opening the save menu is not enough.
 2. Download [**Seedsow-Lua-Editor-Save.zip**](https://github.com/DialingSpoon527/seedsow-lua-editor/releases/latest/download/Seedsow-Lua-Editor-Save.zip).
    This is the already-built editor save. **Leave this file as a ZIP.**
 
-Ignore the separate companion/source ZIP for now. You only need the two files
-above for the initial installation.
+You only need the two files above for the initial installation.
+**Seedsow-PC-Companion-and-Source-VERSION.zip** is the optional computer app and
+developer tools; extract that on a computer if you need it later. Older releases
+call it `seedsow-lua-editor-VERSION.zip`. GitHub's **Source code** downloads are
+also developer files. The file you restore with JKSV is the **Switch save ZIP**.
 
 ## 3. Put JKSV on the Switch 1 SD card
 
@@ -115,13 +174,16 @@ above for the initial installation.
 
 6. Eject the SD card in Windows, remove it from the reader, and put it back into
    the powered-off Switch 1.
-7. Boot the same homebrew-capable system environment you will use for the save transfer.
 
 You have installed JKSV. You have not restored the editor save yet.
 
 ## 4. Open JKSV and back up the demo
 
-If the demo does not appear in JKSV, go back to step 1 and make the first
+0. Boot Switch 1 into **CFW sysNAND/sysMMC**. This uses the same internal storage
+   as step 1.B, with CFW loaded so homebrew can run. **JKSV cannot run in stock
+   mode.** Do not switch to an emuMMC that has a separate save.
+
+If the demo does not appear in JKSV, go back to step 1.B and make the first
 in-game save: **New Game > hold R until normal dialogue > release R > ZL to open
 the save menu > choose an empty slot and save**. Close the game, then reopen JKSV
 under that same user.
@@ -163,7 +225,7 @@ JKSV's buttons are shown at the bottom of its screen. In the current version,
    ```
 
 5. Leave your original backup in place. Eject the card in Windows, return it to
-   the powered-off Switch 1, and boot back into that same system environment.
+   the powered-off Switch 1, and boot back into **CFW sysNAND/sysMMC** for JKSV.
 
 If you cannot find the game folder, search the SD card for the name of your
 new backup. The folder containing that backup is where the downloaded ZIP
@@ -180,8 +242,10 @@ have the backup from step 4 before continuing.
    the name without the `.zip` ending.
 4. Press **Y** for **Restore**, then follow the on-screen confirmation. If it
    asks you to hold a button, keep holding it until the confirmation completes.
-5. Wait until the restore finishes. Exit JKSV.
-6. Start Seedsow as the same user. Open **Load** and select **slot 1**, whose
+5. Wait until the restore finishes. Exit JKSV and fully turn off Switch 1.
+6. Boot back into **stock sysNAND/sysMMC, without CFW**. The restored save is
+   still on that same internal storage. Start Seedsow as the same user. Open
+   **Load** and select **slot 1**, whose
    title includes **LUA EDITOR**.
 7. Confirm that the editor screen appears. Its first launch registers the
    editor and backup entries. Close the game normally before transferring.
@@ -190,12 +254,22 @@ The starter contains recovery slots 1-3 and examples in slots 4 and 5. It has
 portable JKSV restore metadata with personal account fields blanked, rather
 than someone else's account details.
 
-## 7. Move the demo save to Switch 2
+## 7. Transfer the save to Switch 2
+
+Choose **one** method below. Both use Nintendo's services and the same Nintendo
+Account for the save user on each console. Return Switch 1 to **stock sysMMC**
+after the JKSV restore and editor check in step 6.
+
+### 7.A — Nearby/local transfer: demo on both consoles
+
+**No full-game purchase or NSO membership is required.** This is the beginner
+path used throughout the guide. It still requires internet access to Nintendo's
+servers on both consoles.
 
 Keep the consoles near each other, with both connected to the internet and
 the same Nintendo Account linked to the intended save user on each console.
-The source must be in the environment where you restored the save, with Nintendo
-servers reachable; an isolated emuMMC with blocked servers cannot complete this.
+Switch 1 should now be in **stock sysNAND/sysMMC**, using the internal save that
+JKSV restored under CFW. Nintendo servers must be reachable.
 
 1. On **Switch 1**, open **System Settings > Data Management > Transfer Your
    Save Data > Send Save Data to Another Console**. Select the intended user
@@ -211,9 +285,42 @@ save transfer, not the full system transfer used when setting up a new console.
 Availability depends on the installed software and current transfer support.
 [Official transfer instructions](https://www.nintendo.com/en-gb/Support/Troubleshooting/How-to-Transfer-Your-Save-Data-To-a-Nearby-Console-1549113.html).
 
+### 7.B — NSO Save Data Cloud: full game on Switch 2
+
+**Reported working:** upload the editor save from either the **demo or full game
+on Switch 1**, then download it for the **full game on Switch 2**. The receiving
+Switch 2 must have the full game for this route; the demo alone is insufficient.
+This is a community report, not a separate maintainer-reproduced test. Exact
+regional/version combinations were not recorded.
+
+You need an active **Nintendo Switch Online membership**, internet access and
+the same Nintendo Account for the save user on both consoles. Keep the original
+JKSV backup. Cloud uploads can replace an existing cloud backup, and downloads
+replace the target game's save; preserve anything you want to keep first.
+
+1. After checking the restored editor on Switch 1, fully close Seedsow.
+2. On **Switch 1**, open **System Settings > Data Management > Save Data Cloud**.
+   Select the intended user and the Seedsow entry containing the restored editor
+   save, then choose **Back Up Save Data**. Wait for the upload to finish and
+   check its backup time before proceeding.
+3. On **Switch 2**, ensure the **full game** is installed and playable by the
+   user linked to that same Nintendo Account. Close the game if it is open.
+4. Open **System Settings > Data Management > Save Data Cloud**, select that
+   user and the Seedsow full-game entry, then choose **Download Save Data**.
+   Confirm that you are downloading the backup just uploaded from Switch 1.
+5. Wait for the download to finish, then continue to step 8 using the **full
+   game** on Switch 2.
+
+Cloud backup copies the save through Nintendo's servers; it does not remove the
+source save like the nearby transfer does. Nintendo documents the general
+[backup](https://www.nintendo.com/en-gb/Support/Troubleshooting/How-to-Back-Up-Save-Data-on-Nintendo-Switch-2-and-Nintendo-Switch-1434307.html)
+and [Switch 2 download](https://www.nintendo.com/en-gb/Support/Troubleshooting/How-to-Download-Save-Data-Cloud-Backups-on-Nintendo-Switch-2-2879088.html)
+steps. The specific demo-to-full-game behavior comes from the community report.
+
 ## 8. Check Switch 2, then stop here if you only want to future-proof
 
-1. On Switch 2, start the same demo as the receiving user.
+1. On Switch 2, start Seedsow as the receiving user: the **demo** for the demo
+   nearby-transfer route, or the **full game** for the NSO cloud route.
 2. Open **Load** and choose **slot 1**. The editor should appear.
 3. Fully close the game with **HOME > X > Close**. Start it again and load
    **slot 1** once more. This checks that the editor remains installed.

@@ -12,7 +12,7 @@ and console slot 2.
 1. Open **START WINDOWS.cmd**. Confirm that the Pi is reachable and its
    controller is connected as **Player 1**.
 2. On the console, load **slot 2**. Confirm **PC INPUT: 0 / ? bytes**.
-3. In Windows, select **Send a file**, then **New proof**.
+3. In Windows, select **Optional: send files**, then **New example**.
 4. Keep **Lua launch slot** selected and choose a free user slot, for example
    **20**. Publishing replaces the destination slot and a file with the chosen
    filename; use a fresh filename and slot if you want to retain the old program.
@@ -61,7 +61,7 @@ editor does not repair the format of a raw save file you write. The limit is
 
 - Start with **Normal**. Try **Slow** if packets fail. **Fast** has less timing
   margin and needs testing with your hardware.
-- A tiny proof takes around a minute. A 5.6 KB side-editor update can take
+- A tiny example takes around a minute. A 5.6 KB editor update can take
   roughly 25–36 minutes. Progress and remaining time are estimates.
 - **Stop sending** stops Pi transmission. Hold **L** on the console to leave
   the receiver. Loading slot 2 again gives a fresh zero count.

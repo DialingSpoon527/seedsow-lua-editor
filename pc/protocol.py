@@ -52,14 +52,3 @@ def macro(packet,prepare=.05,hold=.10):
 def seconds(packet,prepare=.05,hold=.10):
     # Include the macro interpreter's observed delay at command boundaries.
     return 1.5+2*len(packet)*(prepare+hold+.04)
-
-def keyboard_text(source,limit=2048):
-    if isinstance(source,str):source=source.encode('utf-8')
-    out=[]
-    for byte in source:
-        if byte in (34,92):out.append('\\'+chr(byte))
-        elif 32<=byte<=126:out.append(chr(byte))
-        else:out.append('\\%03d'%byte)
-    result='local f=assert(loadstring("'+''.join(out)+'"));setfenv(f,getfenv());return f(...)'
-    if len(result)>limit:raise ValueError('This source exceeds one keyboard entry; use multiple edits or framed input.')
-    return result

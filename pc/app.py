@@ -15,7 +15,6 @@ from tkinter import filedialog, messagebox, ttk
 from client import BridgeClient, load_settings, save_settings, settings_path, upload_request
 
 ROOT = Path(__file__).resolve().parent.parent
-VERSION = '0.1.2'
 
 
 class App:
@@ -42,8 +41,8 @@ class App:
         style.configure('TButton',padding=(10,6))
         frame = ttk.Frame(root,padding=20)
         frame.pack(fill='both',expand=True)
-        ttk.Label(frame,text='Seedsow Lua Editor',style='Title.TLabel').pack(anchor='w')
-        ttk.Label(frame,text='Install once. Write Lua on your console. Optional uploads from Windows.',style='Hint.TLabel').pack(anchor='w',pady=(3,12))
+        ttk.Label(frame,text='Seedsow PC Companion',style='Title.TLabel').pack(anchor='w')
+        ttk.Label(frame,text='Optional computer tools. Install the Switch editor using the separate save ZIP.',style='Hint.TLabel').pack(anchor='w',pady=(3,12))
         self.connection_status = tk.StringVar(value='The console editor works on its own. A Pi connection is optional for PC uploads.')
         ttk.Label(frame,textvariable=self.connection_status,wraplength=1000).pack(anchor='w',pady=(0,12))
         self.tabs = ttk.Notebook(frame)
@@ -119,7 +118,7 @@ class App:
         self.label(page,'Choose a file or write Lua here')
         bar = ttk.Frame(page)
         bar.pack(fill='x',pady=(0,8))
-        for title,fn in [('Open file…',self.open_file),('New proof',self.quick_proof),('Blue animation',self.demo),('Save on PC…',self.save_file)]:
+        for title,fn in [('Open file…',self.open_file),('New example',self.quick_proof),('Blue animation',self.demo),('Save on PC…',self.save_file)]:
             ttk.Button(bar,text=title,command=fn).pack(side='left',padx=(0,6))
         self.filename = tk.StringVar(value='pc-proof.lua')
         self.mode = tk.StringVar(value='Lua launch slot')
@@ -154,7 +153,7 @@ class App:
                   'No backup-building step or Pi is needed. See the guide for account and online-transfer requirements.')
         row = ttk.Frame(page)
         row.pack(fill='x',pady=(0,8))
-        ttk.Button(row,text='Download prepared save',command=lambda:webbrowser.open(
+        ttk.Button(row,text='Download Switch save ZIP',command=lambda:webbrowser.open(
             'https://github.com/DialingSpoon527/seedsow-lua-editor/releases/latest/download/Seedsow-Lua-Editor-Save.zip')).pack(side='left')
         ttk.Button(row,text='Step-by-step installation',command=lambda:self.open_doc('01-console-install.md')).pack(side='left',padx=8)
         self.label(page,'Optional: build a custom compatible save')
@@ -170,16 +169,16 @@ class App:
         ttk.Button(page,text='Build installation ZIP',command=self.build_installer).pack(anchor='w')
         ttk.Separator(page).pack(fill='x',pady=10)
         self.label(page,'Build an editor update for another slot')
-        self.hint(page,'This creates a small Lua upload from your installed editor base and the source in this repo. '
+        self.hint(page,'Build an update for an existing installation using its retained editor base. '
                   'Upload it to a fresh slot; keep original slots 1–3 and your last working version. '
-                  'The new version still relies on the base loader. Hardware testing of this side editor is pending.')
+                  'Fresh save builds already put the current editor in slot 1.')
         self.update_slot = tk.StringVar(value='30')
         row = ttk.Frame(page)
         row.pack(fill='x')
         ttk.Label(row,text='New editor slot').pack(side='left')
         ttk.Entry(row,textvariable=self.update_slot,width=6).pack(side='left',padx=10)
         ttk.Button(row,text='Build update & open for sending',command=self.build_update).pack(side='left')
-        ttk.Button(page,text='Update & recovery guide',command=lambda:self.open_doc('04-updates-recovery.md')).pack(anchor='w',pady=(6,4))
+        ttk.Button(page,text='Console update methods & recovery',command=lambda:self.open_doc('04-updates-recovery.md')).pack(anchor='w',pady=(6,4))
         self.build_info = tk.StringVar(value='Generated save ZIPs and updates are private build outputs, excluded from Git and source releases.')
         ttk.Label(page,textvariable=self.build_info,wraplength=860,style='Hint.TLabel').pack(anchor='w',pady=(4,0))
 
@@ -198,14 +197,15 @@ class App:
         self.hint(page,'After an upload, hold L, then load the destination slot from the game’s load menu. '
                   'Stop sending stops the Pi; it does not close the console receiver.')
 
-    def work(self,fn,success=None):
+    def work(self,fn,success=None,failure=None):
         def worker():
             try:
                 result = fn()
                 if success:
                     self.events.put(lambda r=result:success(r))
             except Exception as error:
-                self.events.put(lambda message=str(error):self.show_error(message))
+                handler=failure or self.show_error
+                self.events.put(lambda message=str(error):handler(message))
         threading.Thread(target=worker,daemon=True).start()
 
     def drain(self):
@@ -220,7 +220,6 @@ class App:
         self.root.after(100,self.drain)
 
     def show_error(self,message):
-        self.local_busy = False
         self.status.set(message)
         messagebox.showerror('Seedsow',message,parent=self.root)
 
@@ -308,11 +307,12 @@ class App:
                 self.show_error(str(error))
 
     def quick_proof(self):
+        # A fresh token distinguishes a new upload from an older cached program.
         token = 'PC-'+secrets.token_hex(3).upper()
         source = ("editor.screen('0xff1646d8')\nreturn function(e,p)\n p.label(1,30,30,36,'"+token+
                   " '..e:now())\n p.rect(1,30+e:now()%1100,300,80,20,'0xffffffff')\nend\n").encode()
         self.put_source(source,'pc-proof.lua')
-        self.file_info.set('Proof token: '+token+'. After PC FILE SAVED, load your chosen slot and look for this token and a moving bar.')
+        self.file_info.set('Example ID: '+token+'. After PC FILE SAVED, load your chosen slot and look for this ID and a moving bar.')
 
     def demo(self):
         token = 'PC-'+secrets.token_hex(4).upper()
@@ -358,7 +358,10 @@ class App:
         def complete(info):
             self.local_busy = False
             success(info)
-        self.work(build,complete)
+        def failed(message):
+            self.local_busy = False
+            self.show_error(message)
+        self.work(build,complete,failed)
 
     def build_installer(self):
         def done(info):
@@ -431,7 +434,6 @@ class App:
         if sys.platform=='win32':
             os.startfile(path)
         else:
-            import webbrowser
             webbrowser.open(path.as_uri())
 
     def close(self):

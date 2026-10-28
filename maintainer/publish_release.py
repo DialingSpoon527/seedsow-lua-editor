@@ -24,12 +24,12 @@ from package_release import package
 
 
 def release_assets(info):
-    from package_save import starter_files
+    from package_save import current_starter_files
     source = Path(info['zip'])
     save = ROOT/'dist/Seedsow-Lua-Editor-Save.zip'
     if not save.is_file():
         raise RuntimeError('Prepare dist/Seedsow-Lua-Editor-Save.zip with maintainer/package_save.py first.')
-    reviewed = starter_files(save)
+    reviewed = current_starter_files(save)
     with zipfile.ZipFile(save) as archive:
         if set(archive.namelist())!=set(reviewed) or any(archive.read(n)!=b for n,b in reviewed.items()):
             raise RuntimeError('The save ZIP contains unreviewed files or bytes; it is not cleared for publication.')
@@ -176,7 +176,7 @@ def publish_assets(head, token=None):
     tag = 'v'+version
     token = token or credential()
     base = '/repos/'+REPOSITORY
-    notes = (ROOT/'maintainer/RELEASE_NOTES.md').read_text(encoding='utf-8')
+    notes = (ROOT/'maintainer/RELEASE_NOTES.md').read_text(encoding='utf-8').replace('@@VERSION@@',version)
     existing = request(token,base+'/releases/tags/'+tag,optional=True)
     if existing is None:
         drafts = [r for r in request(token,base+'/releases?per_page=100') if r.get('tag_name')==tag]

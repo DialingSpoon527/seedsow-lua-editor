@@ -3,9 +3,6 @@ import argparse
 import re
 from pathlib import Path
 
-PIN = 'ec4b800ad6c55de96bb6c7f9f84b5bdc59a4c975'
-
-
 def patch(root):
     root = Path(root)
     path = root/'nxbt.py'

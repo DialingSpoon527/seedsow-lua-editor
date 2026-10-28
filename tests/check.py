@@ -40,6 +40,10 @@ class Console:
         self.pending=[]
         self.modal=None
         self.denied=set()
+        self.messages={}
+        self.layers={}
+        self.shapes={}
+        self.message_id=None
         if not directory.exists():directory.mkdir()
         for name,data in files.items():
             (directory/name).write_bytes(data)
@@ -93,10 +97,19 @@ class Console:
 
     def set_filter(self,_,fn):self.filter=fn
 
+    @staticmethod
+    def measure_width(value,size=20):
+        widths={ord('W'):18,ord('i'):4,ord(' '):5,ord('|'):4,ord('['):6,ord(']'):6}
+        return sum(widths.get(byte,10) for byte in value)*size/20
+
     def tag(self,_,p):
         row=dict(p.items()); name=row[1]
         assert name not in (b'httpget',b'httppost',b'file',b'callnative'),name
-        if name==b'var':self.variables[row[b'name']]=row[b'data']
+        if name==b'var':
+            if row.get(b'system')==b'get_message_layer_width':
+                width=self.measure_width(self.messages[self.message_id],self.layers[self.message_id][b'size'])
+                self.variables[row[b'name']]=str(width).encode()
+            else:self.variables[row[b'name']]=row[b'data']
         elif name==b'save':
             assert re.fullmatch(rb'(?:ssedit|ed\d{3})-commit[.]dat',row[b'file'])
             (self.directory/row[b'file'].decode('ascii')).write_bytes(b'STAND-IN NATIVE COMMIT')
@@ -105,6 +118,24 @@ class Console:
         elif name==b'delonpush':self.handlers.pop(int(row[b'key']),None)
         else:
             assert name in (b'chgmsg',b'fontinit',b'font',b'rp',b'print',b'/chgmsg',b'lyprop',b'lydel',b'lyc',b'autosave',b'skip',b'automode',b'flip',b'keyconfig',b'reset'),name
+            if name==b'chgmsg':
+                self.message_id=row[b'id']
+                self.layers.setdefault(self.message_id,{})
+            elif name==b'font' and self.message_id:
+                self.layers[self.message_id].update({k:int(row[k]) for k in (b'width',b'height',b'size')})
+            elif name==b'lyc':
+                self.shapes[row[b'id']]=dict(row)
+            elif name==b'lydel':
+                for items in (self.layers,self.messages,self.shapes):
+                    for key in list(items):
+                        if key==row[b'id'] or key.startswith(row[b'id']+b'.'):del items[key]
+            elif name==b'lyprop' and row[b'id'] in self.layers:
+                self.layers[row[b'id']].update({k:int(row[k]) for k in (b'left',b'top',b'visible') if k in row})
+            elif name==b'lyprop' and row[b'id'] in self.shapes:
+                self.shapes[row[b'id']].update(row)
+            elif name==b'rp' and self.message_id:self.messages[self.message_id]=b''
+            elif name==b'print' and self.message_id:
+                self.messages[self.message_id]=self.messages.get(self.message_id,b'')+row[b'data']
 
     def load(self,slot):
         native=IndexedSave((self.directory/f'save{slot:04d}.dat').read_bytes())
@@ -141,11 +172,20 @@ class Console:
     def reply(self,value):
         self.frame()
         assert self.modal,'No native keyboard request'
-        self.variables[self.modal['textfield'].encode()]=value.encode() if isinstance(value,str) else value
+        value=value.decode('utf-8') if isinstance(value,bytes) else value
+        self.variables[self.modal['textfield'].encode()]=value[:32].encode('utf-8')
         self.modal=None
         self.frame()
 
     def prompt(self,button,value):
+        # Model repeated manual Keyboard + insertions, not a larger native dialog.
+        if button=='keyboard' and len(value)>32:
+            if self.state()[b'hex']:
+                value=''.join(value.split())
+            for start in range(0,len(value),32):
+                self.action(button)
+                self.reply(value[start:start+32])
+            return
         self.action(button)
         self.reply(value)
 
@@ -254,7 +294,8 @@ def check(run):
         fresh.state()[b'focus']=next(i for i,b in fresh.state()[b'buttons'].items() if b[b'name']==b'key' and b[b'value']==b'a')
         fresh.frame(); fresh.frame() # Let the modal-keyboard release debounce expire.
         fresh.key(258); assert fresh.state()[b'buffer']==b'a'
-        fresh.point=(20+89+30,394+10); fresh.touch=1; fresh.frame()
+        button=next(b for _,b in fresh.state()[b'buttons'].items() if b[b'name']==b'key' and b[b'value']==b'b')
+        fresh.point=(button[b'x']+10,button[b'y']+10); fresh.touch=1; fresh.frame()
         assert fresh.state()[b'buffer']==b'ab'
         fresh.frame(); assert fresh.state()[b'buffer']==b'ab'
         fresh.touch=0; fresh.frame()
@@ -296,7 +337,6 @@ def check(run):
         recovery.prompt('filename','ssslot004.ref')
         assert recovery.state()[b'buffer']==b'../outside\n'
         # End-to-end controller packet, including repeated held samples per symbol.
-        sys.path.insert(0,str(ROOT/'experiments/pc_input'))
         from protocol import pack,symbols
         receiver=Console(files,base/'receiver');receiver.load(2)
         assert receiver.state()[b'receive'] is not None

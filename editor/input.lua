@@ -1,4 +1,4 @@
--- Learn physical Pi buttons from held-state APIs, including the game's aliases.
+-- Learn physical controller buttons from held-state APIs, including game aliases.
 local Input={}
 local names={'A','B','X','Y','L','R'}
 local methods={'isDown','isPush'}
@@ -28,8 +28,6 @@ end
 function Input:held(name)
  local row=self.map[name]
  if row then for _,key in ipairs(row.codes) do if active(self.e,row.method,key) then return true end end;return false end
- local fallback={A={258,13},B={257,27},X={259,112},Y={256,113},L={260,116},R={261,117}}
- for _,key in ipairs(fallback[name] or {}) do if active(self.e,'isDown',key) then return true end end
  return false
 end
 function Input:start()

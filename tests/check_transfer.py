@@ -1,4 +1,4 @@
-"""V3 regressions: learn actual aliases, latch errors, and persist PC files."""
+"""Transfer regressions: learn actual aliases, latch errors, and persist PC files."""
 import argparse
 import json
 import math
@@ -75,9 +75,14 @@ def main(run):
         original=c.state()[b'buffer']
         for k in (keys['A'],keys['B'],keys['X'],keys['Y']):c.key(k)
         assert c.state()[b'receive'][b'error'] and c.state()[b'buffer']==original
-        c.key(keys['L']);assert c.state()[b'receive'] is None
+        # A slow next frame must not turn trailing receive buttons into UI input.
+        c.held={keys['L'],keys['Y']};c.frame()
+        assert c.state()[b'receive'] is None
+        c.clock+=1000;c.frame()
+        assert not c.state()[b'running']
+        settle(c)
         c.action('receive');assert c.state()[b'receive'][b'count']==0
-        payload=b'print("V3 WINDOWS FILE PROOF")\n'
+        payload=b'print("WINDOWS FILE CHECK")\n'
         send(c,pack('P020_pc-proof.lua',payload),keys)
         assert c.state()[b'receive'][b'complete'] is True
         assert c.state()[b'slot']==20 and c.state()[b'filename']==b'pc-proof.lua'
@@ -89,7 +94,7 @@ def main(run):
         c.key(keys['L']);assert c.state()[b'receive'] is None
         disk={p.name:p.read_bytes() for p in c.directory.iterdir()}
         reboot=Console(disk,base/'restart',c.metadata);reboot.load(20)
-        assert reboot.state()[b'output'][1]==b'V3 WINDOWS FILE PROOF'
+        assert reboot.state()[b'output'][1]==b'WINDOWS FILE CHECK'
         assert reboot.state()[b'input'][b'valid'] is True
         reboot.load(2);assert not reboot.state()[b'calibrate'] and reboot.state()[b'receive']
         raw=bytes(range(256));send(reboot,pack('F000_binary.dat',raw),keys)
@@ -118,7 +123,7 @@ def main(run):
         'raw data preserves all 256 bytes; checksum failures and editor-slot destinations reject',
         'partial input times out visibly and remains latched',
         'three editor entries and recovery sources remain unchanged']}
-    (run/'v3-checks.json').write_text(json.dumps(result,indent=2)+'\n');print(json.dumps(result,indent=2))
+    (run/'transfer-checks.json').write_text(json.dumps(result,indent=2)+'\n');print(json.dumps(result,indent=2))
 
 if __name__=='__main__':
     p=argparse.ArgumentParser();p.add_argument('run',type=Path);main(p.parse_args().run)

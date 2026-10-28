@@ -31,19 +31,20 @@ jobs:
           python -m pip install -r requirements-dev.txt
           sudo apt-get update -qq
           sudo apt-get install -y xvfb python3-tk
-      - name: Fetch the unchanged reviewed starter
+      - name: Fetch the reviewed native baseline
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          gh release download v0.1.1 --repo "$GITHUB_REPOSITORY" --pattern 'Seedsow-Lua-Editor-Save*' --dir dist
-          echo '3d935a182e7563d0dc19190ff3bd594d6fd21fd32cb3db6451b70c5f620df276  dist/Seedsow-Lua-Editor-Save.zip' | sha256sum --check
+          gh release download v0.1.1 --repo "$GITHUB_REPOSITORY" --pattern 'Seedsow-Lua-Editor-Save*' --dir build/reviewed-starter
+          echo '3d935a182e7563d0dc19190ff3bd594d6fd21fd32cb3db6451b70c5f620df276  build/reviewed-starter/Seedsow-Lua-Editor-Save.zip' | sha256sum --check
       - name: Run regression and packaging checks
         run: |
           python -m unittest discover -s tests -p 'test_*.py' -v
-          python tests/run_checks.py --base dist/Seedsow-Lua-Editor-Save.zip
-          python maintainer/check_starter.py --base dist/Seedsow-Lua-Editor-Save.zip
+          python tests/run_checks.py --base build/reviewed-starter/Seedsow-Lua-Editor-Save.zip
+          python maintainer/check_starter.py --base build/reviewed-starter/Seedsow-Lua-Editor-Save.zip
           xvfb-run -a python tests/smoke_gui.py
           sh -n pi/install.sh
+          python maintainer/package_save.py --base build/reviewed-starter/Seedsow-Lua-Editor-Save.zip
       - name: Publish the tagged version
         env:
           GITHUB_TOKEN: ${{ github.token }}

@@ -1,5 +1,48 @@
 # Changelog
 
+## Unreleased
+
+- Record the user's successful console report for the current fresh-save build
+  on 2026-10-27; detailed feature coverage and new PC/Pi trials remain unrecorded.
+
+- Make the sysNAND requirement explicit: download and transfer in stock mode;
+  use CFW on that same sysNAND only for JKSV. Explain that emuNAND saves are separate.
+
+- Document the reported NSO cloud route from demo or full game to a full-game
+  target on Switch 2. Keep demo-to-demo nearby transfer as the beginner path:
+  no full game or NSO membership required, but Nintendo connectivity is required.
+
+- Add the dated 23.0.1 preparation checkpoint and same-account requirement;
+  separate Switch 2 setup from Switch 1 stock/CFW sysMMC stages. Retain the
+  manual-save requirement before JKSV. Correct the reported demo region to EU.
+- Correct the documented Switch keyboard limit to 32 characters per dialog and
+  enforce it in the recording engine. Longer test edits use separate manual
+  insertions; `textfieldsize` does not change the native keyboard's limit.
+- Tap code to place the cursor using native text measurements. Select the code
+  window with A for D-pad cursor movement and B to leave without deleting text.
+  Show a light left-edge line on hover/focus and a black line while selected.
+- Make the current editor the default in fresh saves, including slots 1 and 3
+  and user-program launchers. Keep alongside updates for existing installations.
+- Move navigation into a full toolbar row, increase text-layer height, and
+  refresh font geometry after modal calibration. Remove redundant button hints.
+- Scope PC build completion/error state to its worker; remove the unused keyboard
+  transfer wrapper and duplicate controller fallback polling.
+- Label the Switch save and optional PC bundle separately; rename the latter
+  `Seedsow-PC-Companion-and-Source-VERSION.zip`. Keep beginner installation first
+  and document keyboard, controller-grid, Pi and save-restore update routes.
+- Replace candidate-source text patching with directly editable Lua modules;
+  freeze and hash the reviewed V3 recovery core separately.
+- Add repeatable `--include-save` packaging for a fresh update slot, preserving
+  every backup member and refusing occupied slots or existing output.
+- Accept enclosing JKSV backup folders for updates and normalize candidate line
+  endings so Windows CRLF does not break reconstruction checksums.
+- Add line-up/down cursor movement, independent line/page scrolling and reliable
+  cursor following to the editor. Long lines follow the cursor horizontally;
+  the preview displays line numbers. Hardware testing is pending.
+- Show a visible `[|]` insertion marker and use standard Switch/game input
+  aliases without mandatory calibration. Keep learned mappings as an optional
+  fallback and retain them on restart.
+
 ## 0.1.2 - 2026-10-26
 
 Maintenance release: the prepared console save is byte-identical to 0.1.1.

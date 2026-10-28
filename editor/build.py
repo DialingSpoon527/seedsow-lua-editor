@@ -16,13 +16,7 @@ sys.path.insert(0, str(ROOT / 'tools'))
 from indexed_save import IndexedSave, Edit, string, u32
 from asb import encode_asb
 from save_globals import replace_fixed_title
-
-
-def core_source():
-    return (b'local W=(function()\n' + (HERE/'storage.lua').read_bytes() + b'\nend)()\n'
-            + b'local Transfer=(function()\n' + (HERE/'transfer.lua').read_bytes() + b'\nend)()\n'
-            + b'local Input=(function()\n' + (HERE/'input.lua').read_bytes() + b'\nend)()\n'
-            + (HERE/'editor.lua').read_bytes())
+from source import core_source, recovery_source
 
 
 def load_backup(path):
@@ -121,25 +115,22 @@ end''' % (name, checksum, lua_config)
                        ('wait', {'time':'0', 'input':'0'}), ('stop', {})])
 
 
-def build(base, output=None, replace_slots=False):
-    base = Path(base).resolve()
-    files = load_backup(base)
-    existing = 'ssseed001.bin' in files
-    if not existing and not replace_slots:
-        raise ValueError('First installation replaces slots 1–3. Back up your saves, then enable '
-                         'the installation checkbox or pass --replace-slots.')
+def install_files(files, legacy=False, build_id=None):
+    """Install one runtime and matching launchers into a copy of compatible files."""
+    files = dict(files)
     template = launcher_template(files)
     caret = template.groups[template.groups[0][3]]
-    core = core_source()
+    core = recovery_source() if legacy else core_source()
     checksum = zlib.adler32(core)
-    build_id = secrets.token_hex(4)
+    build_id = build_id or secrets.token_hex(4)
     entry_label = None
     menu = IndexedSave(files['saveg.dat'])
-    for title in (b'LUA EDITOR V1', b'LUA EDITOR V2', b'LUA EDITOR V3', b'"Yoko, stop!"'):
+    label = b'LUA EDITOR V3' if legacy else b'LUA EDITOR   '
+    for title in (b'LUA EDITOR V1', b'LUA EDITOR V2', b'LUA EDITOR V3', b'LUA EDITOR   ', b'"Yoko, stop!"'):
         if menu.fields.count(title) == 1:
-            if title != b'LUA EDITOR V3':
-                files['saveg.dat'] = replace_fixed_title(files['saveg.dat'], title, b'LUA EDITOR V3')
-            entry_label = 'LUA EDITOR V3'
+            if title != label:
+                files['saveg.dat'] = replace_fixed_title(files['saveg.dat'], title, label)
+            entry_label = label.decode().strip()
             break
     for slot in range(1,121):
         script = f'sed{slot:02d}.asb' if slot <= 3 else f'ss{slot:03d}.asb'
@@ -163,6 +154,16 @@ def build(base, output=None, replace_slots=False):
             files[f'ssslot{slot:03d}.ref'] = f'sscode{slot:03d}.lua\n'.encode()
             for suffix in ('.png', '_s.png'):
                 files[f'save{slot:04d}{suffix}'] = files[f'save0001{suffix}']
+    return files, build_id, entry_label, checksum
+
+
+def build(base, output=None, replace_slots=False, legacy=False):
+    base = Path(base).resolve()
+    files = load_backup(base)
+    if 'ssseed001.bin' not in files and not replace_slots:
+        raise ValueError('First installation replaces slots 1-3. Back up your saves, then enable '
+                         'the installation checkbox or pass --replace-slots.')
+    files, build_id, entry_label, checksum = install_files(files, legacy)
     out = (Path(output) if output else ROOT/'build/installer'/build_id).resolve()
     target = out/'Seedsow-Lua-Editor-Save.zip'
     if target.exists() or (out/'manifest.json').exists():
@@ -171,8 +172,9 @@ def build(base, output=None, replace_slots=False):
     with zipfile.ZipFile(target, 'w', zipfile.ZIP_DEFLATED) as archive:
         for name, data in files.items():
             archive.writestr(name, data)
-    manifest = {'build_id':build_id, 'version':3, 'entry_label':entry_label,
-                'source_sha256':{}, 'input_sha256':hashlib.sha256(base.read_bytes()).hexdigest(),
+    manifest = {'build_id':build_id, 'version':3 if legacy else 4, 'entry_label':entry_label,
+                'runtime_sha256':hashlib.sha256(files['ssedit1.lua']).hexdigest(),
+                'input_sha256':hashlib.sha256(base.read_bytes()).hexdigest(),
                 'runtime_core_adler32':checksum, 'editor_slots':[1,2,3], 'user_slots':[4,120],
                 'console_tested':False, 'save_zip':str(target),
                 'save_files':{n:hashlib.sha256(b).hexdigest() for n,b in files.items()},
@@ -185,10 +187,11 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--base', type=Path, required=True, help='Your own compatible backup ZIP')
     parser.add_argument('--output', type=Path)
-    parser.add_argument('--replace-slots', action='store_true', help='Allow first installation into slots 1–3')
+    parser.add_argument('--legacy', action='store_true', help='Build the frozen V3 compatibility editor instead')
+    parser.add_argument('--replace-slots', action='store_true', help='Allow first installation into slots 1-3')
     args = parser.parse_args()
     try:
-        info = build(args.base, args.output, args.replace_slots)
+        info = build(args.base, args.output, args.replace_slots, args.legacy)
         print(json.dumps({k:info[k] for k in ('build_id','save_zip','entry_label')}, indent=2))
     except (ValueError, KeyError, zipfile.BadZipFile, OSError) as error:
         parser.exit(1, 'Build failed: '+str(error)+'\n')

@@ -6,7 +6,7 @@ that a US copy is required. Region, edition, version, title ID and save layout
 are different facts; matching a name or ID alone is not a successful editor test.
 
 **Community reports, added 2026-10-27:** working cases have also been reported
-for the **Japanese demo**, **UK demo** and **US full game**. These are user
+for the **Japanese demo**, **EU demo** and **US full game**. These are user
 reports, separate from the project's own reference testing. Exact game versions,
 console/firmware combinations, transfer steps and feature coverage were not
 recorded, and the maintainer has not independently reproduced these cases.
@@ -16,8 +16,9 @@ recorded, and the maintainer has not independently reproduced these cases.
 | Status | Configuration | Evidence or limit |
 | --- | --- | --- |
 | Hardware tested | Reference demo on Switch 1 and Switch 2 | Manual editing, wired-keyboard input, saving/publishing, full game restart and reload, and the original Pi controller-upload path worked. |
+| Reported working by user | Current fresh-save editor build | Delivered build reported working on console on 2026-10-27; detailed feature coverage not recorded. |
 | Reported working by users | Japanese demo | Working case reported as of 2026-10-27; exact version and feature coverage not recorded. Not independently reproduced by the maintainer. |
-| Reported working by users | UK demo | Working case reported as of 2026-10-27; exact version and feature coverage not recorded. Not independently reproduced by the maintainer. |
+| Reported working by users | EU demo | Working case reported as of 2026-10-27; exact version and feature coverage not recorded. Not independently reproduced by the maintainer. |
 | Reported working by users | US full game | Working case reported as of 2026-10-27; exact version and feature coverage not recorded. Not independently reproduced by the maintainer. |
 | Plausible, untested | Other regional demos, full-game editions and versions without reports | No region-exclusive requirement has been shown. A related engine or matching catalog entry alone does not prove save compatibility. |
 | Locally tested, hardware pending | Current Windows/Pi packaging and alongside-editor updates | Regression/GUI/packaging checks do not replace a fresh console/Pi installation trial. |
@@ -28,6 +29,31 @@ recorded, and the maintainer has not independently reproduced these cases.
 the same as known broken. Windows/Pi are the implemented optional uploader;
 controller/grid or wired-keyboard use on the console needs neither.
 
+## Transfer routes
+
+| Method | Switch 1 source | Switch 2 target | Requirements and evidence |
+| --- | --- | --- | --- |
+| Nearby/local save transfer | Demo | Same demo | Tested reference route. **No full game or NSO membership needed.** Both consoles must connect to Nintendo's servers. |
+| NSO Save Data Cloud | Demo or full game | **Full game required** | User-reported working as of 2026-10-27, not independently reproduced by the maintainer. Requires an NSO membership and Nintendo connectivity. |
+
+The cloud report establishes a reported route from either source edition to the
+full game on Switch 2, rather than a requirement to buy the full game for all
+transfers. Exact source/target regions and versions were not recorded. Nintendo's
+general cloud instructions do not themselves establish demo-to-full-game
+compatibility. The report does not change the prepared starter's metadata target
+or demonstrate that changing a title ID converts a save.
+
+Both methods require the same Nintendo Account for the source and receiving save
+users. Nearby transfer moves the save off the source; cloud backup/download keeps
+the source copy. Either method can replace an existing target save. Follow the
+[installation guide](01-console-install.md#7-transfer-the-save-to-switch-2)
+for steps and backup precautions.
+
+Sources for Nintendo's general requirements:
+[nearby transfer](https://www.nintendo.com/en-gb/Support/Troubleshooting/How-to-Transfer-Your-Save-Data-To-a-Nearby-Console-1549113.html),
+[cloud backup](https://www.nintendo.com/en-gb/Support/Troubleshooting/How-to-Back-Up-Save-Data-on-Nintendo-Switch-2-and-Nintendo-Switch-1434307.html),
+[cloud download on Switch 2](https://www.nintendo.com/en-gb/Support/Troubleshooting/How-to-Download-Save-Data-Cloud-Backups-on-Nintendo-Switch-2-2879088.html).
+
 ## Nintendo Account and networking
 
 The source and destination **save users** must be linked to the same Nintendo
@@ -37,15 +63,19 @@ must be able to launch the installed software.
 
 Nintendo documents internet connectivity and current system software for save
 transfer. Blocking Nintendo servers beforehand can prevent transfer, even though
-the save moves between nearby consoles. Check any update prompt before choosing
-to proceed; this project does not guarantee future transfer availability.
+the save moves between nearby consoles. The [preparation guide's firmware
+checkpoint](01-console-install.md) currently targets **23.0.1 on both consoles**.
+If a newer version appears, get updated project guidance before updating for
+this preparation route. A future FS preparation path can change independently
+of whether Lua still runs; ongoing transfer availability is not guaranteed.
 See [Nintendo's individual-save transfer requirements](https://www.nintendo.com/sg/support/switch/secondary/transfer.html).
 
-The documented route uses online-capable **sysNAND/sysMMC** because it needs
-Nintendo connectivity and account verification. An isolated **emuMMC** normally
-blocks Nintendo servers and cannot complete the transfer in that state. These
-environments have separate saves. This does not mean the transfer feature has a
-technical physical-NAND requirement. Using CFW on sysNAND is not ban-proof.
+**Use sysNAND/sysMMC, not emuNAND/emuMMC, for this installation.** Download/setup,
+editor checks and either nearby transfer or NSO cloud upload can all be done in
+**stock mode**. Only JKSV backup/restore needs **CFW on that same sysNAND**.
+Stock and CFW sysNAND use the same internal save storage; emuNAND has separate
+saves, so restoring there does not prepare the stock sysNAND save for transfer.
+Using CFW on sysNAND is not ban-proof.
 
 After installation, editing, saving, running Lua and reloading after restarting
 the game require no Nintendo connection. Optional uploads use a PC/Pi LAN link
@@ -56,13 +86,13 @@ and Bluetooth controller input to the console, not Nintendo services.
 | Edition | Application/title ID | Basis |
 | --- | --- | --- |
 | Reviewed demo obtained from US eShop | `010042D022AEA000` | The reviewed starter's JKSV metadata and original project record. This is the current starter target. |
-| Full game, US / UK / Japan catalog entries | `0100EE5021C9E000` | All three catalog entries report this ID. Separately, the US full game has a user-reported working case; this does not establish UK/Japanese full-game compatibility. |
+| Full game, US / GB / Japan catalog entries | `0100EE5021C9E000` | All three catalog entries report this ID. Separately, the US full game has a user-reported working case; this does not establish EU/Japanese full-game compatibility. |
 | Regional demos beyond the reference | Not independently resolved | Dataset demo entries provide eShop NSU IDs and parent full-game IDs, but their own `id` fields are null. Do not substitute the parent's ID. |
 
 Source: [title database documentation](https://github.com/blawar/titledb), checked at
 revision `d424690446eec6f4484209b9a1c067c7f7511398`:
 [US catalog](https://github.com/blawar/titledb/blob/d424690446eec6f4484209b9a1c067c7f7511398/US.en.json),
-[UK catalog](https://github.com/blawar/titledb/blob/d424690446eec6f4484209b9a1c067c7f7511398/GB.en.json),
+[GB catalog](https://github.com/blawar/titledb/blob/d424690446eec6f4484209b9a1c067c7f7511398/GB.en.json),
 [Japan catalog](https://github.com/blawar/titledb/blob/d424690446eec6f4484209b9a1c067c7f7511398/JP.ja.json).
 The recorded demo **NSU IDs** are `70030000022768`, `70030000022769` and
 `70030000022770`, respectively. NSU IDs identify storefront entries; they are

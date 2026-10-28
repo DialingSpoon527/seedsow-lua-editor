@@ -9,34 +9,27 @@ and shared parsers/utilities in [`../tools/`](../tools/README.md). This director
 contains the reviewed original starter and official release machinery only.
 Commands below run from the repository root.
 
-## Layout and migration
+The [code review](CODE_REVIEW.md) records the cleanup, deliberate compatibility
+behavior and outstanding console checks.
 
-| Current path | Role | Previous path |
-| --- | --- | --- |
-| `maintainer/package_save.py` | Validate and package the exact reviewed starter | `tools/package_save.py` |
-| `maintainer/check_starter.py` | Starter privacy, hash, structure and actual-Lua regressions | Starter-specific portion of `tests/run_checks.py` |
-| `maintainer/package_release.py` | Source/companion ZIP allowlist, checksums and manifest | `tools/package_release.py` |
-| `maintainer/publish_release.py` | Git guards, resumable release upload and publication | `tools/publish_release.py` |
-| `maintainer/RELEASE_NOTES.md` | Release-page text used by the publisher | Root `RELEASE_NOTES.md` |
-
-Older published source ZIPs retain their original paths. Follow the documentation
-included in the ZIP you downloaded; the current tree uses the paths above.
-
-## Preserve the original reviewed starter
+## Build the current starter from the reviewed baseline
 
 ```powershell
 python maintainer/package_save.py --base "REVIEWED_STARTER_SAVE.zip"
 python maintainer/check_starter.py --base "REVIEWED_STARTER_SAVE.zip"
 ```
 
-A previously released ready-to-restore save ZIP is valid input. The packager
-accepts only the reviewed native starter state and matching editor core; it
-rejects altered native data rather than publishing someone's personal save.
+A reviewed V3 starter or canonical current starter is valid input. The packager
+validates the historical native baseline, then installs the current runtime
+directly in slots 1-3 and all user launchers. `current_starter_files()` checks
+current assets before reversing the exact generated changes for the historical
+validator. It rejects altered native data and noncanonical launchers.
 It removes all unlisted files, personal programs, calibration, reports and
 sessions, blanks personal metadata fields, and includes only examples 4 and 5.
 It writes `dist/Seedsow-Lua-Editor-Save.zip`, its `.zip.sha256`, and its
 `.manifest.json`. Use `--output` to compare a candidate without replacing local
-release artifacts. Input ZIPs are read only.
+release artifacts. Input ZIPs are read only. Use `--legacy` to reproduce the
+historical V3 artifact instead of upgrading it.
 
 The authoritative `STARTER_HASHES` and reviewed thumbnail hash remain in
 [`package_save.py`](package_save.py). All nine native hashes must match. Every
@@ -57,8 +50,9 @@ Portable JKSV revision-1 metadata remains 86 bytes, beginning with `JKSV` and
 revision 1. Account UID bytes 13-28, timestamp bytes 49-56 and commit ID bytes
 77-84 are zero. It retains the reviewed public title/owner IDs and sizes. Its
 encoder is shared with [the target-aware general utility](../tools/README.md#portable-jksv-metadata),
-but the reviewed target is fixed here. Generated metadata and save member bytes
-must remain identical to the released starter during structural cleanup.
+but the reviewed target is fixed here. Current packaging changes the runtime,
+matching launch scripts and the fixed-width menu label. Target metadata and
+native launcher data retain the reviewed layout and values.
 
 ## Reconstructing from a compatible native backup
 
@@ -75,13 +69,10 @@ It does not require `STARTER_HASHES`. Its output is a private candidate, not
 automatically a reviewed public starter. Only `package_save.py` decides whether
 the result matches the original reviewed state and is cleared for publication.
 
-The retained loader combines `storage.lua`, `transfer.lua`, `input.lua`, and
-`editor.lua`, then validates its Adler-32 checksum at startup. Three recovery
-core/launcher copies provide fallback. User slots retain native seeds and run
-the source selected by their `.ref` files. Alongside-editor updates rely on this
-base; their generated Lua has isolated settings/reports and startup recovery.
-Historical internal V3 labels identify the tested save format, not a requirement
-for users to install earlier public releases. The editor payload is unchanged.
+The historical core is frozen in `editor/recovery_v3.lua`, with its SHA-256 in
+`editor/source.py`. Current main and alongside builds use the same editable Lua
+modules. Each fresh save has three current core/launcher copies for recovery.
+Launchers validate their installed core's Adler-32 at startup.
 
 ## Full validation
 
@@ -107,7 +98,7 @@ With a POSIX shell, also run `sh -n pi/install.sh`.
 python maintainer/package_release.py
 ```
 
-This writes `dist/seedsow-lua-editor-<VERSION>.zip`, a SHA-256 file and member
+This writes `dist/Seedsow-PC-Companion-and-Source-<VERSION>.zip`, a SHA-256 file and member
 manifest. Use `--output PATH` for a review candidate. The ZIP has one top-level
 `seedsow-lua-editor/` folder, with `START WINDOWS.cmd` beside `pc/`, `pi/`,
 `editor/`, `tools/`, `maintainer/`, `tests/`, `docs/` and `examples/`.
@@ -117,6 +108,12 @@ downloaded dependencies and unlisted files. Binary images remain byte-identical.
 Every member and the archive are checked after writing. The separate installer
 ZIP stays flat with 274 save files, including `.nx_save_meta.bin`; it does not
 contain the repository or an enclosing directory. Verify both layouts.
+
+For the next release, keep the beginner Switch installation first in the release
+notes. Label the Switch save and PC companion as separate downloads using their
+full filenames. Link the on-console update methods for existing users after the
+first-install steps. The [release notes](RELEASE_NOTES.md) are the working draft;
+replace their pending hardware status only after a console trial.
 
 Do not add a whole archived workspace to the repository. Custom installations
 made from personal backups, generated outputs and connection files stay private.
@@ -128,7 +125,7 @@ made from personal backups, generated outputs and connection files stay private.
 The [release workflow](../.github/workflows/release.yml) publishes a pushed
 `vMAJOR.MINOR.PATCH` tag using GitHub Actions' short-lived repository token.
 It requires no personal token or access to a Windows credential store. Update
-`VERSION`, the PC version label, release notes and changelog, commit and push
+`VERSION`, release notes and changelog, commit and push
 `main`, then tag that reviewed commit:
 
 ```powershell
@@ -137,12 +134,11 @@ git push origin v0.1.2
 ```
 
 Use the actual new version for later releases; do not move a published tag.
-The workflow downloads the reviewed 0.1.1 starter and checks its fixed ZIP hash,
-runs unit/Lua/starter/GUI/Pi checks, packages the new source, and uses the same
-draft/resume/published-asset guards as the local publisher. The unchanged starter
-is uploaded byte-for-byte with its existing checksum and manifest. A future
-console-payload release must separately review and update that baseline; this
-maintenance workflow does not silently rebuild or retarget it.
+The workflow downloads the reviewed 0.1.1 baseline and checks its fixed ZIP hash,
+runs unit/Lua/starter/GUI/Pi checks, then packages the current main-editor save
+and PC source bundle. The publisher validates both archives before uploading.
+The baseline is an input fixture, not the new Switch download. Hardware results
+must be recorded before releasing a new console payload.
 
 CI publication requires a matching tag event, `VERSION`, checked-out SHA, remote
 tag and a commit already on `main`. It does not push branch changes. The workflow
@@ -152,8 +148,8 @@ failed draft can be resumed by rerunning the workflow without changing the tag.
 
 ### Alternative: publish from a signed-in local terminal
 
-Prepare the reviewed save ZIP above, choose a new version in `VERSION` and the
-PC version label, update the [release notes](RELEASE_NOTES.md) and changelog,
+Prepare the current save ZIP above, choose a new version in `VERSION`,
+update the [release notes](RELEASE_NOTES.md) and changelog,
 commit the source to `main`, then use a regular signed-in terminal:
 
 ```powershell

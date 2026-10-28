@@ -116,7 +116,7 @@ class Bridge:
 
     def calibration(self):
         program = '2.0s\n'+''.join(b+' 1.2s\n1.0s\n' for b in ('A','B','X','Y','L','R'))+'2.0s\n'
-        return self._start(program, {'filename':'V3 input calibration', 'bytes':0, 'started':time.time(),
+        return self._start(program, {'filename':'Input calibration', 'bytes':0, 'started':time.time(),
                     'estimated_seconds':18, 'state':'calibrating', 'backend':'controller',
                     'success_state':'calibration inputs sent',
                     'success_note':'Check that the console shows PC INPUT: 0 / ? bytes.'}, 45)

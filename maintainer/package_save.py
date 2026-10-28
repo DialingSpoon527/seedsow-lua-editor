@@ -10,11 +10,14 @@ import json
 import re
 import sys
 import zipfile
+import zlib
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0,str(ROOT/'editor'))
-from build import core_source, bootstrap, load_backup
+from build import recovery_source, bootstrap, load_backup, install_files
+from source import core_source as current_core
+from save_globals import replace_fixed_title
 from indexed_save import IndexedSave, Edit, string
 from asb import decode_asb
 from jksv_metadata import portable_account_metadata
@@ -46,11 +49,15 @@ def portable_metadata():
 
 
 def starter_files(base):
-    files = load_backup(base)
+    return reviewed_files(load_backup(base))
+
+
+def reviewed_files(files):
+    """Validate the historical baseline before selecting public members."""
     for name,expected in STARTER_HASHES.items():
         if name not in files or hashlib.sha256(files[name]).hexdigest()!=expected:
             raise ValueError('Not the reviewed starter state: '+name+'. Personal backups cannot be published by this tool.')
-    core = core_source()
+    core = recovery_source()
     if any(files.get(f'ssedit{i}.lua')!=core for i in (1,2,3)):
         raise ValueError('The starter editor core must match the release source.')
     template = IndexedSave(files['save0001.dat'])
@@ -73,7 +80,6 @@ def starter_files(base):
         match = re.search(r'build_id="([0-9a-f]{8})"',text)
         if not match:
             raise ValueError('Missing launcher build identifier.')
-        import zlib
         if launch!=bootstrap(slot,zlib.adler32(core),match[1]):
             raise ValueError('Unexpected launcher code in '+script)
         result[name] = files[name]
@@ -101,8 +107,43 @@ def starter_files(base):
     return result
 
 
-def package_save(base,output=None):
-    files = starter_files(base)
+def current_starter_files(base):
+    """Derive a fresh editor from the strictly reviewed native baseline.
+
+    For a current package, check its generated assets and reverse only the
+    title/core/launcher changes before running the original hash validator.
+    """
+    files = load_backup(base)
+    core = current_core()
+    legacy = recovery_source()
+    current = files.get('ssedit1.lua') == core
+    normalized = dict(files)
+    if current:
+        if any(files.get(f'ssedit{i}.lua') != core for i in (1,2,3)):
+            raise ValueError('Current editor recovery copies differ.')
+        normalized['saveg.dat'] = replace_fixed_title(files['saveg.dat'], b'LUA EDITOR   ', b'LUA EDITOR V3')
+        for slot in range(1,121):
+            script = f'sed{slot:02d}.asb' if slot<=3 else f'ss{slot:03d}.asb'
+            commands = decode_asb(files[script])
+            match = re.search(r'build_id="([0-9a-f]{8})"',commands[0][2].get('script',''))
+            if not match or files[script] != bootstrap(slot,zlib.adler32(core),match[1]):
+                raise ValueError('Unexpected current launcher: '+script)
+            normalized[script] = bootstrap(slot,zlib.adler32(legacy),match[1])
+            if slot<=3:
+                if files.get(f'ssboot{slot}.bin') != files[script]:
+                    raise ValueError('Current launcher backup differs.')
+                normalized[f'ssboot{slot}.bin'] = normalized[script]
+                normalized[f'ssedit{slot}.lua'] = legacy
+    reviewed = reviewed_files(normalized)
+    # One deterministic ID keeps official packages reproducible.
+    result,_,_,_ = install_files(reviewed,build_id=hashlib.sha256(core).hexdigest()[:8])
+    if current and any(files.get(name) != data for name,data in result.items()):
+        raise ValueError('Current starter differs from its canonical reconstruction.')
+    return result
+
+
+def package_save(base,output=None,legacy=False):
+    files = starter_files(base) if legacy else current_starter_files(base)
     out = Path(output) if output else ROOT/'dist'
     out.mkdir(parents=True,exist_ok=True)
     target = out/'Seedsow-Lua-Editor-Save.zip'
@@ -120,6 +161,8 @@ def package_save(base,output=None):
     digest = hashlib.sha256(target.read_bytes()).hexdigest()
     target.with_suffix('.zip.sha256').write_text(digest+'  '+target.name+'\n',encoding='ascii')
     manifest = {'kind':'ready-to-restore-editor-save','archive':target.name,'sha256':digest,
+                'runtime':'legacy-v3' if legacy else 'current',
+                'runtime_sha256':hashlib.sha256(files['ssedit1.lua']).hexdigest(),
                 'personal_account_metadata_included':False,'portable_restore_metadata':True,
                 'user_programs_included':False,
                 'included_examples':[4,5], 'game':'Seedsow Lullaby US demo 1.0.0',
@@ -132,5 +175,6 @@ if __name__=='__main__':
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument('--base',type=Path,required=True,help='Reviewed starter editor save ZIP')
     p.add_argument('--output',type=Path)
+    p.add_argument('--legacy',action='store_true',help='Repackage the historical V3 starter without upgrading it')
     args = p.parse_args()
-    print(json.dumps(package_save(args.base,args.output),indent=2))
+    print(json.dumps(package_save(args.base,args.output,args.legacy),indent=2))

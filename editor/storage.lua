@@ -6,6 +6,7 @@ end
 function W.protected(name)
     if not W.valid(name) then return true end
     local n=name:lower()
+    if W.private_prefix and n:sub(1,#W.private_prefix)==W.private_prefix then return true end
     if n=='saveg.dat' or n:match('^save000[123][%.]') then return true end
     for _,prefix in ipairs({'ssedit','ssseed','ssboot','ssethumb','sed01.','sed02.','sed03.'}) do
         if n:sub(1,#prefix)==prefix then return true end
@@ -24,6 +25,12 @@ function W.read(base,name)
 end
 function W.put(base,name,data)
     assert(W.valid(name),'Invalid filename')
+    local n=name:lower()
+    if W.recovery_readonly and (n=='saveg.dat' or n:sub(1,6)=='ssedit'
+        or n:match('^save000[123]%.') or n:match('^sed0[123]%.asb')
+        or n:match('^ssboot[123]%.bin') or n:match('^ssseed00[123]%.bin')) then
+        return false,'Original V3 recovery file is read-only in this editor'
+    end
     assert(type(data)=='string' and #data<=W.limit,'File exceeds editor limit')
     local f,why=io.open(base..'/'..name,'wb')
     if not f then return false,tostring(why) end

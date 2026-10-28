@@ -1,70 +1,90 @@
-# Seedsow Lua Editor 0.1.2
+# Seedsow Lua Editor @@VERSION@@
 
-**Maintenance release: existing users do not need to reinstall, restore a save,
-or update the console editor.** The prepared save ZIP is byte-identical to 0.1.1.
-This release updates the companion/source bundle, installation guidance and
-repository organization. Do not overwrite an existing save containing programs
-you want to keep.
+**New users: download the Switch save ZIP first.** The editor runs inside
+Seedsow on your console. The Windows companion is an optional separate download.
 
-Changes include clearer prebuilt-save installation, corrected account/networking
-and compatibility guidance, console screenshots, and 0BSD licensing (no credit
-required for project-owned code and documentation). General save tools remain
-accessible; original starter validation and release infrastructure are separated
-under `maintainer/`.
+**Preparation firmware checkpoint:** use **23.0.1 on both consoles while it is
+the current firmware** (checked 2026-10-27). If a newer firmware appears, stop
+before updating and check the installation guide for updated project advice.
+The future FS preparation path can change even if the Lua editor keeps working.
 
-## Main download: Seedsow-Lua-Editor-Save.zip
+## 1. Switch download: Seedsow-Lua-Editor-Save.zip
 
-**The save is already built. Download it, restore it on a modded/hacked Switch 1
-using JKSV, then transfer the game's save to Switch 2. No Python, compiling,
-save building or Raspberry Pi is required for the initial setup.**
+This is an already-built **game save**, ready to restore with JKSV. You do not
+need Python, a build step or a Raspberry Pi for the initial installation.
 
-**A modded/hacked Switch 1 with homebrew is required for the initial restore.**
-Your Switch 2 does not need to be modded. The beginner guide covers installing
-JKSV, making a backup, copying the ready-made ZIP, restoring it and transferring.
+**Use sysNAND/sysMMC, not emuNAND/emuMMC.** Download the game and transfer the save
+in stock mode. Only JKSV backup/restore needs CFW on that same sysNAND; stock and
+CFW sysNAND share saves, while emuNAND has separate saves.
 
-[Step-by-step installation guide](https://github.com/DialingSpoon527/seedsow-lua-editor/blob/v0.1.2/docs/01-console-install.md)
+1. Use a hacked Switch 1 that can run JKSV and complete Nintendo's official save
+   transfer. Your Switch 2 does not need to be hacked.
+2. In stock sysMMC on Switch 1, make an in-game save and close Seedsow.
+3. Boot CFW on that same sysMMC for JKSV backup/restore of
+   **Seedsow-Lua-Editor-Save.zip**, then return to stock sysMMC and load slot 1.
+4. Transfer that user's game save to Switch 2 using the same Nintendo Account.
+5. Load the editor, fully close and restart Seedsow, then load it again.
 
-If you only want to future-proof, get the save onto Switch 2 and confirm it
-loads after restarting the game. Everything else can wait. Keep the game, save,
-recovery slots and a backup intact.
+[Beginner installation guide](https://github.com/DialingSpoon527/seedsow-lua-editor/blob/v@@VERSION@@/docs/01-console-install.md)
 
-The ready-made starter contains the editor, recovery entries and two examples.
-Personal account identifiers, calibration, reports, sessions and personal
-programs are excluded. Portable JKSV restore metadata has blank personal fields.
-Tested reference: **Seedsow Lullaby demo 1.0.0 from the US eShop**.
-**Compatibility update (2026-10-27):** working cases have also been reported by
-users for the **Japanese demo**, **UK demo** and **US full game**. These have not
-been independently reproduced by the maintainer; exact versions and feature
-coverage were not recorded. Other configurations remain untested, not proven
-incompatible. See the [current compatibility notes](https://github.com/DialingSpoon527/seedsow-lua-editor/blob/main/docs/compatibility.md).
+If you only want the editor installed for later, stop here and keep a backup.
+Use the controller character grid or a wired USB keyboard to edit on the console.
+The installed editor needs no Nintendo connection. The initial official save
+transfer does require Nintendo connectivity and account verification.
 
-The matching Nintendo Account is required for the save users in the official
-transfer, not inherently for downloading the demo. Both consoles need Nintendo
-connectivity for that initial transfer; blocking Nintendo servers beforehand can
-prevent it. The documented source is online-capable sysNAND/sysMMC; an isolated
-emuMMC normally blocks those servers. This is a workflow choice, not a physical
-NAND restriction of the transfer feature, and CFW on sysNAND is not ban-proof.
-Running the installed editor afterward requires no Nintendo connection.
+**Nearby/local transfer works with the demo on both consoles:** no full game or
+NSO membership is needed, but both consoles must connect to Nintendo's servers.
+The guide also lists the **NSO cloud-backup alternative**, reported working from
+the **demo or full game on Switch 1** to the **full game on Switch 2**. Cloud
+transfer requires the full game on the target and an NSO membership. This route
+is a user report, not an independently reproduced maintainer test.
 
-## Optional download: seedsow-lua-editor-0.1.2.zip
+The prepared save opens the current editor directly in **slot 1**. Slot 2 is
+the optional upload receiver; slot 3 is a backup of the current editor. Programs
+use slots 4-120. No slot-30 setup is needed for a fresh installation.
 
-This is the PC companion and source bundle. Download it if you want the optional
-Pi uploader, development tools or later update-building tools. The installed
-console editor works with its controller/character grid or a wired USB keyboard
-without any of those extras.
+## 2. Optional PC download: Seedsow-PC-Companion-and-Source-@@VERSION@@.zip
 
-Windows and Raspberry Pi describe the implemented uploader, not a fundamental
-Lua runtime requirement. General save tools remain in `tools/` and `editor/`;
-reviewed-starter and release infrastructure is in `maintainer/`.
+Extract this ZIP **on your computer**. Open **START WINDOWS.cmd** for the Windows
+companion; Python 3.10+ with Tcl/Tk is required. The bundle also contains Lua
+source, development tools, documentation and the optional Raspberry Pi bridge.
 
-**Vibecoded:** built with AI assistance and hands-on console testing. The core
-editor/save/restart flow has real-console results, including Switch 2. The new
-PC/Pi packaging and alongside-editor update still need a fresh hardware trial.
+Use it for PC/Pi uploads or to build an editor update for your retained base.
+It is not a Switch save: do not restore it with JKSV. Older releases called this
+bundle `seedsow-lua-editor-VERSION.zip`. GitHub's automatic **Source code**
+archives are for development and are also not console saves.
 
-An Artemis-based route to a broader exploit has not been confirmed by this
-project. Installing the editor does not guarantee that a future exploit path
-will work or become available.
+## Already installed? Keep your save and update from the console
 
-Both downloads include SHA-256 checksum files and file manifests. If you already
-have the editor installed, keep your existing save and programs; do not restore
-the starter over them.
+Do not restore the starter over programs you want to keep. A compatible editor
+update is an ordinary Lua file, built for a particular fresh user slot. Keep
+recovery slots 1-3 and your last working editor.
+
+- **Wired USB keyboard:** enter the update source with **Keyboard +** in chunks,
+  then **Save + publish** and load its matching slot.
+- **Controller only:** enter the same source with the on-screen grid and publish.
+  This works without a Pi but takes substantial manual entry.
+- **Optional PC/Pi:** upload the Lua file into the matching fresh slot, wait for
+  **PC FILE SAVED**, then load it.
+- **JKSV restore:** a complete update save ZIP replaces the console save with
+  that ZIP's contents. Back up first; programs absent from it will not be kept.
+
+[Update methods, obtaining the Lua file, and recovery](https://github.com/DialingSpoon527/seedsow-lua-editor/blob/v@@VERSION@@/docs/04-updates-recovery.md)
+
+The current editor adds tap-to-position, a selectable code window for D-pad
+cursor movement, line movement, independent scrolling and a visible insertion
+cursor. A left-edge line is light on hover/focus and black while selected; B
+leaves cursor mode. Ordinary controller aliases work without mandatory calibration. It uses
+directly editable Lua modules and separate settings/reports. Automated checks
+cover editing, publication, restart, reconstruction failure and startup recovery.
+**The current fresh-save build was reported working on console on 2026-10-27.**
+Detailed feature coverage was not recorded; fresh PC/Pi installation and
+alongside-update hardware trials remain pending.
+
+The tested reference is demo 1.0.0 from the US eShop on Switch 1 and Switch 2.
+Japanese demo, EU demo and US full-game working cases are user reports; see
+[compatibility evidence](https://github.com/DialingSpoon527/seedsow-lua-editor/blob/v@@VERSION@@/docs/compatibility.md).
+
+Project-owned code and documentation use 0BSD with no credit required. Built
+with AI assistance and console testing. No broader Artemis exploit is confirmed.
+ZIP downloads include SHA-256 files and manifests; neither is another installer.

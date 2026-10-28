@@ -83,12 +83,22 @@ hashes or Python installation is required for that path.
 
 Both intended save users must be linked to the same Nintendo Account, and both
 consoles must reach Nintendo for the initial transfer. The account that downloaded
-the demo need not be that user. Check that you restored into the same environment
-you are trying to transfer from: sysMMC and emuMMC have separate saves. An isolated
-emuMMC normally blocks Nintendo servers. A banned or blocked source cannot finish
+the demo need not be that user. **Use sysNAND/sysMMC, not emuNAND/emuMMC.**
+Download and transfer in **stock mode**; only boot **CFW on the same sysNAND**
+for JKSV backup/restore. Stock and CFW sysNAND share saves, while emuNAND has a
+separate save: restoring there does not change the save on stock sysNAND.
+A banned or blocked source cannot finish
 this documented online route. SysNAND CFW is not ban-proof. See the
 [setup prerequisites](01-console-install.md#check-the-source-setup-before-restoring).
 The installed editor itself does not require Nintendo connectivity afterward.
+
+**Nearby/local transfer still requires Nintendo's servers**, even with the two
+consoles side by side. It does not require the full game or an NSO membership:
+the demo-to-demo route is sufficient. If using the **NSO cloud alternative**,
+you need an NSO membership and the **full game on the receiving Switch 2**;
+users report the source can be the demo or full game. Check that the uploaded
+backup belongs to the intended user and is the restored editor save. See the
+[two transfer methods](01-console-install.md#7-transfer-the-save-to-switch-2).
 
 ## The optional custom-save builder rejects my backup
 

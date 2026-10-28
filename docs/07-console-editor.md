@@ -7,8 +7,10 @@ editor. Slots 1–3 are reserved for editor recovery; use **4–120** for progra
 
 1. Choose a free user slot.
 2. Select **Keyboard +** to insert text at the byte cursor. A wired USB keyboard
-   can type into the console's text-entry dialog. **Edit line** changes the
-   current line, up to 512 bytes, while keeping the rest of the file.
+   can type into the console's text-entry dialog, which accepts **32 characters
+   per entry** in this Switch build. Repeat **Keyboard +** for longer text.
+   **Edit line** replaces the current line segment; use insertion and deletion
+   controls for edits that exceed the keyboard limit.
 3. The on-screen character grid is available for printable ASCII, newline,
    tab and backspace.
 4. Choose **RUN buffer** to run the current contents, including unsaved edits.
@@ -25,7 +27,7 @@ can open another plain filename; a missing file starts a new buffer.
 | Input | Action |
 | --- | --- |
 | Touch, or D-pad then A | Select and activate a button |
-| B | Backspace while editing; return from a normally running program |
+| B | Leave cursor mode; otherwise backspace or return from a running program |
 | L / R | Move the byte cursor |
 | X | Open console text entry |
 | Y | Run the buffer |
@@ -34,6 +36,52 @@ can open another plain filename; a missing file starts a new buffer.
 
 Unsaved changes require a repeated open/navigation action before discarding.
 **Restore .bak** loads the previous file version into the buffer for inspection.
+
+Direct USB typing into the editor window is not exposed by this game's Switch
+input path. A wired keyboard works inside the system dialog. The character grid
+and optional Pi uploads do not have its 32-character dialog cap.
+
+## Place and move the cursor
+
+Tap the code to select its window and place the cursor at the nearest insertion
+point. With a controller, move focus into the code window and press **A**.
+The line along its left edge is light while hovered or focused, and black while
+selected.
+
+While selected, **D-pad left/right** moves a byte and **up/down** moves a line,
+preserving the preferred column across short lines. Hold a direction to repeat.
+**B** returns to button navigation without deleting text. **X** opens text entry
+and returns to cursor mode afterward. Tapping another button changes focus to it.
+In HEX mode, D-pad up/down moves 16 bytes.
+
+## Scrolling and moving between lines
+
+Six buttons above the code preview control navigation in **TEXT** mode:
+
+| Button | Action |
+| --- | --- |
+| Line up / Line down | Move the cursor one line, keeping its byte column where possible. A short or empty line clamps the cursor; the original column is restored on a longer line. |
+| Scroll up / Scroll down | Browse one line without moving the cursor or changing the code. |
+| Page up / Page down | Browse six lines without moving the cursor. |
+
+Select a button with the D-pad and press A, or tap it. Moving the cursor or editing
+resumes automatic scrolling so its line stays visible. Long lines also follow the
+cursor horizontally. The preview shows **one-based line numbers**, `>` beside
+the cursor's line, and **`[|]` at the insertion point**. The marker is display-only;
+it is not inserted into your program. **Byte offset** still uses zero-based byte
+positions.
+
+Fresh saves include these controls in the main editor in slot 1 and its backup
+in slot 3. Older installations can add the current editor in a fresh user slot
+using the [update guide](04-updates-recovery.md). In HEX mode, use L/R or
+**Byte offset**. The current fresh-save build was reported working on console on
+2026-10-27; detailed feature coverage was not recorded.
+
+Ordinary editing uses the game's standard Switch input codes and aliases without
+requiring calibration. An existing learned mapping is reused when available.
+**Calibrate input** remains an optional fallback for nonstandard inputs and Pi
+uploads: hold physical **A, B, X, Y, L, R** as prompted, releasing each before
+the next step. Manual calibration needs no PC/Pi and returns to editing.
 
 ## Raw hex editing
 

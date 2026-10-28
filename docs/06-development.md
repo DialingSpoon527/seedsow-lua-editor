@@ -21,6 +21,10 @@ Python 3.10+ is needed for these host tools. The PC runtime uses only the standa
 library and Tcl/Tk. Lua checks additionally use Lupa's Lua 5.1 runtime. Neither
 Python nor Windows nor a Pi is needed to run the installed console editor.
 
+For local visual QA, `tests/preview_editor.py` renders the actual recorded UI
+layers using optional Pillow and a supplied TrueType font. It is a layout
+preview with a substitute host font, not a native console renderer.
+
 ## Build or modify a compatible save
 
 ```powershell
@@ -44,15 +48,11 @@ metadata; it does not silently retarget to the original starter title ID.
 This structural compatibility check does not establish a new edition's behavior
 on a console. Keep custom saves private and test with recoverable backups.
 
-## Troubleshooting a custom build
-
-Check for a manual save in slot 1 with both thumbnails, and one whole backup per
-ZIP. First-time custom builds need the recognized initial title-screen autosave
-layout; existing editor backups can supply their own recognized launcher. The
-tested reference is demo **1.0.0 from the US eShop**, not proof of a US-only
-requirement. Other layouts and arbitrary autosave positions are not established.
-The builder leaves the input file unchanged when rejecting a backup. Exact
-original starter hashes are not a requirement for this general tool.
+The default build installs the current editor directly in slot 1, the receiver
+in slot 2, and a current-editor backup in slot 3. User launchers run the same
+current runtime. `--legacy` is only for reconstructing the frozen V3 baseline.
+`editor/source.py` composes both main and alongside builds from the same Lua
+modules; new features do not need a second implementation.
 
 ## Build an alongside-editor update
 
@@ -68,6 +68,34 @@ need a new Switch 2 export merely to target that retained base. Follow
 [updates and recovery](04-updates-recovery.md) for loading the generated program.
 The alongside-editor workflow passes local checks but still needs its hardware trial.
 
+The current editor is ordinary Lua in `editor/editor.lua`, composed with
+`storage.lua`, `transfer.lua`, `input.lua`, `navigation.lua` and `controls.lua`.
+The builder binds the chosen slot, computes a compact delta against the installed
+base, and adds the checksummed startup/recovery loader. It does not patch Lua
+functions through Python text replacements. `--source` accepts an alternative
+combined candidate before slot binding; line endings are normalized to LF.
+
+To also produce a ready-to-restore save with the update already in a fresh slot:
+
+```powershell
+python editor/build_side_editor.py --base "YOUR_EDITOR_BACKUP.zip" --slot 30 --include-save --output build/current-editor
+```
+
+The output directory must be new or empty. `--include-save` rejects an occupied
+slot or filename and preserves every input member byte-for-byte. Load slot 1
+once to register the new entry, choose Title screen, then load slot 30. Restoring
+the ZIP replaces the console save with this copy of the input backup. Uploading
+the standalone Lua instead retains programs already on the console.
+
+`navigation.lua` owns the line index, preferred cursor column and viewport.
+Regressions exercise the rendered preview and actual controller activation,
+as well as the packaged save's startup and simulated cold restart.
+
+`editor/controls.lua` supplies ordinary editing controls from native Switch
+codes, their standard game/keyboard aliases and `csv.advkey.def` button groups.
+This works without a learned upload profile. Explicitly learned mappings remain
+an optional fallback; Pi receive/calibration continues to use `editor/input.lua`.
+
 ## Shared format utilities
 
 See [`tools/README.md`](../tools/README.md) for the API map. `IndexedSave` reads the
@@ -78,14 +106,17 @@ reads nested length-prefixed variables and checks fixed-width title replacements
 IDs and sizes without assuming a game or region. These are shared modules used
 by both general builders and maintainer scripts; no parser is duplicated.
 
-## Runtime source and recovery
+## Recovery compatibility
 
-The installed core is composed, in order, from `storage.lua`, `transfer.lua`,
-`input.lua` and `editor.lua`. Keep line endings stable: the loader checks the
-combined source checksum. Normal launchers load a retained base core and run
-the saved source selected by the slot's `.ref` file. Native seed templates let
-the editor publish into user slots. Unrestricted Lua can bypass normal storage
-protections; backups and recovery entries still matter.
+`editor/recovery_v3.lua` is the frozen core from older releases. Its SHA-256 is
+pinned in `source.recovery_source()`. It supports historical validation and
+testing updates from existing installations. Fresh saves use `source.core_source()`
+instead; their three recovery copies contain the current editor.
+
+Normal launchers load their installed core and run the source selected by a
+slot's `.ref` file. Alongside updates use their own callback names and `edNNN-`
+settings/reports, read the base calibration as a fallback, and block writes to
+recovery files. Native seed templates let either editor publish user programs.
 
 ## Local checks
 

@@ -17,16 +17,18 @@ PUBLIC_FILES = (
     'docs/compatibility.md', 'tools/README.md', 'tools/jksv_metadata.py',
     'docs/images/console-editor.jpg', 'docs/images/save-menu.jpg', 'docs/images/included-example.jpg',
     'editor/build.py', 'editor/build_side_editor.py', 'editor/editor.lua',
-    'editor/input.lua', 'editor/storage.lua', 'editor/transfer.lua',
+    'editor/input.lua', 'editor/storage.lua', 'editor/transfer.lua', 'editor/navigation.lua', 'editor/controls.lua',
+    'editor/recovery_v3.lua',
+    'editor/source.py',
     'examples/hello.lua', 'examples/blue.lua', 'licenses/NXBT-MIT.txt',
     'pc/app.py', 'pc/client.py', 'pc/protocol.py',
     'pi/pi_bridge.py', 'pi/pairing_agent.py', 'pi/patch_nxbt.py', 'pi/install.sh',
     'pi/export_connection.py', 'pi/seedsow-input.service',
-    'tests/check.py', 'tests/check_v3.py', 'tests/check_side_editor.py',
-    'tests/test_pc.py', 'tests/run_checks.py', 'tests/smoke_gui.py',
-    'tests/test_release.py', 'tests/test_layout.py', 'tests/test_metadata.py',
+    'tests/check.py', 'tests/check_transfer.py', 'tests/check_side_editor.py', 'tests/check_navigation.py',
+    'tests/test_pc.py', 'tests/test_pc_app.py', 'tests/run_checks.py', 'tests/smoke_gui.py', 'tests/preview_editor.py',
+    'tests/test_release.py', 'tests/test_layout.py', 'tests/test_metadata.py', 'tests/test_editor_build.py',
     'tools/asb.py', 'tools/indexed_save.py', 'tools/save_globals.py',
-    'maintainer/README.md', 'maintainer/RELEASE_NOTES.md',
+    'maintainer/README.md', 'maintainer/RELEASE_NOTES.md', 'maintainer/CODE_REVIEW.md',
     'maintainer/package_release.py', 'maintainer/publish_release.py',
     'maintainer/package_save.py', 'maintainer/check_starter.py',
 )
@@ -56,7 +58,7 @@ def package(output=None):
     files = source_files()
     out = Path(output) if output else ROOT/'dist'
     out.mkdir(parents=True,exist_ok=True)
-    target = out/f'seedsow-lua-editor-{version}.zip'
+    target = out/f'Seedsow-PC-Companion-and-Source-{version}.zip'
     with zipfile.ZipFile(target,'w',compression=zipfile.ZIP_DEFLATED,compresslevel=9) as archive:
         for name,data in sorted(files.items()):
             info = zipfile.ZipInfo('seedsow-lua-editor/'+name,date_time=(2026,1,1,0,0,0))

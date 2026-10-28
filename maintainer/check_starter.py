@@ -14,7 +14,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 sys.path[:0] = [str(ROOT/'tests'), str(ROOT/'tools')]
-from package_save import package_save, starter_files, STARTER_HASHES
+from package_save import package_save, starter_files, current_starter_files, STARTER_HASHES
 from indexed_save import IndexedSave, Edit, string
 
 
@@ -26,7 +26,7 @@ def write_zip(path, files):
 
 def main(base):
     from check import check
-    from check_v3 import main as check_v3
+    from check_transfer import main as check_transfer
     before = hashlib.sha256(base.read_bytes()).digest()
     with tempfile.TemporaryDirectory() as temp:
         work = Path(temp)
@@ -39,7 +39,7 @@ def main(base):
         private_zip = work/'private.zip'
         write_zip(private_zip, files)
         starter = work/'starter'
-        public = package_save(private_zip, starter)
+        public = package_save(private_zip, starter,legacy=True)
         with zipfile.ZipFile(public['zip']) as archive:
             assert not set(private) & set(archive.namelist())
             meta = archive.read('.nx_save_meta.bin')
@@ -48,17 +48,17 @@ def main(base):
             files = {n: archive.read(n) for n in archive.namelist()}
         (starter/'manifest.json').write_text(json.dumps({
             'build_id': 'public-starter', 'version': 3, 'entry_label': 'LUA EDITOR V3',
-            'source_sha256': {}, 'save_files': {n: hashlib.sha256(b).hexdigest()
+            'save_files': {n: hashlib.sha256(b).hexdigest()
                                              for n, b in files.items()}}))
         check(starter)
-        check_v3(starter)
+        check_transfer(starter)
         # Equivalent zlib encodings remain accepted; all decoded structure matters.
         variant = dict(files)
         native = variant['ssseed020.bin']
         variant['ssseed020.bin'] = native[:12]+zlib.compress(IndexedSave(native).body, 1)
         variant_zip = work/'different-compression.zip'
         write_zip(variant_zip, variant)
-        package_save(variant_zip, work/'portable-compression')
+        package_save(variant_zip, work/'portable-compression',legacy=True)
         # Exercise every native hash guard and a structurally changed launcher.
         for name in (*STARTER_HASHES, 'ssseed020.bin'):
             altered = dict(files)
@@ -85,6 +85,23 @@ def main(base):
             pass
         else:
             raise AssertionError('Structurally altered launcher accepted.')
+        # The current public save opens the editor directly in slot 1.
+        current = package_save(private_zip,work/'current')
+        current_files = current_starter_files(current['zip'])
+        assert not set(private) & set(current_files)
+        from check import Console
+        from check_navigation import check_navigation
+        console=Console(current_files,work/'current-runtime');console.load(1)
+        assert console.messages[b'zzzzsseditor.title']==b'SEEDSOW LUA EDITOR'
+        check_navigation(console)
+        repacked=package_save(current['zip'],work/'current-repacked')
+        assert Path(repacked['zip']).read_bytes()==Path(current['zip']).read_bytes()
+        for name in ('saveg.dat','ssedit2.lua','sed01.asb','ssboot3.bin','ss042.asb','ssseed020.bin'):
+            damaged=dict(current_files);damaged[name]+=b'TAMPER'
+            write_zip(bad,damaged)
+            try:current_starter_files(bad)
+            except (ValueError,KeyError,AssertionError,zlib.error):pass
+            else:raise AssertionError('Altered current starter accepted: '+name)
     assert hashlib.sha256(base.read_bytes()).digest() == before
     print('Reviewed starter privacy, hashes, structure, portable compression and Lua checks passed. Input unchanged.')
 
