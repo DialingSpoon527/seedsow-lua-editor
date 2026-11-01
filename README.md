@@ -2,11 +2,12 @@
 
 > [!IMPORTANT]
 > **JUST FUTURE-PROOFING? GET THE EDITOR SAVE ONTO SWITCH 2 FIRST.**
-> This is not an exploit! It is a foothold to any possible Lua/Artemis exploit that 
-> Nintendo cant take away from you if/when one does come out!
-> Follow the [beginner installation guide](docs/01-console-install.md), then check
-> that the editor loads after fully restarting the game. **Everything else can
-> wait.** Keep the game, its save, recovery slots and a backup.
+> The editor gives you Lua execution inside Seedsow Lullaby and access to the
+> game's own save files. Install it now as a foothold that nintendo cannot take
+> for when a future Artemis exploit is released.
+> Follow the [beginner installation guide](docs/01-console-install.md) to transfer
+> the save. **Once the transfer finishes, you can stop.** Keep the game, its save,
+> recovery slots and a backup. Loading the editor can wait until you want to use it.
 > If you already have smileBasic, this is not neccesary!
 
 **Firmware checkpoint (2026-10-27):** this preparation guide targets **23.0.1
@@ -19,16 +20,14 @@ works with a controller and on-screen character grid, or a wired USB keyboard.
 It also edits text, hex and ordinary files in the game's own save storage.
 
 **Vibecoded:** built with AI assistance and hands-on console testing. Expect rough
-edges. This project has not confirmed an Artemis-based route to a broader exploit;
-installing the editor does not guarantee any future exploit or continued transfer
-availability.
+edges.
 
 ## New here? Start with the Switch save
 
 | Download | Use it for | What to do with it |
 | --- | --- | --- |
 | **Seedsow-Lua-Editor-Save.zip** | First installation on Switch | Restore with JKSV on your hacked Switch 1, then transfer the save to Switch 2. |
-| **Seedsow-PC-Companion-and-Source-VERSION.zip** | Optional Windows/Pi uploads, update building and development | Extract on your computer. The Windows app starts with **START WINDOWS.cmd**. |
+| **Seedsow-PC-Companion-and-Source-VERSION.zip** | Optional Windows or Mac uploads via Pi, update building and development | Extract on your computer; see [launch instructions](#optional-uploads-from-a-computer). |
 
 For a first installation, download the **Switch save ZIP** and follow the steps
 below. You can use the editor entirely on the console afterward. Older releases
@@ -59,15 +58,18 @@ Stock and CFW sysNAND share the internal save; emuNAND has a separate save.
    modes use the same internal save storage.
 4. Close the game. On both consoles, use **System Settings > Data Management >
    Transfer Your Save Data** to move that user's demo save to Switch 2.
-5. Load **slot 1** on Switch 2, fully close and restart the game, then load it again.
-   **If you only want to prepare for later, stop here.**
+5. **If you only want to prepare for later, stop once the transfer finishes.**
+   Keep the game, its save, recovery slots and a backup. Loading the editor or
+   examples on Switch 2 can wait until you want to use them.
 
 [Follow the complete step-by-step installation guide](docs/01-console-install.md).
 It covers JKSV installation, the SD card folders, backups, restoring and transfer.
-It also covers the **NSO cloud-backup alternative**: users report transferring
-from the **demo or full game on Switch 1** to the **full game on Switch 2**.
-That route requires the full game on the target and an NSO membership; it has
-not been independently reproduced by the maintainer.
+See the [full-game setup](docs/01-console-install.md#1c--full-game-alternative-online-license-on-switch-1).
+Online License controls game access; **NSO Save Data Cloud** is a separate,
+membership-based way to copy the same *full-game* save between consoles.
+A demo save cannot be transferred to the full game. If you own the digital full
+game, **Online License** lets the purchasing user launch it on Switch 1 while
+online without loading its virtual game card there.
 Restoring replaces the chosen save; keep your original backup. An existing editor
 installation does not need the starter restored over its saved programs.
 
@@ -86,7 +88,8 @@ Once installed, editing, saving and running Lua require no Nintendo connection.
 | Tested | Demo 1.0.0 obtained from the US eShop; Switch 1 and Switch 2 | Console editing, save/reload after a full restart, and the original PC/controller upload path worked on hardware. |
 | Reported working by users | Japanese demo, EU demo, US full game | Working cases reported as of 2026-10-27; not independently reproduced by the maintainer. Exact versions and feature coverage were not recorded. |
 | Plausible, untested | Other regions, editions and game versions without reports | Not established as compatible or incompatible. The US demo is a tested reference, not a requirement. |
-| Local checks only | Current PC/Pi packaging and alongside-editor update | Automated checks pass; a fresh hardware trial is pending. |
+| Reported working by user | 0.1.3 alongside-editor update via Mac/Raspberry Pi | Built for another slot using the original installation as the base, transferred and reported working on console on 2026-10-28. |
+| Local checks only | Fresh PC/Pi installation | A fresh installer trial remains pending; the update report used an existing setup. |
 | Cannot complete this installation route | Stock Switch 1 for JKSV restore; source unable to contact Nintendo for official transfer | These block particular installation steps, not Lua execution in an already-installed editor. |
 
 [Compatibility evidence, title IDs and transfer requirements](docs/compatibility.md).
@@ -110,27 +113,44 @@ Compatible editor updates can be installed in a fresh user slot later; see
 Fresh saves built from this source open the current editor directly in slot 1,
 including line movement, scrolling and a visible insertion cursor. Older
 installations can add it in a fresh user slot using the [update guide](docs/04-updates-recovery.md).
-The current fresh-save build was reported working on console on 2026-10-27.
+The 0.1.3 fresh-save build was reported working on console on 2026-10-27.
 That report does not establish a complete regression pass for every feature.
 Release 0.1.3 includes this editor in the prepared Switch save. Existing
 installations can keep their programs and use the update methods linked above.
 
 ## Optional uploads from a computer
 
-**Windows and Raspberry Pi describe the implemented upload workflow, not a
-requirement for running Lua.** A Pi is a very convenient option if you have one:
-the Windows companion sends files over your LAN to a Pi, which acts as a Bluetooth
+**The desktop companion works on Windows and has user-reported support on macOS.**
+It sends files over your LAN to a Raspberry Pi, which acts as a Bluetooth
 controller. The console uses Bluetooth input; its Wi-Fi and Nintendo servers are
-not used for these uploads. A real wired USB keyboard can also enter text directly.
+not used for these uploads. This setup is optional; the editor also works directly
+on the console with its controller grid or a wired USB keyboard's text-entry dialog.
 
 **Airplane mode can stay ON, including during pairing.** Enable only its
 Bluetooth/controller exception and leave console Wi-Fi OFF. Pairing, calibration
 and uploads do not require turning airplane mode off. Nintendo's initial official
 save transfer is a separate step that requires internet connectivity.
 
-For the optional companion, download **Seedsow-PC-Companion-and-Source-VERSION.zip**,
-keep its folders
-together, install Python 3.10+ with Tcl/Tk on Windows, and open **START WINDOWS.cmd**.
+Download **Seedsow-PC-Companion-and-Source-VERSION.zip**, extract it and keep its
+folders together. The companion needs **Python 3.10+ with Tcl/Tk** and no pip packages.
+
+**Windows:** install Python with Tcl/Tk and open **START WINDOWS.cmd**.
+
+**Mac:** in Terminal, open the extracted project folder containing `pc/` and run:
+
+```sh
+python3 pc/app.py
+```
+
+If Tk support is missing, the reported working Mac setup added it with Homebrew:
+
+```sh
+brew install python-tk
+```
+
+Then launch with `python3 pc/app.py`. Use the Python installation that has Tk
+support; Python being installed alone does not guarantee that Tk is available.
+
 Follow [Pi setup](docs/02-pi-setup.md), then [send a file](docs/03-send-files.md).
 Controller uploads are slow. Use the companion's estimate for the actual file;
 an editor update can take an hour or more. The 1 MiB file limit describes storage.
@@ -161,7 +181,7 @@ an editor update can take an hour or more. The 1 MiB file limit describes storag
 
 - [Beginner installation](docs/01-console-install.md), [console controls](docs/07-console-editor.md), and [troubleshooting](docs/05-troubleshooting.md).
 - [General development](docs/06-development.md): compatible-save builders in `editor/`, shared save utilities in [`tools/`](tools/README.md), and regression tests in `tests/`.
-- Optional Windows companion in `pc/`; optional Raspberry Pi bridge in `pi/`.
+- Optional Windows/macOS desktop companion in `pc/`; optional Raspberry Pi bridge in `pi/`.
 - [Maintainers](maintainer/README.md): reviewed starter reconstruction, exact validation hashes, source packaging, release publication and historical implementation details in `maintainer/`.
 
 ## License

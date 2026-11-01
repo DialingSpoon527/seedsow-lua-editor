@@ -66,7 +66,9 @@ core and `--output` for another directory. The input must contain the same base
 editor as the console. It can be the original starter you installed; you do not
 need a new Switch 2 export merely to target that retained base. Follow
 [updates and recovery](04-updates-recovery.md) for loading the generated program.
-The alongside-editor workflow passes local checks but still needs its hardware trial.
+The 0.1.3 alongside-editor workflow was reported working on console on 2026-10-28,
+after an update for another slot was built from the original installation and
+transferred via Mac/Raspberry Pi.
 
 The current editor is ordinary Lua in `editor/editor.lua`, composed with
 `storage.lua`, `transfer.lua`, `input.lua`, `navigation.lua` and `controls.lua`.

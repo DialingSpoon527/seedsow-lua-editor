@@ -96,7 +96,9 @@ programs. Use one of the Lua entry/upload methods to keep those programs.
 
 Fresh saves already include the current editor in slot 1. Existing installations
 can add it using one of the methods above. See [line movement and code scrolling](07-console-editor.md#scrolling-and-moving-between-lines).
-It has passed automated checks; its console trial is pending. It reconstructs
+The 0.1.3 alongside-update workflow was reported working on 2026-10-28: a user
+built an update for another slot using their original installation as the base,
+transferred it via Mac/Raspberry Pi and ran the full editor on console. It reconstructs
 and checks its source before starting, keeps separate settings/reports, and
 attempts to restore the prior editor if startup fails. It does not fetch updates.
 

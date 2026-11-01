@@ -57,5 +57,7 @@ The optional layout renderer uses a substitute host font. Neither establishes
 native rendering behavior. The user reported that the delivered fresh-save build
 works on console on 2026-10-27. This is a hardware report with unspecified feature
 coverage, not evidence that every navigation, keyboard, publication, restart or
-recovery path was tested. Fresh PC/Pi installation and alongside-update hardware
-trials remain pending.
+recovery path was tested. On 2026-10-28, a user reported successfully building a
+0.1.3 update for another slot from their original installation, transferring it
+via Mac/Raspberry Pi and running the full editor on console. That establishes a
+reported alongside-update trial; a fresh PC/Pi installation trial remains pending.

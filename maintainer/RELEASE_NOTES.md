@@ -23,21 +23,25 @@ CFW sysNAND share saves, while emuNAND has separate saves.
 3. Boot CFW on that same sysMMC for JKSV backup/restore of
    **Seedsow-Lua-Editor-Save.zip**, then return to stock sysMMC and load slot 1.
 4. Transfer that user's game save to Switch 2 using the same Nintendo Account.
-5. Load the editor, fully close and restart Seedsow, then load it again.
+5. **Preparation is complete when the transfer finishes.** Keep the game, its
+   save, recovery slots and a backup. Loading the editor on Switch 2 can wait.
 
 [Beginner installation guide](https://github.com/DialingSpoon527/seedsow-lua-editor/blob/v@@VERSION@@/docs/01-console-install.md)
 
 If you only want the editor installed for later, stop here and keep a backup.
 Use the controller character grid or a wired USB keyboard to edit on the console.
-The installed editor needs no Nintendo connection. The initial official save
-transfer does require Nintendo connectivity and account verification.
+The editor itself needs no Nintendo connection. The initial official save transfer
+also requires Nintendo connectivity and account verification.
 
 **Nearby/local transfer works with the demo on both consoles:** no full game or
 NSO membership is needed, but both consoles must connect to Nintendo's servers.
-The guide also lists the **NSO cloud-backup alternative**, reported working from
-the **demo or full game on Switch 1** to the **full game on Switch 2**. Cloud
-transfer requires the full game on the target and an NSO membership. This route
-is a user report, not an independently reproduced maintainer test.
+**Keep matching editions: demo → demo or full game → full game. A demo save
+cannot be transferred to the full game.** If you own the digital full game,
+**Online License** lets the purchasing user launch it on Switch 1 while online
+without loading its virtual game card there. Restore and transfer its full-game
+save to the same full game on Switch 2. Online License authorizes game access;
+**NSO Save Data Cloud** separately requires a membership to copy that same
+full-game save. Neither feature converts a demo save.
 
 The prepared save opens the current editor directly in **slot 1**. Slot 2 is
 the optional upload receiver; slot 3 is a backup of the current editor. Programs
@@ -77,14 +81,16 @@ cursor. A left-edge line is light on hover/focus and black while selected; B
 leaves cursor mode. Ordinary controller aliases work without mandatory calibration. It uses
 directly editable Lua modules and separate settings/reports. Automated checks
 cover editing, publication, restart, reconstruction failure and startup recovery.
-**The current fresh-save build was reported working on console on 2026-10-27.**
-Detailed feature coverage was not recorded; fresh PC/Pi installation and
-alongside-update hardware trials remain pending.
+**The 0.1.3 fresh-save build was reported working on console on 2026-10-27.**
+**The 0.1.3 alongside-update workflow was reported working on 2026-10-28:** a user
+built an update for another slot using their original installation as the base,
+transferred the full editor via Mac/Raspberry Pi and ran it on console.
+A fresh PC/Pi installation trial remains pending.
 
 The tested reference is demo 1.0.0 from the US eShop on Switch 1 and Switch 2.
 Japanese demo, EU demo and US full-game working cases are user reports; see
 [compatibility evidence](https://github.com/DialingSpoon527/seedsow-lua-editor/blob/v@@VERSION@@/docs/compatibility.md).
 
 Project-owned code and documentation use 0BSD with no credit required. Built
-with AI assistance and console testing. No broader Artemis exploit is confirmed.
+with AI assistance and console testing.
 ZIP downloads include SHA-256 files and manifests; neither is another installer.

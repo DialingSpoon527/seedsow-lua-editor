@@ -95,9 +95,11 @@ The installed editor itself does not require Nintendo connectivity afterward.
 **Nearby/local transfer still requires Nintendo's servers**, even with the two
 consoles side by side. It does not require the full game or an NSO membership:
 the demo-to-demo route is sufficient. If using the **NSO cloud alternative**,
-you need an NSO membership and the **full game on the receiving Switch 2**;
-users report the source can be the demo or full game. Check that the uploaded
-backup belongs to the intended user and is the restored editor save. See the
+you need an NSO membership and the **same full game on both consoles**.
+**A demo save cannot be transferred to the full game.** Online License lets the
+purchasing account launch the full game on Switch 1 while online without loading
+its virtual game card there; see [full-game setup](01-console-install.md#1c--full-game-alternative-online-license-on-switch-1).
+Check that the uploaded backup belongs to the intended user and full-game entry. See the
 [two transfer methods](01-console-install.md#7-transfer-the-save-to-switch-2).
 
 ## The optional custom-save builder rejects my backup

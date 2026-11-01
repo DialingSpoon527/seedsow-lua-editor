@@ -21,7 +21,8 @@ recorded, and the maintainer has not independently reproduced these cases.
 | Reported working by users | EU demo | Working case reported as of 2026-10-27; exact version and feature coverage not recorded. Not independently reproduced by the maintainer. |
 | Reported working by users | US full game | Working case reported as of 2026-10-27; exact version and feature coverage not recorded. Not independently reproduced by the maintainer. |
 | Plausible, untested | Other regional demos, full-game editions and versions without reports | No region-exclusive requirement has been shown. A related engine or matching catalog entry alone does not prove save compatibility. |
-| Locally tested, hardware pending | Current Windows/Pi packaging and alongside-editor updates | Regression/GUI/packaging checks do not replace a fresh console/Pi installation trial. |
+| Reported working by user | 0.1.3 alongside-editor update via Mac/Raspberry Pi | Reported on 2026-10-28: built an update for another slot using the original installation as the base, transferred the full editor and ran it successfully on console. |
+| Locally tested, hardware pending | Fresh PC/Pi installation | The successful update report used an existing setup; a fresh installer trial remains pending. |
 | Cannot perform the restore step | Stock Switch 1 or Switch 2 alone | This route uses homebrew JKSV on Switch 1 to restore the prepared save. |
 | Cannot perform the official transfer while blocked | Source banned from required services, Nintendo servers blocked, or isolated emuMMC without Nintendo access | Connectivity and account verification are required at transfer time. This says nothing about an editor already installed. |
 
@@ -34,14 +35,17 @@ controller/grid or wired-keyboard use on the console needs neither.
 | Method | Switch 1 source | Switch 2 target | Requirements and evidence |
 | --- | --- | --- | --- |
 | Nearby/local save transfer | Demo | Same demo | Tested reference route. **No full game or NSO membership needed.** Both consoles must connect to Nintendo's servers. |
-| NSO Save Data Cloud | Demo or full game | **Full game required** | User-reported working as of 2026-10-27, not independently reproduced by the maintainer. Requires an NSO membership and Nintendo connectivity. |
+| Nearby/local save transfer | Full game | Same full game | No NSO membership needed. The purchased game can be launched on Switch 1 through Online License while connected to Nintendo. |
+| NSO Save Data Cloud | Full game | Same full game | Requires an NSO membership and Nintendo connectivity. Online License can authorize the source game's launch; it does not convert saves. |
 
-The cloud report establishes a reported route from either source edition to the
-full game on Switch 2, rather than a requirement to buy the full game for all
-transfers. Exact source/target regions and versions were not recorded. Nintendo's
-general cloud instructions do not themselves establish demo-to-full-game
-compatibility. The report does not change the prepared starter's metadata target
-or demonstrate that changing a title ID converts a save.
+Online License lets the purchasing Nintendo Account play its downloaded game
+while connected to the internet without loading the virtual game card on that
+console. It is separate from NSO cloud backup. Only the purchasing user can use
+that license, and the account cannot play its digital games on multiple consoles
+simultaneously. See [Nintendo's Online License instructions](https://www.nintendo.com/au/support/articles/how-to-enable-or-disable-the-online-license-setting-on-nintendo-switch-2-and-nintendo-switch/)
+and the [full-game setup](01-console-install.md#1c--full-game-alternative-online-license-on-switch-1).
+This does not change the prepared starter's metadata target or mean that
+changing a title ID converts a save.
 
 Both methods require the same Nintendo Account for the source and receiving save
 users. Nearby transfer moves the save off the source; cloud backup/download keeps

@@ -1,5 +1,20 @@
 # Changelog
 
+## Unreleased
+
+- End the preparation instructions after save transfer; remove the final Switch 2
+  editor-launch, restart and example checks.
+
+- Correct the demo-to-full-game transfer claim: saves stay within the same edition.
+  Document Online License for launching the purchased full game on Switch 1,
+  separately from NSO cloud backups and virtual game card loading.
+
+- Focus preparation guidance on preserving the in-game Lua environment and
+  save-file tools for future Lua/Artemis filesystem research.
+
+- Document the reported Mac companion setup and successful 0.1.3 alongside-update
+  transfer via Mac/Raspberry Pi.
+
 ## 0.1.3 - 2026-10-27
 
 - Record the user's successful console report for the current fresh-save build
@@ -8,8 +23,8 @@
 - Make the sysNAND requirement explicit: download and transfer in stock mode;
   use CFW on that same sysNAND only for JKSV. Explain that emuNAND saves are separate.
 
-- Document the reported NSO cloud route from demo or full game to a full-game
-  target on Switch 2. Keep demo-to-demo nearby transfer as the beginner path:
+- Document NSO cloud backups alongside nearby transfer. Keep demo-to-demo
+  nearby transfer as the beginner path:
   no full game or NSO membership required, but Nintendo connectivity is required.
 
 - Add the dated 23.0.1 preparation checkpoint and same-account requirement;

@@ -1,30 +1,32 @@
-# Optional: send files from Windows
+# Optional: send files from Windows or Mac
 
 This guide is for the optional Pi upload setup. The console editor also works
 without it; see [manual editing](07-console-editor.md).
 
 Complete [console installation](01-console-install.md) and
-[Pi setup/calibration](02-pi-setup.md) once. Later uploads use the Windows app
+[Pi setup/calibration](02-pi-setup.md) once. Later uploads use the desktop app
 and console slot 2.
 
 ## First proof
 
-1. Open **START WINDOWS.cmd**. Confirm that the Pi is reachable and its
+1. Open **START WINDOWS.cmd** on Windows, or run `python3 pc/app.py` from the
+   project folder on Mac. See [Python/Tk setup](../README.md#optional-uploads-from-a-computer).
+   Confirm that the Pi is reachable and its
    controller is connected as **Player 1**.
 2. On the console, load **slot 2**. Confirm **PC INPUT: 0 / ? bytes**.
-3. In Windows, select **Optional: send files**, then **New example**.
+3. In the companion, select **Optional: send files**, then **New example**.
 4. Keep **Lua launch slot** selected and choose a free user slot, for example
    **20**. Publishing replaces the destination slot and a file with the chosen
    filename; use a fresh filename and slot if you want to retain the old program.
 5. Tick **Console slot 2 is armed and shows PC INPUT: 0 / ? bytes**.
 6. Click **Send & save**. Leave console controls released while it sends.
 7. Wait for the console to say **PC FILE SAVED**, with the expected filename,
-   byte count and **SLOT 20**. Windows “input sent” only describes the Pi;
+   byte count and **SLOT 20**. The companion's “input sent” only describes the Pi;
    there is no console-to-PC acknowledgement channel.
 8. Hold **L** to leave the console receiver. You can use **Hold L / leave
    receiver** on the PC app's Controller tab.
 9. Return to the game's load menu and load **slot 20**. The blue proof screen
-   should show the same **PC-… token** displayed in the Windows app, a changing
+   should show the same **PC-… token** displayed in the companion, a changing
    clock, and a moving white bar.
 10. Fully close and reopen Seedsow, then load slot 20 again to check persistence.
 

@@ -38,23 +38,26 @@ Choose a transfer route before downloading the game:
 | Route | Switch 1 source | Switch 2 target | Nintendo Switch Online membership |
 | --- | --- | --- | --- |
 | **Nearby/local save transfer — beginner path below** | Demo | Same demo | **Not required** |
-| **NSO Save Data Cloud — reported alternative** | Demo or full game | **Full game required** | **Required** |
+| **Nearby/local save transfer — full-game alternative** | Full game | Same full game | **Not required** |
+| **NSO Save Data Cloud — full-game alternative** | Full game | Same full game | **Required** |
 
 **You do not need the full game for nearby/local transfer.** The demo works on
 both consoles. **Local does not mean offline:** both consoles still need an
 internet connection to Nintendo's servers and matching Nintendo Account users.
 The cloud route also needs Nintendo connectivity and the same account.
 
-The demo/full-game cloud route was reported by users on 2026-10-27; the maintainer
-has not independently reproduced it. See [step 7](#7-transfer-the-save-to-switch-2)
-for both methods and [compatibility evidence](compatibility.md#transfer-routes)
-for the limits of that report.
+**A demo save cannot be transferred to the full game.** Keep the same edition
+throughout the restore and transfer. The full game can be launched on Switch 1
+using **Online License**, as explained in [step 1.C](#1c--full-game-alternative-online-license-on-switch-1).
+Online License authorizes launching a purchased game; it is separate from the
+NSO cloud-backup service. See [step 7](#7-transfer-the-save-to-switch-2) for the
+two transfer methods and [compatibility evidence](compatibility.md#transfer-routes).
 
 - Your hacked Switch 1, including its microSD card and working homebrew menu.
 - Your Switch 2.
 - A computer and a way to read the Switch 1's microSD card on it. A microSD card
   reader or SD adapter is enough. The file-copy steps below use Windows names.
-- For the nearby route, the same Seedsow Lullaby edition installed on both consoles. The tested
+- The same Seedsow Lullaby edition installed on both consoles. The tested
   reference used in this guide is **demo 1.0.0 obtained from the US eShop**.
   There are also user-reported working cases for the **Japanese demo**,
   **EU demo** and **US full game**; see [compatibility notes](compatibility.md)
@@ -64,7 +67,9 @@ for the limits of that report.
 
 The matching account is for the **save users and Nintendo's transfer process**.
 It is not inherently required that this account downloaded the demo. Each selected
-user must be able to launch the installed software.
+user must be able to launch the installed software. When using Online License
+for the full game, only the purchasing Nintendo Account can launch it that way;
+use that account for the save user on both consoles.
 
 ### Check the source setup before restoring
 
@@ -90,7 +95,7 @@ a future ban.
 Both consoles need Nintendo connectivity and account verification for the initial
 transfer. **Blocking Nintendo servers beforehand can prevent it.** Follow the
 firmware checkpoint above before accepting an update. This project cannot
-guarantee ongoing transfer availability. After installation, the editor runs without Nintendo
+guarantee ongoing transfer availability. The editor itself needs no Nintendo
 connectivity. See [Nintendo's requirements](https://www.nintendo.com/sg/support/switch/secondary/transfer.html)
 and [compatibility notes](compatibility.md).
 
@@ -99,12 +104,11 @@ the starter over programs you want to keep.
 
 ## 1. Get the demo on both consoles
 
-These steps follow the nearby demo-to-demo route. For the optional **NSO cloud
-route**, install the **full game on Switch 2** instead; Switch 1 can use the demo
-or full game. If using the full game on Switch 1, use that game's own save and
-JKSV backup entry throughout steps 1–6. Check the [compatibility notes](compatibility.md)
-before restoring to another edition; the prepared ZIP retains the reference
-demo's metadata. A cloud-transfer report does not change that restore target.
+These steps follow the nearby demo-to-demo route. If you own the full game and
+want to use it instead, install the **full game on both consoles** and follow
+[step 1.C](#1c--full-game-alternative-online-license-on-switch-1). Use the full
+game's own save and JKSV backup entry throughout; do not start with a demo save
+and expect either transfer method to convert it.
 
 ### 1.A — Get the demo on Switch 2
 
@@ -138,6 +142,37 @@ demo's metadata. A cloud-transfer report does not change that restore target.
 **Make at least one in-game save before opening JKSV.** JKSV will only recognize
 the game for that user after a save has been made. Simply reaching the title
 screen or opening the save menu is not enough.
+
+### 1.C — Full-game alternative: Online License on Switch 1
+
+If you own the digital full game, you can launch it on your modded Switch 1
+using **Online License**, without loading its virtual game card on Switch 1.
+The game must also be installed and playable as the **full game on Switch 2**.
+
+1. On Switch 1 in **stock sysNAND/sysMMC**, use a user linked to the Nintendo
+   Account that **purchased the full game**. Link that same account to the
+   intended receiving save user on Switch 2.
+2. From HOME, select that user's icon, then **User Settings > Online License
+   Settings > Use Online License > On**. Nintendo says this setting applies to
+   the account across its consoles.
+3. If the full game is not downloaded, open **Virtual Game Cards**, select the
+   purchasing user and Seedsow, then **Options > Download Data**. This downloads
+   the software without loading its virtual game card on this console.
+4. Keep Switch 1 connected to the internet and launch the **full game as the
+   purchasing user**. Do not run the account's digital games on both consoles
+   simultaneously. Make an in-game save and close the game, as in step 1.B.
+5. Use **CFW on the same sysNAND** only for JKSV backup/restore. Select the
+   **full-game save entry**. Return to **stock sysNAND** to check the editor,
+   close the game and transfer that full-game save to Switch 2.
+
+Online License changes how you access the purchased game, not its save edition.
+**It does not convert a demo save into a full-game save.** Check the
+[compatibility notes](compatibility.md) before restoring to another edition:
+the prepared starter's metadata still targets the reference demo.
+
+Nintendo's instructions:
+[Online License](https://www.nintendo.com/au/support/articles/how-to-enable-or-disable-the-online-license-setting-on-nintendo-switch-2-and-nintendo-switch/),
+[download without loading the virtual game card](https://www.nintendo.com/au/support/articles/how-to-redownload-nintendo-switch-2-or-nintendo-switch-digital-content/).
 
 ## 2. Download two files on your computer
 
@@ -266,6 +301,9 @@ after the JKSV restore and editor check in step 6.
 path used throughout the guide. It still requires internet access to Nintendo's
 servers on both consoles.
 
+The same nearby method can also transfer a **full-game save to the same full
+game**. If following step 1.C, select the full-game entry instead of the demo.
+
 Keep the consoles near each other, with both connected to the internet and
 the same Nintendo Account linked to the intended save user on each console.
 Switch 1 should now be in **stock sysNAND/sysMMC**, using the internal save that
@@ -285,13 +323,12 @@ save transfer, not the full system transfer used when setting up a new console.
 Availability depends on the installed software and current transfer support.
 [Official transfer instructions](https://www.nintendo.com/en-gb/Support/Troubleshooting/How-to-Transfer-Your-Save-Data-To-a-Nearby-Console-1549113.html).
 
-### 7.B — NSO Save Data Cloud: full game on Switch 2
+### 7.B — NSO Save Data Cloud: full game on both consoles
 
-**Reported working:** upload the editor save from either the **demo or full game
-on Switch 1**, then download it for the **full game on Switch 2**. The receiving
-Switch 2 must have the full game for this route; the demo alone is insufficient.
-This is a community report, not a separate maintainer-reproduced test. Exact
-regional/version combinations were not recorded.
+Use the **full game on both consoles**: upload its editor save from Switch 1,
+then download it for the same full game on Switch 2. **A demo save cannot be
+downloaded into the full game.** Online License can let you launch the purchased
+full game on Switch 1 as described in step 1.C; it does not change this save rule.
 
 You need an active **Nintendo Switch Online membership**, internet access and
 the same Nintendo Account for the save user on both consoles. Keep the original
@@ -300,32 +337,29 @@ replace the target game's save; preserve anything you want to keep first.
 
 1. After checking the restored editor on Switch 1, fully close Seedsow.
 2. On **Switch 1**, open **System Settings > Data Management > Save Data Cloud**.
-   Select the intended user and the Seedsow entry containing the restored editor
-   save, then choose **Back Up Save Data**. Wait for the upload to finish and
+   Select the intended user and the **Seedsow full-game entry** containing the
+   restored editor save, then choose **Back Up Save Data**. Wait for the upload to finish and
    check its backup time before proceeding.
 3. On **Switch 2**, ensure the **full game** is installed and playable by the
    user linked to that same Nintendo Account. Close the game if it is open.
 4. Open **System Settings > Data Management > Save Data Cloud**, select that
    user and the Seedsow full-game entry, then choose **Download Save Data**.
    Confirm that you are downloading the backup just uploaded from Switch 1.
-5. Wait for the download to finish, then continue to step 8 using the **full
-   game** on Switch 2.
+5. Wait for the download to finish. The full-game save is now on Switch 2;
+   continue to step 8.
 
 Cloud backup copies the save through Nintendo's servers; it does not remove the
 source save like the nearby transfer does. Nintendo documents the general
 [backup](https://www.nintendo.com/en-gb/Support/Troubleshooting/How-to-Back-Up-Save-Data-on-Nintendo-Switch-2-and-Nintendo-Switch-1434307.html)
 and [Switch 2 download](https://www.nintendo.com/en-gb/Support/Troubleshooting/How-to-Download-Save-Data-Cloud-Backups-on-Nintendo-Switch-2-2879088.html)
-steps. The specific demo-to-full-game behavior comes from the community report.
+steps. Online License and cloud backup are separate features; neither converts
+the demo's save into the full game's save.
 
-## 8. Check Switch 2, then stop here if you only want to future-proof
+## 8. Stop here if you are only preparing for later
 
-1. On Switch 2, start Seedsow as the receiving user: the **demo** for the demo
-   nearby-transfer route, or the **full game** for the NSO cloud route.
-2. Open **Load** and choose **slot 1**. The editor should appear.
-3. Fully close the game with **HOME > X > Close**. Start it again and load
-   **slot 1** once more. This checks that the editor remains installed.
-4. Optionally load **slot 5** for the included blue animation. Press **B** to
-   return to the editor.
+Once the save transfer or cloud download finishes, keep the game and its save
+on Switch 2. Loading the editor, running examples and testing reloads can wait
+until you want to use them.
 
 > **You're set up. Everything else can wait.** You do not need the Pi uploader,
 > Python, coding knowledge or an editor update right now. Keep the game and its

@@ -1,18 +1,19 @@
-# Optional: set up a Pi for Windows uploads
+# Optional: set up a Pi for computer uploads
 
 The working hardware path uses a Pi as a Bluetooth Pro Controller. Once set up,
-the Windows app handles pairing, calibration, sending and manual controller
+the desktop app handles pairing, calibration, sending and manual controller
 buttons. You do not need an open Pi desktop.
 
-Windows and Raspberry Pi describe the implemented uploader, not requirements for
-running Lua. After the initial Nintendo save transfer, this path needs only the
-PC/Pi LAN connection and console Bluetooth; it does not contact Nintendo servers.
+The companion runs on Windows and has reported working results on Mac. See the
+[launch instructions](../README.md#optional-uploads-from-a-computer). After the
+initial Nintendo save transfer, this path needs only the computer/Pi LAN connection
+and console Bluetooth; it does not contact Nintendo servers.
 
 ## Before you start
 
 This is optional. Install and verify the console editor first; you can keep
 using it with the controller or a wired keyboard for as long as you want.
-A Pi is useful when you want to send larger programs and files from Windows.
+A Pi is useful when you want to send larger programs and files from your computer.
 If you already have a configured bridge, import its private connection JSON
 in the app rather than reinstalling the service.
 
@@ -20,9 +21,9 @@ in the app rather than reinstalling the service.
 
 Use a Pi running Raspberry Pi OS or another compatible Debian Linux with
 Bluetooth, `apt`, and `systemd`. Enable SSH and connect it to the same LAN as
-Windows. The original trial used a Pi 3B's built-in Bluetooth adapter.
+your computer. The original trial used a Pi 3B's built-in Bluetooth adapter.
 
-1. Copy this entire source folder to the Pi. For example, from PowerShell in
+1. Copy this entire source folder to the Pi. From Windows PowerShell or Mac Terminal in
    the folder containing this project:
 
    ```powershell
@@ -46,7 +47,7 @@ Windows. The original trial used a Pi 3B's built-in Bluetooth adapter.
    controller setup; installing can restart Bluetooth and disconnect other
    Bluetooth devices using the Pi.
 
-3. Export a private Windows connection file:
+3. Export a private connection file for the companion:
 
    ```sh
    python3 pi/export_connection.py --output ~/seedsow-connection.json
@@ -56,20 +57,20 @@ Windows. The original trial used a Pi 3B's built-in Bluetooth adapter.
    contains the generated bridge token. The installer keeps an existing token
    on subsequent runs.
 
-4. In a **Windows** PowerShell window, copy that file back:
+4. In **Windows PowerShell or Mac Terminal** on your computer, copy that file back:
 
    ```powershell
    scp YOUR_USER@raspberrypi.local:~/seedsow-connection.json .
    ```
 
-5. Open **START WINDOWS.cmd**. On **Connect & calibrate**, select **Import
-   connection file…** and choose the copied JSON. The app saves the connection
-   under `%LOCALAPPDATA%\SeedsowLuaEditor\settings.json`.
+5. Start the companion: **START WINDOWS.cmd** on Windows, or `python3 pc/app.py`
+   from the project folder on Mac. On **Connect & calibrate**, select **Import
+   connection file…** and choose the copied JSON.
 6. Click **Save & test connection**. The app should report that the Pi is reachable.
 
 Keep connection files private. The bridge uses authenticated HTTP on LAN port
 **39391**; it does not use TLS. Use a trusted LAN and keep the port off the
-public internet. No SSH password is stored by the Windows app.
+public internet. No SSH password is stored by the companion.
 
 ## Pair as Player 1
 
@@ -82,11 +83,11 @@ public internet. No SSH password is stored by the Windows app.
 5. Register the Pi controller as **Player 1**. The PC connection line reports
    the player number when available. Use Change Grip/Order again if another
    controller is occupying Player 1.
-6. Return to Seedsow. The **Controller** tab in Windows provides D-pad, face
+6. Return to Seedsow. The companion's **Controller** tab provides D-pad, face
    and shoulder buttons if you need them to navigate.
 
 Keep the Bluetooth/controller exception enabled after leaving the pairing screen.
-The Windows PC and Pi still need their LAN connection; the console does not need
+Your computer and Pi still need their LAN connection; the console does not need
 Wi-Fi. Nintendo's initial official save transfer is separate and requires internet
 connectivity, as explained in the [installation guide](01-console-install.md).
 
@@ -96,9 +97,9 @@ connectivity, as explained in the [installation guide](01-console-install.md).
 2. On a fresh installation, it should say **INPUT CALIBRATION**, waiting for
    **physical A**. If it already says **PC INPUT: 0 / ? bytes**, the saved
    calibration is loaded and you can skip to [sending](03-send-files.md).
-3. In Windows, tick **Console is on INPUT CALIBRATION, waiting for physical A**.
+3. In the companion, tick **Console is on INPUT CALIBRATION, waiting for physical A**.
 4. Click **Calibrate controller** and release every other controller.
-5. Wait about 18 seconds. Windows sends A, B, X, Y, L, R with holds and releases.
+5. Wait about 18 seconds. The companion sends A, B, X, Y, L, R with holds and releases.
 6. Success on the console is **PC INPUT: 0 / ? bytes**. The editor may still display a
    stale “hold physical R” heading above that line; the zero-count receiver
    status means calibration is complete.
