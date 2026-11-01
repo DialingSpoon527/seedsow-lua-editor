@@ -7,7 +7,7 @@
 > for when a future Artemis exploit is released.
 > Follow the [beginner installation guide](docs/01-console-install.md) to transfer
 > the save. **Once the transfer finishes, you can stop.** Keep the game, its save,
-> recovery slots and a backup. Loading the editor can wait until you want to use it.
+> recovery slots and a backup.
 > If you already have smileBasic, this is not neccesary!
 
 **Firmware checkpoint (2026-10-27):** this preparation guide targets **23.0.1
@@ -58,9 +58,8 @@ Stock and CFW sysNAND share the internal save; emuNAND has a separate save.
    modes use the same internal save storage.
 4. Close the game. On both consoles, use **System Settings > Data Management >
    Transfer Your Save Data** to move that user's demo save to Switch 2.
-5. **If you only want to prepare for later, stop once the transfer finishes.**
-   Keep the game, its save, recovery slots and a backup. Loading the editor or
-   examples on Switch 2 can wait until you want to use them.
+5. Load **slot 1** on Switch 2, fully close and restart the game, then load it again.
+   **If you only want to prepare for later, stop here.**
 
 [Follow the complete step-by-step installation guide](docs/01-console-install.md).
 It covers JKSV installation, the SD card folders, backups, restoring and transfer.
