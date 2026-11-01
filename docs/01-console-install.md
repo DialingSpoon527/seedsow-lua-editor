@@ -76,14 +76,14 @@ use that account for the save user on both consoles.
 **Use sysNAND/sysMMC, not emuNAND/emuMMC, for this installation.** All Switch 1
 stages use the console's internal system storage. **Stock is also sysNAND**;
 you only need to boot **CFW on sysNAND to use JKSV**. Download the game, link the
-account, check the editor and transfer or upload the save in stock mode.
+account and transfer or upload the save in stock mode.
 The boot mode changes while the underlying saves stay the same:
 
 | Stage on Switch 1 | Boot mode |
 | --- | --- |
 | Download the demo, link the account and make the first save | **Stock sysMMC**, without CFW |
 | Back up and restore with JKSV | **CFW sysMMC**, on that same internal storage |
-| Check the editor, transfer locally or upload an NSO cloud backup | **Stock sysMMC**, without CFW |
+| Transfer locally or upload an NSO cloud backup | **Stock sysMMC**, without CFW |
 
 An **emuNAND/emuMMC** is a separate system environment, usually on the SD card,
 with separate saves. Restoring into emuMMC does not put the editor into the
@@ -162,8 +162,8 @@ The game must also be installed and playable as the **full game on Switch 2**.
    purchasing user**. Do not run the account's digital games on both consoles
    simultaneously. Make an in-game save and close the game, as in step 1.B.
 5. Use **CFW on the same sysNAND** only for JKSV backup/restore. Select the
-   **full-game save entry**. Return to **stock sysNAND** to check the editor,
-   close the game and transfer that full-game save to Switch 2.
+   **full-game save entry**. Return to **stock sysNAND** and transfer that
+   full-game save to Switch 2.
 
 Online License changes how you access the purchased game, not its save edition.
 **It does not convert a demo save into a full-game save.** Check the
@@ -279,11 +279,7 @@ have the backup from step 4 before continuing.
    asks you to hold a button, keep holding it until the confirmation completes.
 5. Wait until the restore finishes. Exit JKSV and fully turn off Switch 1.
 6. Boot back into **stock sysNAND/sysMMC, without CFW**. The restored save is
-   still on that same internal storage. Start Seedsow as the same user. Open
-   **Load** and select **slot 1**, whose
-   title includes **LUA EDITOR**.
-7. Confirm that the editor screen appears. Its first launch registers the
-   editor and backup entries. Close the game normally before transferring.
+   still on that same internal storage, ready for transfer.
 
 The starter contains recovery slots 1-3 and examples in slots 4 and 5. It has
 portable JKSV restore metadata with personal account fields blanked, rather
@@ -293,7 +289,7 @@ than someone else's account details.
 
 Choose **one** method below. Both use Nintendo's services and the same Nintendo
 Account for the save user on each console. Return Switch 1 to **stock sysMMC**
-after the JKSV restore and editor check in step 6.
+after the JKSV restore in step 6.
 
 ### 7.A — Nearby/local transfer: demo on both consoles
 
@@ -335,7 +331,7 @@ the same Nintendo Account for the save user on both consoles. Keep the original
 JKSV backup. Cloud uploads can replace an existing cloud backup, and downloads
 replace the target game's save; preserve anything you want to keep first.
 
-1. After checking the restored editor on Switch 1, fully close Seedsow.
+1. Keep Seedsow closed during the cloud backup.
 2. On **Switch 1**, open **System Settings > Data Management > Save Data Cloud**.
    Select the intended user and the **Seedsow full-game entry** containing the
    restored editor save, then choose **Back Up Save Data**. Wait for the upload to finish and

@@ -21,7 +21,7 @@ CFW sysNAND share saves, while emuNAND has separate saves.
    transfer. Your Switch 2 does not need to be hacked.
 2. In stock sysMMC on Switch 1, make an in-game save and close Seedsow.
 3. Boot CFW on that same sysMMC for JKSV backup/restore of
-   **Seedsow-Lua-Editor-Save.zip**, then return to stock sysMMC and load slot 1.
+   **Seedsow-Lua-Editor-Save.zip**, then return to stock sysMMC.
 4. Transfer that user's game save to Switch 2 using the same Nintendo Account.
 5. **Preparation is complete when the transfer finishes.** Keep the game, its
    save, recovery slots and a backup. Loading the editor on Switch 2 can wait.

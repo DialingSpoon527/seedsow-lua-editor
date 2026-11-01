@@ -54,9 +54,8 @@ Stock and CFW sysNAND share the internal save; emuNAND has a separate save.
    empty slot and save. **JKSV will only recognize the game for that user after
    you have made at least one save.** Close the game, boot **CFW sysMMC**, and use
    **JKSV** to back up that user's save and restore the downloaded ZIP. Return
-   to **stock sysMMC**, start the demo and load **editor slot 1**. These boot
-   modes use the same internal save storage.
-4. Close the game. On both consoles, use **System Settings > Data Management >
+   to **stock sysMMC**. These boot modes use the same internal save storage.
+4. On both consoles, use **System Settings > Data Management >
    Transfer Your Save Data** to move that user's demo save to Switch 2.
 5. Load **slot 1** on Switch 2, fully close and restart the game, then load it again.
    **If you only want to prepare for later, stop here.**

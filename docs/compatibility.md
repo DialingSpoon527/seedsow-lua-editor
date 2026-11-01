@@ -74,8 +74,8 @@ this preparation route. A future FS preparation path can change independently
 of whether Lua still runs; ongoing transfer availability is not guaranteed.
 See [Nintendo's individual-save transfer requirements](https://www.nintendo.com/sg/support/switch/secondary/transfer.html).
 
-**Use sysNAND/sysMMC, not emuNAND/emuMMC, for this installation.** Download/setup,
-editor checks and either nearby transfer or NSO cloud upload can all be done in
+**Use sysNAND/sysMMC, not emuNAND/emuMMC, for this installation.** Download/setup
+and either nearby transfer or NSO cloud upload can all be done in
 **stock mode**. Only JKSV backup/restore needs **CFW on that same sysNAND**.
 Stock and CFW sysNAND use the same internal save storage; emuNAND has separate
 saves, so restoring there does not prepare the stock sysNAND save for transfer.
