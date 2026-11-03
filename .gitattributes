@@ -6,3 +6,4 @@
 *.md text eol=lf
 *.cmd text eol=crlf
 *.jpg binary
+uploader/r14_body.lua -text

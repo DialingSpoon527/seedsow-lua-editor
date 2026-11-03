@@ -1,124 +1,124 @@
 # Troubleshooting
 
-## The demo does not appear in JKSV
+## Windows closes the setup window or cannot find Python
 
-Make at least one save inside the game first:
+Open Terminal in the extracted R14 folder and run `py --version`, then
+`py tools/make_sheet.py`. You need Python 3.10+. If your installation provides
+`python` instead of `py`, use `python tools/make_sheet.py` and
+`python pc/send_alula.py`. The `.cmd` shortcuts use `py`.
 
-1. On Switch 1, start the demo as the intended save user and choose **New Game**.
-2. Hold **R** to skip until you reach normal dialogue, then release **R**.
-3. Press **ZL** to open the **save menu**.
-4. Choose an empty slot, confirm **Save**, and wait for saving to finish.
-5. Close the game and reopen JKSV under the same user.
+On Mac/Linux, use `python3`. Neither R14 tool needs Tk or pip packages.
 
-**JKSV will only recognize the game after at least one save has been made for
-that user.** Reaching the title screen or opening the save menu alone is not
-enough. Then continue with
-[backing up the demo](01-console-install.md#4-open-jksv-and-back-up-the-demo).
+## “Run tools/make_sheet.py first”
 
-## The Windows app does not open
+Generate your settings before starting the sender. The default settings file
+is **build/config.json** in this R14 folder. If you used another output folder,
+pass its config explicitly, for example:
 
-Install Python 3.10 or newer from python.org with Tcl/Tk and the Python launcher.
-From the project folder, try `py -3 pc/app.py`. Any error remains visible in that
-terminal. WSL is not needed. Keep the `pc`, `editor`, `examples`, `tools` and
-`docs` folders together when extracting the release.
+```sh
+python3 pc/send_alula.py --config "/path/to/your/config.json"
+```
 
-## Windows cannot reach the Pi
+The settings determine the Lua source. If you change the computer IP, port or
+launcher destination, generate the uploader again and update the console copy
+as well. For manual entry, its first three settings entries can be replaced
+carefully; compare with the regenerated sheet and final byte count.
 
-1. Check the Pi is powered on and Windows and Pi share the same LAN.
-2. Try the Pi IP address in place of its `.local` hostname.
-3. Confirm port **39391** in the app and `/etc/seedsow-input.json`.
-4. On the Pi, run `sudo systemctl status seedsow-input --no-pager` and
-   `sudo journalctl -u seedsow-input -n 60 --no-pager`.
-5. If the app says the token was rejected, export/import the Pi connection file
-   again. Do not post that file or the token in an issue.
+## Download or checksum error
 
-The app's saved settings are at
-`%LOCALAPPDATA%\SeedsowLuaEditor\settings.json`. They stay outside the source repo.
+The sender requires the original **v1 seedsow_save.zip**. Use the
+[local ZIP option](02-existing-editor.md#alternative-use-a-zip-you-downloaded-yourself)
+if the automatic download is blocked. A Source code ZIP, Nora save, newer version
+or re-compressed ZIP is not the pinned file. Do not bypass the checksum to make
+an unexpected download pass.
 
-## The Pi will not pair or disconnects on returning to the game
+## “Address already in use” or a bind error
 
-1. **Airplane mode can stay ON.** Enable its Bluetooth/controller exception and
-   leave **Wi-Fi OFF**. Keep controller Bluetooth enabled after leaving the
-   pairing screen. Initial pairing, calibration and uploads do not require
-   turning airplane mode off.
-2. Put other nearby consoles to sleep and open **Change Grip/Order** on the
-   intended console before clicking **Pair controller**.
-3. Make the Pi **Player 1**. Seedsow input from a different player may be ignored.
-4. Use the pinned library and continuous-report fix installed by `pi/install.sh`.
-   Pairing alone does not demonstrate that reports continue inside the game.
-5. After restarting the bridge, pair again if needed, then re-arm console slot 2.
+Close an older copy of the sender or the other program using your chosen port.
+If the computer no longer owns the IP you generated, reconnect it to the expected
+network or generate new settings. A new TCP port also needs an updated console
+uploader. Ports below 1024 can require extra privileges on Linux/Mac; choosing
+another unused port above 1023 is simpler.
 
-The Pi 3B's ordinary USB ports cannot present a USB keyboard to the console.
-This release exposes the established controller path. A real wired keyboard
-can still type into the game's text-entry dialog.
+## Sender says Listening, but the console never connects
 
-## Calibration stalls, or still says hold R
+Check these before a fresh attempt:
 
-Verify Player 1 and start on **INPUT CALIBRATION / physical A** before clicking
-Calibrate. Release other controls. If the bottom says **PC INPUT: 0 / ? bytes**,
-calibration has completed even if the “hold R” heading remains.
+1. The console uploader's **PC_IP** is the **computer's** active LAN IPv4 address.
+2. **PC_PORT** matches the sender's listening port.
+3. The console has an active Wi-Fi/Ethernet connection, even if you used Bluetooth
+   alone to enter the uploader.
+4. Both devices are on a LAN that permits device-to-device connections. Guest
+   Wi-Fi, client isolation and VPN routing can prevent this.
+5. The computer firewall permits Python/incoming TCP on that port on the private
+   network. Leave router port forwarding off.
 
-Calibration writes `ssedit-input-report.txt` and `ssedit-controls.txt` in the
-game's save. A backup exported after the test can provide those reports for
-diagnosis. They are ordinary data, not files to type back into the editor.
+The compact uploader has no timeout and does not reliably report connection
+errors. Close Seedsow with **HOME > X > Close** if it hangs. Restart the sender
+first, wait for Listening and then run a fresh console attempt.
 
-## Upload stops at a few bytes or shows an error
+## Transmission ends but there is no matching completion log
 
-Stop Windows transmission, hold L to leave the console receiver, then load
-slot 2 and check **0 / ? bytes** before sending again. Try **Slow**. Leave all
-other controls released during transmission. Errors are latched until L.
+Open **ax_install.log** in the ordinary editor through **File / new**. Its
+`R14_COMPLETE SLOT=... RUN=...` line must match this sender attempt's run ID and
+your chosen destination. An older successful log is not a result for a new attempt.
 
-An incomplete packet times out after ten seconds without data edges once bytes
-have arrived. Transfer results/errors are recorded in
-`ssedit-transfer-report.txt` in the game's save. Windows completion is not
-console acknowledgement; look for **PC FILE SAVED** on the console.
+If the file is missing, the receiver may not have reached the installer or the
+game may have crashed. Recheck hand-typed text against the sheet, including its
+byte count. Preserve an available error log before changing files.
 
-## I only want to install the downloaded save
+## `SLOT_IN_USE` or `SOURCE_IN_USE`
 
-Follow the [beginner guide](01-console-install.md). Restore the already-built
-save ZIP with JKSV; do not open the custom builder. No clean autosave, developer
-hashes or Python installation is required for that path.
+The destination contains save files or a sidecar source already. Choose a
+different unused destination slot, regenerate the uploader and transfer or edit
+that source before trying again. A slot can contain files even when its menu
+entry is missing. Keep the uploader and launcher slots different.
 
-## Nintendo's save transfer will not complete
+The installer refuses an occupied destination rather than replacing it.
 
-Both intended save users must be linked to the same Nintendo Account, and both
-consoles must reach Nintendo for the initial transfer. The account that downloaded
-the demo need not be that user. **Use sysNAND/sysMMC, not emuNAND/emuMMC.**
-Download and transfer in **stock mode**; only boot **CFW on the same sysNAND**
-for JKSV backup/restore. Stock and CFW sysNAND share saves, while emuNAND has a
-separate save: restoring there does not change the save on stock sysNAND.
-A banned or blocked source cannot finish
-this documented online route. SysNAND CFW is not ban-proof. See the
-[setup prerequisites](01-console-install.md#check-the-source-setup-before-restoring).
-The installed editor itself does not require Nintendo connectivity afterward.
+## `COLLISION ax_...`
 
-**Nearby/local transfer still requires Nintendo's servers**, even with the two
-consoles side by side. It does not require the full game or an NSO membership:
-the demo-to-demo route is sufficient. If using the **NSO cloud alternative**,
-you need an NSO membership and the **same full game on both consoles**.
-**A demo save cannot be transferred to the full game.** Online License lets the
-purchasing account launch the full game on Switch 1 while online without loading
-its virtual game card there; see [full-game setup](01-console-install.md#1c--full-game-alternative-online-license-on-switch-1).
-Check that the uploaded backup belongs to the intended user and full-game entry. See the
-[two transfer methods](01-console-install.md#7-transfer-the-save-to-switch-2).
+An existing launcher file has different contents. This can be an earlier install
+or a different version; a different destination slot alone will not resolve a
+shared `ax_` file conflict. Keep the log and back up the existing files before
+deciding what to replace. Do not delete recovery/editor files to work around it.
 
-## The optional custom-save builder rejects my backup
+## Missing bootstrap, slot template or thumbnail
 
-The downloaded installer does not use this builder. For custom builds, see
-[compatible-save inputs and troubleshooting](06-development.md#troubleshooting-a-custom-build).
+R14 expects the original editor's `ssNNN.asb`, `ssseedNNN.bin` and `ssethumb.png`
+files. Changing only the visible slot number cannot create missing templates.
+Keep your working save and check the
+[original editor's recovery instructions](https://github.com/DialingSpoon527/seedsow-lua-editor/blob/88f443f8666bf02ebc9cb1887a470958739a0121/docs/04-updates-recovery.md)
+or report the exact error and editor version. Another editor layout may need
+adaptation; do not restore a starter save over programs you want to retain.
 
-If you already have the editor installed, keep it. The new PC app accepts the existing
-Pi service and does not require a new console save installation.
+## Completion log matches, but no launcher slot appears
 
-## A published slot or editor update does not run
+Fully close and restart Seedsow, load the ordinary editor in slot 1, then use
+**Title screen** and open the game's **Load** menu. Loading the editor registers
+the new `.ref` file in the menu. Find the destination number you selected; the
+title can contain `ax_slot...lua` rather than “Artemis”.
 
-Use a free slot from 4–120, verify the console's **PC FILE SAVED / SLOT …**, then
-hold L and load that exact slot. To prove persistence, fully restart the game.
-For side-editor updates, build from a backup containing the same editor base as the
-console. Retain slots 1–3 and follow [recovery steps](04-updates-recovery.md).
+## Launcher opens but `/status` does not respond
 
-## Useful details to include with a problem report
+Press **Y** on the launcher screen and read any error shown. Use the **Switch's**
+current IP in `http://YOUR_SWITCH_IP:8080/status`; this is different from the
+computer IP used for R14. Keep both on the same reachable LAN. If the server
+reports a native error, retain that message and your game/firmware details.
 
-Include game version, console model, Pi model/OS, which step failed, the exact
-console status, Pi player number, file byte count, speed, and any relevant report
-file. Remove connection tokens and personal save information before sharing.
+The installer port and Pi port 39391 are not the HTTP server port. Closing the
+game stops the server.
+
+## Pi upload errors
+
+Use the companion from its **separate editor folder**. Import the correct
+connection JSON, make the Pi Player 1, and load slot 2 until it shows
+**PC INPUT: 0 / ? bytes**. Confirm success on the console, not only in the app.
+After an interrupted controller upload, leave with L and reload slot 2 before
+trying Slow speed. See the [Pi walkthrough](04-pi-upload.md).
+
+## Returning to your editor
+
+Close Seedsow and load the editor's original slot 1 or backup slot 3. The sidecar
+does not change game startup. For launcher update recovery, use the
+[Minus-button steps](02-existing-editor.md#updates-and-recovery).

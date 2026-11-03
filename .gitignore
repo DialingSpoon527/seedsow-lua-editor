@@ -1,20 +1,7 @@
-# Private saves, generated packages and local dependencies
-/build/
-/dist/
-/vendor/
-/.venv/
-/.private/
+build/
 __pycache__/
-*.py[cod]
+*.pyc
+.venv/
+.DS_Store
+dist/
 *.zip
-*.dat
-*.bin
-*.jsonl
-*.jsonl.zst
-*.log
-config.json
-settings.json
-known_hosts
-seedsow-connection*.json
-.env
-.env.*
