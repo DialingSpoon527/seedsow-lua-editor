@@ -36,7 +36,7 @@ except ImportError:
 
 class GeneratedSource(unittest.TestCase):
     def test_exact_body_and_keyboard_reconstruction(self):
-        body = (ROOT / 'uploader/r14_body.lua').read_bytes()
+        body = (ROOT / 'uploader/bootstrap.lua').read_bytes()
         self.assertEqual(len(body), 3599)
         self.assertEqual(hashlib.sha256(body).hexdigest(), sheet.BODY_SHA256)
         for ip, port, slot, uploader in [('10.0.0.2', 1024, 4, 120), ('192.168.100.100', 65535, 120, 119)]:
@@ -76,7 +76,7 @@ class GeneratedSource(unittest.TestCase):
 
         def damaged(path):
             value = original(path)
-            return value + b' ' if path.name == 'r14_body.lua' else value
+            return value + b' ' if path.name == 'bootstrap.lua' else value
 
         with tempfile.TemporaryDirectory() as temp, mock.patch.object(Path, 'read_bytes', damaged):
             with self.assertRaisesRegex(ValueError, 'body has changed'):
@@ -202,7 +202,7 @@ class StreamedInstaller(unittest.TestCase):
             self.assertEqual(files[name], data)
         self.assertEqual(writes[-2:], [b'ssslot030.ref', b'ax_install.log'])
         self.assertEqual(files[b'ssslot030.ref'], b'ax_slot030.lua\n')
-        self.assertIn(b'R14_COMPLETE SLOT=30 RUN=1234abcd', files[b'ax_install.log'])
+        self.assertIn(b'ARTEMIS_INSTALL_COMPLETE SLOT=30 RUN=1234abcd', files[b'ax_install.log'])
         self.assertEqual(files[b'ax_core.lua'], b'core\0bytes')
 
     def test_preflight_failures_write_only_the_failure_log(self):
@@ -211,15 +211,15 @@ class StreamedInstaller(unittest.TestCase):
                 initial, files, writes = self.run_install(**{option: True})
                 self.assertEqual(writes, [b'ax_install.log'])
                 self.assertIn(error, files[b'ax_install.log'])
-                self.assertIn(b'R14_FAILED', files[b'ax_install.log'])
-                self.assertNotIn(b'R14_COMPLETE', files[b'ax_install.log'])
+                self.assertIn(b'ARTEMIS_INSTALL_FAILED', files[b'ax_install.log'])
+                self.assertNotIn(b'ARTEMIS_INSTALL_COMPLETE', files[b'ax_install.log'])
                 self.assertEqual({k: v for k, v in files.items() if k != b'ax_install.log'}, initial)
 
     def test_interrupted_write_never_publishes_a_slot(self):
         _, files, _ = self.run_install(interrupted_write=True)
         self.assertNotIn(b'ssslot030.ref', files)
-        self.assertIn(b'R14_FAILED', files[b'ax_install.log'])
-        self.assertNotIn(b'R14_COMPLETE', files[b'ax_install.log'])
+        self.assertIn(b'ARTEMIS_INSTALL_FAILED', files[b'ax_install.log'])
+        self.assertNotIn(b'ARTEMIS_INSTALL_COMPLETE', files[b'ax_install.log'])
 
 
 if __name__ == '__main__':

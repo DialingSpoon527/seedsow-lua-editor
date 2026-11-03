@@ -2,15 +2,13 @@
 
 ## Scope and provenance
 
-The project starts from `Seedsow_R14_Clean_Source_for_Codex.zip`, supplied as a
-working handoff. The public layout removes the handoff memo and intentionally
-nonworking placeholder template. Users generate configured source through
-`tools/make_sheet.py`.
+The installer prepends your computer address, TCP port and destination slot to
+the compact bootstrap. Generate configured source through `tools/make_sheet.py`.
 
 The compact native body is retained **byte for byte**, without added fail-safes:
 
 ```text
-uploader/r14_body.lua
+uploader/bootstrap.lua
 3599 bytes
 SHA-256 c51e7aa1621d7fdd1631d57a334d832b90fc4afc3d0fff3bf992f70c220dde23
 ```
@@ -29,12 +27,12 @@ handling. Host socket timeouts cannot unfreeze a blocked console receiver.
 ## Hardware evidence
 
 The handoff reports a successful Switch 1 install and HTTP `/status` response,
-plus successful manual R14 entry and installation on an unmodified Switch 2.
+plus successful manual uploader entry and installation on an unmodified Switch 2.
 Exact editor version, game region and firmware for each test were not supplied.
 Switch 1 native experiments used emuMMC; this is distinct from the **sysMMC**
 workflow needed when transferring a replacement save through stock mode.
 
-Those reports apply to the supplied R14 workflow. No new console hardware trial
+Those reports apply to the supplied uploader workflow. No new console hardware trial
 has been performed for this repository cleanup. In particular, validate the
 revised streamed installer/log ID and the complete Pi route on hardware before
 calling this revision hardware-tested. Offline checks exercise generation,
@@ -89,7 +87,7 @@ writes start can leave files behind, and an occupied partial destination is
 refused on a retry. Keep a backup and inspect an interrupted attempt.
 
 `ax_install.log` includes the run ID printed by the current sender, plus either
-`R14_COMPLETE SLOT=... RUN=...` or `R14_FAILED ...`. Log matching prevents a stale
+`ARTEMIS_INSTALL_COMPLETE SLOT=... RUN=...` or `ARTEMIS_INSTALL_FAILED ...`. Log matching prevents a stale
 success from being treated as confirmation of a later send. The TCP sender
 does not receive an install acknowledgement.
 

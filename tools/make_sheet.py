@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Configure R14 and generate exact keyboard entries of at most 32 characters."""
+"""Configure the Artemis installer and generate exact keyboard entries of at most 32 characters."""
 from __future__ import annotations
 
 import argparse
@@ -71,9 +71,9 @@ def split_body(body):
 
 def generate(ip, port, slot, uploader_slot, output_dir):
     ip = validate(ip, port, slot, uploader_slot)
-    body_bytes = (ROOT / 'uploader/r14_body.lua').read_bytes()
+    body_bytes = (ROOT / 'uploader/bootstrap.lua').read_bytes()
     if hashlib.sha256(body_bytes).hexdigest() != BODY_SHA256:
-        raise ValueError('The tested R14 body has changed. Restore uploader/r14_body.lua before continuing.')
+        raise ValueError('The tested bootstrap body has changed. Restore uploader/bootstrap.lua before continuing.')
     body = body_bytes.decode('ascii')
     chunks = [f'local PC_IP="{ip}";', f'local TARGET_SLOT={slot};', f'local PC_PORT={port};']
     chunks += split_body(body)
@@ -94,12 +94,12 @@ def generate(ip, port, slot, uploader_slot, output_dir):
                      f'<td>{len(c)}/32</td><td><input type="checkbox" aria-label="Typed row {i}"></td></tr>'
                      for i, c in enumerate(chunks, 1))
     page = f'''<!doctype html><html lang="en"><meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1"><title>R14 typing sheet</title>
+<meta name="viewport" content="width=device-width,initial-scale=1"><title>Artemis installer typing sheet</title>
 <style>body{{font:16px system-ui;line-height:1.5;max-width:960px;margin:2rem auto;padding:0 1rem;background:#fafafa;color:#222}}
 table{{border-collapse:collapse;width:100%}}td,th{{border:1px solid #ccc;padding:8px;text-align:left}}
 tr:nth-child(even){{background:#eee}}code{{font:17px ui-monospace,Consolas,monospace;white-space:pre}}
 input{{width:22px;height:22px}}.table{{overflow-x:auto}}</style>
-<h1>R14 manual entry</h1><p>Uploader slot: <strong>{uploader_slot}</strong>.
+<h1>Artemis installer manual entry</h1><p>Uploader slot: <strong>{uploader_slot}</strong>.
 Launcher destination: <strong>{slot}</strong>. Computer: {ip}, TCP port {port}.</p>
 <p><strong>{len(chunks)} entries, {len(source)} characters.</strong> Type each row's code using
 <strong>Keyboard +</strong>. Keep the cursor at the end. Do not add row numbers, line breaks or extra spaces.</p>
@@ -109,7 +109,7 @@ write down your last completed row before closing it.</p>
 <div class="table"><table><thead><tr><th>Row</th><th>Type exactly</th><th>Length</th><th>Done</th></tr></thead>
 <tbody>{rows}</tbody></table></div></html>'''
     (out / 'VIEW_TYPING_SHEET.html').write_text(page, encoding='utf-8')
-    config = {'version': 'R14', 'pc_ip': ip, 'port': port, 'launcher_slot': slot,
+    config = {'version': 'seedsow-artemis-installer-1', 'pc_ip': ip, 'port': port, 'launcher_slot': slot,
               'uploader_slot': uploader_slot, 'characters': len(source), 'entries': len(chunks),
               'source_sha256': digest, 'body_sha256': BODY_SHA256}
     (out / 'config.json').write_text(json.dumps(config, indent=2) + '\n', encoding='utf-8')
@@ -137,7 +137,7 @@ def main():
     args = parser.parse_args()
     values = (args.ip, args.port, args.slot, args.uploader_slot)
     if all(value is None for value in values):
-        print("R14 setup: check two unused slots in your console editor before continuing.\n"
+        print("Artemis installer setup: check two unused slots in your console editor before continuing.\n"
               "Use your COMPUTER's IPv4 address. The Switch will connect to it over your LAN.\n"
               'Choose an unused TCP port, preferably 1024-65535. Nothing is sent yet.\n')
         while True:

@@ -3,7 +3,7 @@
 The [0BSD license](LICENSE) applies to project-owned code and documentation. It
 does not relicense Alula's code, the native payload's upstream contributions,
 fonts, game material or dependencies. The original source handoff did not supply
-a separate authorship/license inventory for the compact R14 body; retain its
+a separate authorship/license inventory for the compact bootstrap; retain its
 provenance and upstream attribution when redistributing it.
 
 This installer adapts code downloaded from

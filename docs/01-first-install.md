@@ -3,7 +3,7 @@
 If you have not installed the Seedsow Lua Editor, start with
 [Alula's switch-artemis-launcher](https://github.com/alula/switch-artemis-launcher/).
 This guide expands its JKSV and save-transfer steps for the **Seedsow Lullaby
-demo**. The R14 uploader is for an editor you already have.
+demo**. The uploader is for an editor you already have.
 
 ## Before you begin
 
@@ -138,4 +138,4 @@ Continue with [using the HTTP server](02-existing-editor.md#5-use-the-launcher).
 For later updates to this replacement save, use
 [Alula's update instructions](https://github.com/alula/switch-artemis-launcher#updating)
 and its unprefixed filenames. The `ax_` filenames in the existing-editor guide
-belong to the R14 install route.
+belong to the existing-editor install route.

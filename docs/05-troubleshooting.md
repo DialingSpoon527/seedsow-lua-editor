@@ -2,17 +2,17 @@
 
 ## Windows closes the setup window or cannot find Python
 
-Open Terminal in the extracted R14 folder and run `py --version`, then
+Open Terminal in the extracted installer folder and run `py --version`, then
 `py tools/make_sheet.py`. You need Python 3.10+. If your installation provides
 `python` instead of `py`, use `python tools/make_sheet.py` and
 `python pc/send_alula.py`. The `.cmd` shortcuts use `py`.
 
-On Mac/Linux, use `python3`. Neither R14 tool needs Tk or pip packages.
+On Mac/Linux, use `python3`. Neither installer tool needs Tk or pip packages.
 
 ## “Run tools/make_sheet.py first”
 
 Generate your settings before starting the sender. The default settings file
-is **build/config.json** in this R14 folder. If you used another output folder,
+is **build/config.json** in this installer folder. If you used another output folder,
 pass its config explicitly, for example:
 
 ```sh
@@ -60,7 +60,7 @@ first, wait for Listening and then run a fresh console attempt.
 ## Transmission ends but there is no matching completion log
 
 Open **ax_install.log** in the ordinary editor through **File / new**. Its
-`R14_COMPLETE SLOT=... RUN=...` line must match this sender attempt's run ID and
+`ARTEMIS_INSTALL_COMPLETE SLOT=... RUN=...` line must match this sender attempt's run ID and
 your chosen destination. An older successful log is not a result for a new attempt.
 
 If the file is missing, the receiver may not have reached the installer or the
@@ -85,7 +85,7 @@ deciding what to replace. Do not delete recovery/editor files to work around it.
 
 ## Missing bootstrap, slot template or thumbnail
 
-R14 expects the original editor's `ssNNN.asb`, `ssseedNNN.bin` and `ssethumb.png`
+The installer expects the original editor's `ssNNN.asb`, `ssseedNNN.bin` and `ssethumb.png`
 files. Changing only the visible slot number cannot create missing templates.
 Keep your working save and check the
 [original editor's recovery instructions](https://github.com/DialingSpoon527/seedsow-lua-editor/blob/88f443f8666bf02ebc9cb1887a470958739a0121/docs/04-updates-recovery.md)
@@ -103,7 +103,7 @@ title can contain `ax_slot...lua` rather than “Artemis”.
 
 Press **Y** on the launcher screen and read any error shown. Use the **Switch's**
 current IP in `http://YOUR_SWITCH_IP:8080/status`; this is different from the
-computer IP used for R14. Keep both on the same reachable LAN. If the server
+computer IP used for the installer. Keep both on the same reachable LAN. If the server
 reports a native error, retain that message and your game/firmware details.
 
 The installer port and Pi port 39391 are not the HTTP server port. Closing the

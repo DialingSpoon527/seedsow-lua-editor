@@ -50,7 +50,7 @@ this procedure. If you move the cursor accidentally, use **Byte offset** and ent
 the current total byte count to place it at the end before continuing.
 
 The first three rows contain the generated computer address, launcher slot and
-TCP port. The sheet already filled these in. `uploader/r14_body.lua` is the
+TCP port. The sheet already filled these in. `uploader/bootstrap.lua` is the
 compact body without those settings; type from your generated sheet.
 
 ## 3. Check and publish

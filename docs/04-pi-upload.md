@@ -11,7 +11,7 @@ to create **build/TYPE_THIS_EXACT.lua**. Keep a note of your two chosen slots.
 ## 1. Open the existing Pi companion
 
 If your Pi bridge is already working, use your existing companion folder and
-connection settings. Leave this R14 folder separate: its `pc/` directory contains
+connection settings. Leave this installer folder separate: its `pc/` directory contains
 the new network sender, while the older companion has its own `pc/app.py`.
 
 If you need the companion files, download
@@ -50,7 +50,7 @@ The process is:
    the connection. The linked guide gives the exact copy and SSH commands.
 
 The bridge uses authenticated HTTP on Pi port **39391** on your trusted LAN.
-This is separate from the TCP port chosen for R14 and Alula's HTTP port 8080.
+This is separate from the TCP port chosen for the installer and Alula's HTTP port 8080.
 
 ## 2. Pair and calibrate
 
@@ -69,15 +69,15 @@ This is separate from the TCP port chosen for R14 and Alula's HTTP port 8080.
 
 Your computer and Pi need their LAN connection during this step. The console
 only needs Bluetooth for the controller upload; it needs its LAN connection
-when you run the R14 uploader afterward.
+when you run the uploader afterward.
 
 ## 3. Send your generated Lua file
 
 1. In the companion, open **Optional: send files**, then **Open file…**.
-2. Select **TYPE_THIS_EXACT.lua** from the **new R14 folder's build directory**.
+2. Select **TYPE_THIS_EXACT.lua** from the **new installer folder's build directory**.
    The file starts with your generated `PC_IP`, `TARGET_SLOT` and `PC_PORT`.
 3. Select **Lua launch slot**. Set **Slot** to the free **uploader slot** you
-   chose during R14 setup. The app's default slot may be different; change it.
+   chose during Artemis installer setup. The app's default slot may be different; change it.
 4. Use a new filename such as **artemis-uploader.lua**. Confirm both that name
    and the uploader slot are free; sending publishes to the selected slot.
 5. Start with **Normal** speed. Confirm the console receiver still shows
@@ -97,7 +97,7 @@ to get a new zero-count receiver before retrying. **Slow** gives more timing mar
 
 1. Enable console Wi-Fi or Ethernet and connect it to the computer's LAN. If
    airplane mode left Wi-Fi disabled, enable the required network connection now.
-2. Return to your **R14 folder** on the computer. Start
+2. Return to your **installer folder** on the computer. Start
    **START_SENDER_WINDOWS.cmd**, or `python3 pc/send_alula.py` on Mac/Linux.
 3. Wait for **Listening** before running anything on the console.
 4. Load your ordinary editor, select **Choose slot** and open the **uploader

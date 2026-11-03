@@ -1,6 +1,6 @@
 # ⚠️ AI-generated instructions — not yet human-reviewed
 
-> **The proven single-line R14 script is confirmed working on hardware.**
+> **The proven single-line uploader script is confirmed working on hardware.**
 > The instructions and Pi setup material are currently AI-generated and have
 > **not yet been human-reviewed**. You're welcome to try them.
 
@@ -19,7 +19,7 @@ This installer adds Alula's launcher to a **free program slot in your existing
 save**. You keep the editor, its recovery slots and your programs. The launcher
 runs when you select its slot; game startup stays as it is.
 
-You enter a small R14 uploader once, then your computer sends the launcher over
+You enter a small uploader once, then your computer sends the launcher over
 your local network. Choose either way of getting that uploader onto the console:
 
 | Method | What you need | Start here |
@@ -65,7 +65,7 @@ The new-install route follows Alula's **Seedsow Lullaby demo** support. Its
 demo title ID `010042D022AEA000`; it currently says the full game is unsupported.
 The old Lua Editor's compatibility reports do not establish launcher support.
 
-R14's supplied test report records a working Switch 1 install and HTTP `/status`
+The supplied test report records a working Switch 1 install and HTTP `/status`
 response, plus a successful manually typed install on an unmodified Switch 2.
 Exact editor, game-region and firmware coverage was not supplied. The desktop
 cleanup in this repository still needs a new end-to-end console trial; see

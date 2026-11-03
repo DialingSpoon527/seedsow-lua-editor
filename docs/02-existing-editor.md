@@ -45,7 +45,7 @@ compatibility test. [Evidence and limits](06-technical-notes.md#hardware-evidenc
 3. On **Mac/Linux**, open Terminal and run `python3 --version`. Install or update
    Python if it is missing or older than 3.10.
 
-The R14 tools need no `pip` packages or Tk. The optional older Pi companion uses
+The installer tools need no `pip` packages or Tk. The optional older Pi companion uses
 Tk; its separate setup is described in the [Pi guide](04-pi-upload.md).
 
 To open a terminal in the extracted folder: on Windows, right-click its empty
@@ -153,11 +153,11 @@ the install result before launching the new slot.
    ordinary editor, normally **slot 1**. This lets the editor register the
    launcher's new slot in the game's load menu.
 2. Use **File / new** to open `ax_install.log`. View it in **TEXT** mode. Look
-   for `R14_COMPLETE SLOT=... RUN=...` at the end. The slot must be your launcher
+   for `ARTEMIS_INSTALL_COMPLETE SLOT=... RUN=...` at the end. The slot must be your launcher
    destination, and **RUN** must match the run ID from this sender attempt.
    Use the code window's scrolling controls if necessary. Leave the log as a
    log file; do not publish it as a program.
-3. If the log says **R14_FAILED**, is missing, or has an older run ID, use
+3. If the log says **ARTEMIS_INSTALL_FAILED**, is missing, or has an older run ID, use
    [Troubleshooting](05-troubleshooting.md). Keep the full error text.
 4. After a matching completion line, choose **Title screen** and open the game's
    **Load** menu. Find your destination slot. Its title may say
