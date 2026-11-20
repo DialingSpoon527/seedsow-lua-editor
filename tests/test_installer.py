@@ -62,6 +62,33 @@ class GeneratedSource(unittest.TestCase):
                     lua = LuaRuntime()
                     self.assertIsNotNone(lua.eval('function(s) return assert(loadstring(s)) end')(source.decode()))
 
+    def test_readable_uploader_preserves_code_and_compiles_without_execution(self):
+        with tempfile.TemporaryDirectory() as temp:
+            _, out = sheet.generate('10.0.0.2', 39000, 20, 21, temp)
+            compact = (out / 'TYPE_THIS_EXACT.lua').read_text('ascii')
+            pretty = (out / 'UPLOADER_READABLE.lua').read_text('ascii')
+            self.assertGreater(len(pretty.splitlines()), 200)
+            self.assertEqual(sheet.LUA_TOKEN.findall(compact), sheet.LUA_TOKEN.findall(pretty))
+            self.assertIn('local PC_IP = "10.0.0.2";', pretty)
+            page = (out / 'VIEW_READABLE_UPLOADER.html').read_text()
+            self.assertIn('VIEW_TYPING_SHEET.html', page)
+            self.assertIn('UPLOADER_READABLE.lua', page)
+            self.assertIn('VIEW_READABLE_UPLOADER.html', (out / 'VIEW_TYPING_SHEET.html').read_text())
+            if LuaRuntime:
+                # Only compile: never execute the uploader or native exploit.
+                lua = LuaRuntime()
+                self.assertIsNotNone(lua.eval('function(s) return assert(loadstring(s)) end')(pretty))
+
+    def test_modified_readable_body_is_rejected_before_output(self):
+        original = Path.read_text
+        def damaged(path, *args, **kwargs):
+            text = original(path, *args, **kwargs)
+            return text.replace('1405712', '1405713') if path.name == 'bootstrap-readable.lua' else text
+        with tempfile.TemporaryDirectory() as temp, mock.patch.object(Path, 'read_text', damaged):
+            with self.assertRaisesRegex(ValueError, 'beyond whitespace'):
+                sheet.generate('10.0.0.2', 39000, 20, 21, temp)
+            self.assertEqual(list(Path(temp).iterdir()), [])
+
     def test_invalid_configuration_is_rejected(self):
         for args in [('127.0.0.1', 1024, 4, 5), ('0.0.0.0', 1024, 4, 5),
                      ('8.8.8.8', 1024, 4, 5), ('169.254.0.2', 1024, 4, 5),

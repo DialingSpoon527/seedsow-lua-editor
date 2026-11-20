@@ -7,10 +7,22 @@ import hashlib
 import html
 import ipaddress
 import json
+import re
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 BODY_SHA256 = 'c51e7aa1621d7fdd1631d57a334d832b90fc4afc3d0fff3bf992f70c220dde23'
+
+# This recognizes the pinned bootstrap's tokens, preserving quoted strings and
+# numeric spelling. It is deliberately not a formatter for arbitrary Lua.
+LUA_TOKEN = re.compile(r'''"(?:\\.|[^"\\])*"|'(?:\\.|[^'\\])*'|0[xX][0-9a-fA-F]+|\d+(?:\.\d+)?(?:[eE][+-]?\d+)?|[A-Za-z_]\w*|\.\.\.|\.\.|[~<>=]=|[^\s]''')
+
+
+def readable_body(body):
+    pretty = (ROOT / 'uploader/bootstrap-readable.lua').read_text('ascii')
+    if LUA_TOKEN.findall(pretty) != LUA_TOKEN.findall(body):
+        raise ValueError('Readable uploader differs from the pinned body beyond whitespace.')
+    return pretty
 
 
 def validate(ip, port, slot, uploader_slot):
@@ -75,6 +87,7 @@ def generate(ip, port, slot, uploader_slot, output_dir):
     if hashlib.sha256(body_bytes).hexdigest() != BODY_SHA256:
         raise ValueError('The tested bootstrap body has changed. Restore uploader/bootstrap.lua before continuing.')
     body = body_bytes.decode('ascii')
+    pretty_body = readable_body(body)
     chunks = [f'local PC_IP="{ip}";', f'local TARGET_SLOT={slot};', f'local PC_PORT={port};']
     chunks += split_body(body)
     source = ''.join(chunks)
@@ -84,6 +97,24 @@ def generate(ip, port, slot, uploader_slot, output_dir):
     out = Path(output_dir).resolve()
     out.mkdir(parents=True, exist_ok=True)
     (out / 'TYPE_THIS_EXACT.lua').write_bytes(source.encode('ascii'))
+    pretty = (f'local PC_IP = "{ip}";\nlocal TARGET_SLOT = {slot};\n'
+              f'local PC_PORT = {port};\n\n' + pretty_body)
+    (out / 'UPLOADER_READABLE.lua').write_text(pretty, encoding='ascii')
+    pretty_rows = '\n'.join(f'<li><code>{html.escape(line) or " "}</code></li>'
+                            for line in pretty.splitlines())
+    pretty_page = f'''<!doctype html><html lang="en"><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1"><title>Readable Artemis uploader</title>
+<style>body{{font:16px system-ui;line-height:1.5;margin:2rem;background:#fafafa;color:#222}}
+li{{padding-left:1em}}li::marker{{color:#777}}code{{font:15px ui-monospace,Consolas,monospace;white-space:pre}}
+ol{{width:max-content;padding-right:2rem}}.source{{overflow:auto}}</style>
+<h1>Full uploader — readable view</h1>
+<p>Computer: {ip}, TCP port {port}. Uploader slot: {uploader_slot}. Artemis slot: {slot}.</p>
+<p>This indented view lets you read the full script. Use the
+<a href="VIEW_TYPING_SHEET.html">32-character typing sheet</a> for exact keyboard entries;
+its row numbers, whitespace and character count refer to the compact version.</p>
+<p><a href="UPLOADER_READABLE.lua">Open the multiline Lua file</a>.</p>
+<div class="source"><ol>{pretty_rows}</ol></div></html>'''
+    (out / 'VIEW_READABLE_UPLOADER.html').write_text(pretty_page, encoding='utf-8')
     (out / 'ONE_ENTRY_PER_LINE.txt').write_text('\n'.join(chunks) + '\n', encoding='ascii')
     header = ['Type only the characters after |. Keep the cursor at the end between entries.',
               'Do not type row numbers or add spaces or newlines between entries.',
@@ -106,6 +137,7 @@ Launcher destination: <strong>{slot}</strong>. Computer: {ip}, TCP port {port}.<
 <p>Use <strong>Save file</strong> to keep progress. Checkmarks last only while this page remains open;
 write down your last completed row before closing it.</p>
 <p>Expected final byte count: <strong>{len(source)}</strong>. SHA-256: <small>{digest}</small>.</p>
+<p><a href="VIEW_READABLE_UPLOADER.html">Read the full uploader with indentation and line numbers</a>.</p>
 <div class="table"><table><thead><tr><th>Row</th><th>Type exactly</th><th>Length</th><th>Done</th></tr></thead>
 <tbody>{rows}</tbody></table></div></html>'''
     (out / 'VIEW_TYPING_SHEET.html').write_text(page, encoding='utf-8')
@@ -157,7 +189,8 @@ def main():
     print(f"\nReady: {config['entries']} entries, {config['characters']} characters.\n"
           f"Uploader slot: {config['uploader_slot']}; launcher slot: {config['launcher_slot']}\n"
           f'Files: {out}\n'
-          'Manual entry: open VIEW_TYPING_SHEET.html. Pi upload: use TYPE_THIS_EXACT.lua.\n'
+          'Manual entry: open VIEW_TYPING_SHEET.html. Readable view: VIEW_READABLE_UPLOADER.html.\n'
+          'Pi/Pico file transfer: use TYPE_THIS_EXACT.lua.\n'
           'Start the sender before running the uploader. See docs/02-existing-editor.md.')
 
 

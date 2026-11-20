@@ -18,6 +18,7 @@ If you have a modded Switch 1, [RealRobertBrownieJr’s Plume USB guide](https:/
 ## 2. Type each row
 
 1. On the computer, double-click **build/VIEW_TYPING_SHEET.html**. It opens in your browser.
+   Use its **Read the full uploader** link to open a second view with the whole script indented and line-numbered. `build/UPLOADER_READABLE.lua` contains that same multiline view. Keep the typing sheet beside it for the exact 32-character keyboard entries and compact byte count.
 2. Find row **001**.
 3. On the console, select **Keyboard +**.
 4. Type exactly the code in row 001. Include its punctuation and capitalization. Leave out the row number and checkbox.

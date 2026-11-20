@@ -91,6 +91,8 @@ You should find these files.
 | --- | --- |
 | **VIEW_TYPING_SHEET.html** | Open this in a browser for manual entry |
 | **TYPE_IN_ORDER.txt** | A plain-text copy of the numbered typing sheet |
+| **VIEW_READABLE_UPLOADER.html** | Full script with indentation and line numbers, for reading beside the typing sheet |
+| **UPLOADER_READABLE.lua** | The same readable view as a multiline Lua file |
 | **TYPE_THIS_EXACT.lua** | The complete file for Pi or Pico transfer |
 | **config.json** | Settings used by the final network sender |
 
