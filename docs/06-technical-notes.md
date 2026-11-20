@@ -42,6 +42,16 @@ The AIO Bluetooth backend and Wi-Fi HTTP service are not included in this build.
 All 29 tests passed after this addition, including Lua 5.1 installation
 simulations, UART packet reconstruction, and malformed/wrong-chip UF2 rejection.
 
+The later standalone Pico 2 W build removes the UART main loop and embeds an
+8 KiB reserved configuration object for the uploader packet. A Python tool patches
+that object in a checksum-pinned blank UF2. It does not modify instructions or
+UF2 headers. BOOTSEL supplies deliberate test/calibrate/send/cancel controls.
+The actual C scheduler passed six native tests, including reconstruction of the
+original SSE2 packet from its button-clock output. The full Python regression
+suite additionally checks configurator/image rejection and source-to-template fingerprints.
+Configured-image inspection confirms board `pico2_w`, RP2350 ARM Secure.
+No hardware test has been performed. See [the standalone guide](09-pico2w-standalone.md).
+
 ## Scope and provenance
 
 The installer prepends your computer address, TCP port and destination slot to

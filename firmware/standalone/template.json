@@ -1,0 +1,22 @@
+{
+  "file": "pico2w-standalone-TEMPLATE.uf2",
+  "bytes": 93696,
+  "sha256": "5917063588c32df9dd87d6dd7a274eb2a8f75753f304ac42812e4c63b7b58f08",
+  "board": "pico2_w",
+  "platform": "rp2350-arm-s",
+  "upstream_revision": "02ff001ca206997229766256af0d0a096e26fb39",
+  "sdk": "2.2.0",
+  "clock_mhz": 150,
+  "controllers": 1,
+  "hardware_tested": false,
+  "configuration": "Blank: does not send a file until configured with tools/make_pico2w_standalone.py",
+  "source_sha256": {
+    "main.cpp": "2d561089be669e89d99f52a2964e38e326534c45d92af4342c864dd79286113a",
+    "engine.c": "3fba9799a6a8597613c26c8076ba3dbd1bf79d4777fc4e59a599c600537b8c64",
+    "engine.h": "190d63f15140074d513d9eb60cdd6f58fd9938cdb896455a87aa22abd7401042",
+    "CMakeLists.txt": "3414b553d7637c5991d3e2515eac7af8442700f28964b6b9c18f3dd7abc7db2d"
+  },
+  "compiler": "Arm GNU 14.2.Rel1",
+  "sdk_revision": "a1438dff1d38bd9c65dbd693f0e5db4b9ae91779",
+  "tinyusb_revision": "86ad6e56c1700e85f1c5678607a762cfe3aa2f47"
+}

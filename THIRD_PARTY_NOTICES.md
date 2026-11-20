@@ -42,3 +42,10 @@ included under `firmware/pico2w/`, with source revisions, build instructions,
 and dependency license notices in that directory. It retains upstream licensing;
 the project's 0BSD license does not replace those terms. pyserial 3.5 is an optional dependency for the wired
 path and is distributed under its own BSD license.
+
+The standalone Pico 2 W firmware replaces the UART application with this
+project's `firmware/standalone/main.cpp` and `engine.c`, retaining the same
+upstream USB driver. It also links upstream's unchanged flash-safe BOOTSEL
+sampler, which credits awalol/DS5Dongle under MIT. That additional notice is
+retained in `firmware/standalone/DS5Dongle-MIT.txt`. The original dependency
+notices in `firmware/pico2w/licenses/` also accompany the standalone image.

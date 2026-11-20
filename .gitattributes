@@ -6,4 +6,10 @@
 *.md text eol=lf
 *.cmd text eol=crlf
 *.jpg binary
+*.uf2 binary
+*.c text eol=lf
+*.cpp text eol=lf
+*.h text eol=lf
+*.cmake text eol=lf
+CMakeLists.txt text eol=lf
 uploader/bootstrap.lua -text

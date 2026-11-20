@@ -1,5 +1,10 @@
 # Method 3 — send the uploader with a Pico
 
+**Have a Pico 2 W and no UART adapter?** Use the
+[standalone Pico 2 W guide](09-pico2w-standalone.md). It stores the uploader in
+firmware and uses only the board's USB cable and BOOTSEL button. The externally
+controlled UART/HTTP options below remain available.
+
 First complete [Prepare your computer and editor](02-existing-editor.md). Keep the generated **build/TYPE_THIS_EXACT.lua** and your uploader slot number ready.
 
 Choose **A** for a wired original Pico or **Pico 2 W (RP2350)**, or **B** if you already have a wireless board serving the compatible controller HTTP interface. Both use `pc/send_controller.py` for a real file transfer to the editor’s existing receiver. A blank Pico 2 W does not provide that HTTP interface just because it has Wi-Fi.

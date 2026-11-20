@@ -15,10 +15,11 @@ This guide starts with the **Seedsow Lua Editor already working on your console*
 | --- | --- | --- |
 | Manual entry | An ordinary controller or a USB keyboard | [Type the uploader](docs/03-manual-entry.md) |
 | Raspberry Pi | A full Raspberry Pi running Linux and acting as a Bluetooth controller | [Send with a Pi](docs/04-pi-upload.md) |
-| Pico / Pico 2 W | An RP2040 Pico or RP2350 Pico 2 W with a USB-to-UART adapter, or an existing compatible wireless HTTP bridge | [Set up and send with a Pico](docs/07-pico-upload.md) |
+| Pico 2 W, standalone | Pico 2 W plus USB data cable; no UART adapter or jumper wires | [Configure, flash and send](docs/09-pico2w-standalone.md) |
+| Pico, externally controlled | An RP2040 Pico or RP2350 Pico 2 W with a USB-to-UART adapter, or an existing compatible wireless HTTP bridge | [Set up and send with a Pico](docs/07-pico-upload.md) |
 | Plume USB | A modded Switch 1 running Plume USB, connected to the target console as a USB keyboard | [RealRobertBrownieJr’s Plume walkthrough](https://github.com/RealRobertBrownieJr/seedsow-artemis-plume-installer) |
 
-3. Follow **[Install and open Artemis](docs/08-finish-installation.md)**. All four methods finish with these same steps.
+3. Follow **[Install and open Artemis](docs/08-finish-installation.md)**. All methods finish with these steps; the standalone guide explains which PC sender to start before returning to them.
 
 The Plume walkthrough supplies numbered text chunks for the uploader. Follow its setup instructions and check that the chunks use your computer’s IP, the same TCP port as your sender, and your chosen Artemis destination slot. Its example uses uploader slot **21**, Artemis slot **20**, and port **39000**. Keep those settings consistent with your local setup before sending anything.
 
@@ -26,7 +27,7 @@ The small uploader contains your computer’s address and the slot for Artemis. 
 
 A full Raspberry Pi and a Pico are different devices. Choose the Pi guide if your board runs Raspberry Pi OS. Choose the Pico guide if you have a small microcontroller with a BOOTSEL button.
 
-The Pico guide includes a file sender, calibration, and a button test. Choose the firmware for your exact board: the original Pico uses the pinned upstream RP2040 download; Pico 2 W uses the included RP2350 UART build. Both use the same sender commands and a separate 3.3 V USB-to-UART adapter. The Pico 2 W build has passed compilation and image checks; console input and a full transfer still need hardware testing. Its Wi-Fi and Bluetooth are unused by this wired build.
+For **Pico 2 W without an adapter**, use the standalone guide and run `SETUP_PICO2W_STANDALONE.cmd` to create your configured UF2. It stores the uploader on the board and uses BOOTSEL for a button test, calibration and deliberate transfer start. The separate UART option still uses a 3.3 V USB-to-UART adapter and the PC sender commands. Both Pico 2 W builds pass compilation and offline checks; physical input and a complete transfer still need hardware testing. Their Wi-Fi and Bluetooth are unused.
 
 ## Before you change anything
 
