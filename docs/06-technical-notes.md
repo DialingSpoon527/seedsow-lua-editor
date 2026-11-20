@@ -1,5 +1,36 @@
 # Technical notes
 
+## Pico controller validation
+
+The controller sender supports the pinned switch-pico UART v3 firmware and
+the level-preserving HTTP controller interface. Offline checks reconstruct a
+complete SSE2 file packet from simulated UART button-clock edges and verify
+its contents and checksum. They also cover partial UART writes, interruption,
+HTTP errors, protected destinations, and releasing buttons after a lost reply.
+
+The final November 19, 2026 test run passed all 25 tests, including the three
+Lua 5.1 installer simulations with the pinned Lupa 2.8 development dependency.
+Shell syntax, Python syntax, documentation file links, and heading links were
+checked as well.
+
+The updated Pi service preserves the companion API while selecting the actual
+available adapter, waiting for pairing-agent readiness, retaining an active
+transfer until its worker queues cancellation, and reporting malformed requests.
+The dependency patcher retains continuous reports and private D-Bus connections,
+adds socket-reset recovery and correct peer-address recording, and exposes
+profile registration errors. Its Bluetooth helper changes only the Input-plugin
+setting, retains existing explicit disabled plugins, refuses foreign/wildcard
+configurations, and attempts rollback if the Bluetooth restart fails.
+
+The exact pinned dependency was patched twice identically and parsed locally.
+Pi state, HTTP, and systemd tests use simulated devices and temporary files.
+The revised Pi installation and real Bluetooth pairing still require hardware
+validation. They do not establish a fix for a particular BlueZ/GATT failure.
+
+The new Pico path still requires a physical button test, calibration, and a
+complete file transfer on the console. Its pinned RP2040 UF2 is identified in
+the Pico guide. Serial writes alone provide no console acknowledgement.
+
 ## Scope and provenance
 
 The installer prepends your computer address, TCP port and destination slot to

@@ -1,86 +1,43 @@
-# ⚠️ AI-generated instructions — not yet human-reviewed
+# Add Alula’s Artemis launcher to your Lua Editor
 
-> **The proven single-line uploader script is confirmed working on hardware.**
-> The instructions and Pi setup material are currently AI-generated and have
-> **not yet been human-reviewed**. You're welcome to try them.
+> **This project is practically all AI-written.** I give Codex the direction and test what I can; almost all of the code, tools, and instructions here were written by AI. I cannot guarantee that it works or is safe on your setup, but the base principles are sound. Other people’s upstream work is credited separately.
 
-# Seedsow Artemis Installer
+This guide starts with the **Seedsow Lua Editor already working on your console**. It adds Alula’s launcher to a free slot in that save.
 
-**First time here? Start with [Alula's switch-artemis-launcher](https://github.com/alula/switch-artemis-launcher/) and download its `seedsow_save.zip`.**
+**The rewritten instructions, updated Pi service, and new Pico sender still need a complete hardware walkthrough.** The compact uploader has previous hardware reports. Offline tests cover the controller transports and installation logic; those checks do not establish hardware compatibility.
 
-Our [step-by-step first installation guide](docs/01-first-install.md) explains
-how to restore that download with JKSV on Switch 1 and transfer it to Switch 2.
-Use Alula's save for a new installation; the tools here are for people who
-already have the Seedsow Lua Editor.
+## Start here
 
-## Already have the Lua Editor?
+1. Follow **[Prepare your computer and editor](docs/02-existing-editor.md)**. It explains the downloads, Python, finding your computer’s address, and choosing two free slots.
+2. Choose **one** way to put the small uploader into the editor.
 
-This installer adds Alula's launcher to a **free program slot in your existing
-save**. You keep the editor, its recovery slots and your programs. The launcher
-runs when you select its slot; game startup stays as it is.
-
-You enter a small uploader once, then your computer sends the launcher over
-your local network. Choose either way of getting that uploader onto the console:
-
-| Method | What you need | Start here |
+| Method | What you use | Instructions |
 | --- | --- | --- |
-| **Manual entry** | Computer, console editor, controller or USB keyboard; roughly 3,700 characters in entries of up to 32 | [Existing-editor setup](docs/02-existing-editor.md), then [typing guide](docs/03-manual-entry.md) |
-| **Pi bridge** | Existing editor plus the Bluetooth Pi upload setup | [Existing-editor setup](docs/02-existing-editor.md), then [Pi guide](docs/04-pi-upload.md) |
-| **Replace the save** | Modded Switch 1 and willingness to replace the current game save | [First installation guide](docs/01-first-install.md) using Alula's download |
+| Manual entry | An ordinary controller or a USB keyboard | [Type the uploader](docs/03-manual-entry.md) |
+| Raspberry Pi | A full Raspberry Pi running Linux and acting as a Bluetooth controller | [Send with a Pi](docs/04-pi-upload.md) |
+| Pico | An RP2040 Pico with a USB-to-UART adapter, or an existing compatible Pico W HTTP bridge | [Set up and send with a Pico](docs/07-pico-upload.md) |
+| Plume USB | A modded Switch 1 running Plume USB, connected to the target console as a USB keyboard | [RealRobertBrownieJr’s Plume walkthrough](https://github.com/RealRobertBrownieJr/seedsow-artemis-plume-installer) |
 
-Both uploader methods need the **console and sending computer on the same
-reachable LAN**. The Pi only enters the small uploader; the launcher files travel
-directly from the computer to the console over TCP.
+3. Follow **[Install and open Artemis](docs/08-finish-installation.md)**. All four methods finish with these same steps.
 
-You can keep using your current editor until you want to install the launcher.
-The editor's source and original guides remain on
-[`main`](https://github.com/DialingSpoon527/seedsow-lua-editor/tree/main).
-The [v0.1.3 release](https://github.com/DialingSpoon527/seedsow-lua-editor/releases/tag/v0.1.3)
-still contains the editor save and Pi companion.
+The Plume walkthrough supplies numbered text chunks for the uploader. Follow its setup instructions and check that the chunks use your computer’s IP, the same TCP port as your sender, and your chosen Artemis destination slot. Its example uses uploader slot **21**, Artemis slot **20**, and port **39000**. Keep those settings consistent with your local setup before sending anything.
 
-## Quick start for an existing editor
+The small uploader contains your computer’s address and the slot for Artemis. Once it is saved, your computer sends the launcher files over your local network. Allow plenty of time for typing or controller transfer. The network transfer afterward is much shorter.
 
-1. Download this repository with **Code > Download ZIP**, then extract it on
-   your computer. Open the extracted folder containing this README.
-2. Check **two different unused slots**, both between 4 and 120: one for the
-   small uploader and one for Alula's launcher. Keep slots 1–3 for recovery.
-3. Run **SETUP_WINDOWS.cmd**, or run `python3 tools/make_sheet.py` in a terminal
-   on Mac/Linux. Enter your computer's LAN IPv4 address, a TCP port and the two
-   slots. [Detailed setup](docs/02-existing-editor.md#2-generate-your-uploader).
-4. [Type the generated sheet](docs/03-manual-entry.md) or
-   [send the generated Lua file with the Pi](docs/04-pi-upload.md).
-5. Start **START_SENDER_WINDOWS.cmd**, or `python3 pc/send_alula.py` on Mac/Linux.
-   Wait for **Listening**, then run your uploader on the console.
-6. Check the install log, register the new slot and start the launcher using
-   [the finishing steps](docs/02-existing-editor.md#4-finish-the-installation).
+A full Raspberry Pi and a Pico are different devices. Choose the Pi guide if your board runs Raspberry Pi OS. Choose the Pico guide if you have a small microcontroller with a BOOTSEL button.
 
-The [full walkthrough](docs/02-existing-editor.md) includes Python setup, finding
-your IP address, firewall settings, a local-download option and expected screens.
-If something stalls, use [Troubleshooting](docs/05-troubleshooting.md).
+The Pico guide now includes a file sender, calibration, and a button test. Its wired route targets a specific external firmware build. A generic USB gamepad firmware needs a matching input interface before the PC can drive it.
 
-## What is supported?
+## Before you change anything
 
-The new-install route follows Alula's **Seedsow Lullaby demo** support. Its
-[README](https://github.com/alula/switch-artemis-launcher#supported-games) lists
-demo title ID `010042D022AEA000`; it currently says the full game is unsupported.
-The old Lua Editor's compatibility reports do not establish launcher support.
+Keep slots **1–3** and any programs you want. Check that both new slots and your uploader filename are unused. Back up your save if you already have a working way to do that. Keep copies of important Lua programs separately. An interrupted install can leave files behind in the save.
 
-The supplied test report records a working Switch 1 install and HTTP `/status`
-response, plus a successful manually typed install on an unmodified Switch 2.
-Exact editor, game-region and firmware coverage was not supplied. The desktop
-cleanup in this repository still needs a new end-to-end console trial; see
-[technical notes](docs/06-technical-notes.md).
+The upstream project lists **Seedsow Lullaby Demo**, title ID `010042D022AEA000`. Check your game against that supported title. Existing Lua Editor operation alone does not establish Artemis compatibility with another game edition. [Alula’s supported games](https://github.com/alula/switch-artemis-launcher#supported-games)
 
-This installer downloads and checks the original **Alula v1** Seedsow archive.
-It does not silently switch to a newer release. Generated source, typing sheets
-and settings stay in the ignored `build/` folder.
+This workflow uses your installed editor and local network throughout. Keep the computer, console, and any wireless bridge on a trusted network. Alula’s HTTP server accepts Lua execution requests from machines that can reach it.
 
-## Network use
+## If you get stuck
 
-Use a trusted LAN. Alula's HTTP server on port **8080** can execute Lua sent to
-`/eval` without authentication. Keep it and the temporary uploader port off the
-public internet. The compact uploader has no connection timeout: start the PC
-sender first, and close Seedsow if an upload hangs.
+Use the exact screen text or the last line in the PC window to find the matching entry in **[Troubleshooting](docs/05-troubleshooting.md)**.
 
-For credits, third-party material and licensing, see
-[Third-party notices](THIRD_PARTY_NOTICES.md).
+[Technical notes](docs/06-technical-notes.md) describe the files and test evidence. [Third-party notices](THIRD_PARTY_NOTICES.md) cover the external projects used here.

@@ -1,69 +1,41 @@
-# Enter the small uploader by hand
+# Method 1 — type the uploader
 
-Complete [existing-editor setup](02-existing-editor.md#2-generate-your-uploader)
-first. You should have a generated `build/VIEW_TYPING_SHEET.html` and two chosen
-free slots. This route needs no Pi.
+Start after [preparing your computer and editor](02-existing-editor.md). Have your uploader slot number, Artemis slot number, and generated typing sheet beside you.
 
-You will enter roughly **3,700 characters**, divided into about 120 small entries.
-The exact count depends on your settings and is printed on your sheet. The
-console's keyboard dialog accepts **32 characters per entry**; the complete Lua
-program can be much longer.
+You can type with the controller’s on-screen keyboard or a wired USB keyboard. The same steps work for either. Expect about **3,700 characters**, entered in small pieces. Your sheet gives the exact length.
 
-## 1. Prepare an empty program
+If you have a modded Switch 1, [RealRobertBrownieJr’s Plume USB guide](https://github.com/RealRobertBrownieJr/seedsow-artemis-plume-installer) provides another text-entry option. It uses the Switch 1 as a USB keyboard to send numbered uploader chunks. Check its connection settings against your own setup before using those files.
 
-1. Load the editor, normally through **slot 1**.
-2. Select **Choose slot** and enter your chosen **uploader slot**. This must be
-   different from the destination reserved for Alula's launcher. Confirm that
-   it does not contain a program you want to keep.
-3. Select **File / new**, enter a new filename such as `artemis-uploader.lua`,
-   then confirm. If this filename already exists, choose another new name.
-4. Check that the buffer is empty and shows **0 bytes**. Opening an unused slot
-   can initially create a Hello World example; opening a new filename gives you
-   the empty buffer needed here. If the editor asks you to repeat an action to
-   discard that example, do so once you have checked it is the default example.
-5. Use **TEXT** mode. Leave the cursor at the end, initially byte **0**.
+## 1. Open an empty file
 
-## 2. Type the sheet in order
+1. Load your ordinary Lua Editor, normally slot 1.
+2. Select **Choose slot** and enter your **uploader slot**. Leave the Artemis destination empty.
+3. Select **File / new**. Enter a new filename such as `artemis-uploader.lua`.
+4. If that filename already exists, choose a different new name.
+5. Check that the buffer says **0 bytes**. An empty slot can initially create a Hello World example. The new filename gives you the empty file needed here. If asked to repeat an action to discard changes, first confirm that you are discarding only that new default example.
+6. Select **TEXT** mode.
 
-1. On your computer, open **build/VIEW_TYPING_SHEET.html** in a browser. Windows
-   setup opens it automatically. You can use `TYPE_IN_ORDER.txt` instead.
-2. Start at **row 001**. Select **Keyboard +** in the console editor.
-3. Type only that row's code. In the text sheet, that means the characters to
-   the right of `|`, without the separator space or row number. Match punctuation,
-   capitalization, quotes and backslashes exactly.
-4. Confirm the keyboard dialog. The cursor advances to the end of the inserted
-   text. Tick the row on the computer's sheet.
-5. Open **Keyboard +** again for the next row, continuing in order. The next
-   entry goes immediately after the previous entry. **Do not add a newline or
-   a space between rows.** Spaces already printed inside a row belong to the code.
-6. Use **Save file** periodically to keep your work. Write down the last row
-   completed if you take a break; the HTML checkboxes are not saved across page
-   reloads. Resume at the first untyped row, with the cursor at the buffer's end.
+## 2. Type each row
 
-A wired USB keyboard can type into the same system dialog and is usually easier
-for punctuation. You still confirm each entry before opening the next dialog.
-The controller-operated keyboard also works. There is no need to use the editor's
-character grid unless you prefer it for a particular character.
+1. On the computer, double-click **build/VIEW_TYPING_SHEET.html**. It opens in your browser.
+2. Find row **001**.
+3. On the console, select **Keyboard +**.
+4. Type exactly the code in row 001. Include its punctuation and capitalization. Leave out the row number and checkbox.
+5. Confirm the keyboard dialog on the console. The code is inserted and the cursor moves forward.
+6. Tick row 001 on your computer.
+7. Select **Keyboard +** again and enter row 002.
+8. Continue in order until every row is entered. Put each entry immediately after the previous one. Add no spaces or newlines between rows. Spaces printed inside a row are part of that row’s code.
 
-**Keyboard +** inserts text. **Edit line** replaces a segment; use Keyboard + for
-this procedure. If you move the cursor accidentally, use **Byte offset** and enter
-the current total byte count to place it at the end before continuing.
+The system keyboard accepts up to **32 characters per entry**. The generated sheet already fits that limit. **Keyboard +** inserts text. **Edit line** replaces text, so use **Keyboard +** for these steps.
 
-The first three rows contain the generated computer address, launcher slot and
-TCP port. The sheet already filled these in. `uploader/bootstrap.lua` is the
-compact body without those settings; type from your generated sheet.
+Select **Save file** periodically. Before taking a break, write down the last completed row. Browser checkboxes disappear if you refresh or close the page. When resuming, put the cursor at the end of your existing text. **Byte offset** can move it there using the current total byte count.
 
-## 3. Check and publish
+## 3. Check the result
 
-1. After the last row, compare the editor's byte count with **Expected final
-   byte count** on the sheet. The source is ASCII, so bytes and characters match.
-   A matching length catches omissions or extras, but does not prove every
-   character was typed correctly.
-2. If the count is wrong, use your saved row notes and compare the text. **Undo**
-   can remove a recent mistaken edit while it remains in the editor's undo history.
-   Fix the source before running it; a native uploader typo can crash the game.
-3. Confirm the selected slot is still your **uploader slot**, then choose
-   **Save + publish**. Keep the launcher destination empty for the installer.
+1. Compare the console’s byte count with the sheet’s **Expected final byte count**.
+2. If they differ, check your row notes and correct the text before running it.
+3. A matching count can still hide a wrong character. Check quotes, backslashes, punctuation, and the first three settings rows carefully.
+4. Confirm that **Choose slot** still shows your uploader slot.
+5. Select **Save + publish**.
 
-Return to [start the computer sender](02-existing-editor.md#3-start-the-computer-sender-then-the-uploader).
-Wait for its **Listening** message before choosing **RUN buffer** on the console.
+The uploader is now saved. Continue with [Install and open Artemis](08-finish-installation.md). Start the computer sender and wait for **Listening** before running the console uploader.

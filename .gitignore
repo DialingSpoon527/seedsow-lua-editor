@@ -5,3 +5,5 @@ __pycache__/
 .DS_Store
 dist/
 *.zip
+pico-connection.json
+seedsow-connection.json

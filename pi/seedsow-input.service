@@ -1,0 +1,19 @@
+[Unit]
+Description=Seedsow paired input bridge
+After=network-online.target bluetooth.service
+Wants=network-online.target bluetooth.service
+StartLimitIntervalSec=120
+StartLimitBurst=3
+
+[Service]
+Type=simple
+User=root
+WorkingDirectory=/opt/seedsow-input
+ExecStart=/usr/bin/python3 /opt/seedsow-input/pi/pi_bridge.py --config /etc/seedsow-input.json
+Restart=on-failure
+RestartSec=5
+TimeoutStopSec=120
+KillMode=mixed
+
+[Install]
+WantedBy=multi-user.target
