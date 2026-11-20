@@ -15,7 +15,7 @@ This guide starts with the **Seedsow Lua Editor already working on your console*
 | --- | --- | --- |
 | Manual entry | An ordinary controller or a USB keyboard | [Type the uploader](docs/03-manual-entry.md) |
 | Raspberry Pi | A full Raspberry Pi running Linux and acting as a Bluetooth controller | [Send with a Pi](docs/04-pi-upload.md) |
-| Pico | An RP2040 Pico with a USB-to-UART adapter, or an existing compatible Pico W HTTP bridge | [Set up and send with a Pico](docs/07-pico-upload.md) |
+| Pico / Pico 2 W | An RP2040 Pico or RP2350 Pico 2 W with a USB-to-UART adapter, or an existing compatible wireless HTTP bridge | [Set up and send with a Pico](docs/07-pico-upload.md) |
 | Plume USB | A modded Switch 1 running Plume USB, connected to the target console as a USB keyboard | [RealRobertBrownieJr’s Plume walkthrough](https://github.com/RealRobertBrownieJr/seedsow-artemis-plume-installer) |
 
 3. Follow **[Install and open Artemis](docs/08-finish-installation.md)**. All four methods finish with these same steps.
@@ -26,7 +26,7 @@ The small uploader contains your computer’s address and the slot for Artemis. 
 
 A full Raspberry Pi and a Pico are different devices. Choose the Pi guide if your board runs Raspberry Pi OS. Choose the Pico guide if you have a small microcontroller with a BOOTSEL button.
 
-The Pico guide now includes a file sender, calibration, and a button test. Its wired route targets a specific external firmware build. A generic USB gamepad firmware needs a matching input interface before the PC can drive it.
+The Pico guide includes a file sender, calibration, and a button test. Choose the firmware for your exact board: the original Pico uses the pinned upstream RP2040 download; Pico 2 W uses the included RP2350 UART build. Both use the same sender commands and a separate 3.3 V USB-to-UART adapter. The Pico 2 W build has passed compilation and image checks; console input and a full transfer still need hardware testing. Its Wi-Fi and Bluetooth are unused by this wired build.
 
 ## Before you change anything
 

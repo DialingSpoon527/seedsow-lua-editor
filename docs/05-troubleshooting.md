@@ -92,10 +92,12 @@ The updated service keeps custom overrides for inspection. Stop any old controll
 1. Confirm that the USB-to-UART adapter appears in the port list, and use its current port name.
 2. Close other applications using that port.
 3. Install `pyserial==3.5` in the same Python used for the sender.
-4. Verify the pinned firmware, 3.3 V UART signal levels, crossed TX/RX wiring, and common ground against [the Pico guide](07-pico-upload.md).
+4. Verify that the firmware matches the exact board: upstream RP2040 image for original Pico, included RP2350 image for Pico 2 W. Check 3.3 V UART signal levels, crossed TX/RX wiring, and common ground against [the Pico guide](07-pico-upload.md).
 5. Check Pro Controller Wired Communication and run the one-button test again.
 
 An open COM port alone does not confirm that the board or console received any input. On Linux, a permission error may require the serial-device access group appropriate to your distribution. Reopen your login session after changing group membership.
+
+If Pico 2 W stays on the `RP2350` drive after copying, check that you used `switch-pico2w-uart.uf2`, not the RP2040 file. Reconnect while holding BOOTSEL to try the correct image. If no drive appears, disconnect all jumper wires, try a known USB data cable, and hold BOOTSEL while plugging into the PC. A dark onboard LED is expected with this wired build and does not prove a failure.
 
 ## Pico HTTP endpoint or token error
 

@@ -2,7 +2,7 @@
 
 First complete [Prepare your computer and editor](02-existing-editor.md). Keep the generated **build/TYPE_THIS_EXACT.lua** and your uploader slot number ready.
 
-Choose **A** for a wired RP2040 Pico, or **B** if you already have a Pico W serving the compatible controller HTTP interface. Both use `pc/send_controller.py` for a real file transfer to the editor’s existing receiver.
+Choose **A** for a wired original Pico or **Pico 2 W (RP2350)**, or **B** if you already have a wireless board serving the compatible controller HTTP interface. Both use `pc/send_controller.py` for a real file transfer to the editor’s existing receiver. A blank Pico 2 W does not provide that HTTP interface just because it has Wi-Fi.
 
 **This sender has offline tests. A complete Pico-to-console transfer still needs a hardware trial.** Verify button input before sending any file.
 
@@ -10,24 +10,33 @@ Choose **A** for a wired RP2040 Pico, or **B** if you already have a Pico W serv
 
 ### 1. Gather the hardware
 
-- An original **RP2040 Raspberry Pi Pico**, with headers fitted so you can connect jumper wires. The pinned UF2 targets RP2040. Pico 2 uses a different chip and needs a board-specific build.
+- An original **RP2040 Raspberry Pi Pico**, or a **Raspberry Pi Pico 2 W (RP2350)**, with headers fitted so you can connect jumper wires. Check the name printed on your board before choosing firmware below. Other RP2350 boards need their own board configuration.
 - A USB data cable from the Pico to the console dock.
 - A **3.3 V logic USB-to-UART adapter** supporting **921600 baud**, plus jumper wires. The adapter connects to your computer.
 - Python 3.10 or newer on your computer, already checked in the preparation guide.
 
-The Pico uses its USB connection for the console. The separate UART adapter carries the computer’s controller inputs.
+The Pico uses its USB connection for the console. The separate UART adapter carries the computer’s controller inputs. You need both connections; the Pico's USB port cannot serve the PC and console at the same time in this setup. The Pico 2 W firmware below uses neither Wi-Fi nor Bluetooth.
 
 ### 2. Install the board firmware
 
-This route uses the UART build of **jyapayne/switch-pico**, pinned to revision `02ff001ca206997229766256af0d0a096e26fb39`. The firmware is downloaded separately. [Firmware source](https://github.com/jyapayne/switch-pico/tree/02ff001ca206997229766256af0d0a096e26fb39)
+Both boards use the UART backend of **jyapayne/switch-pico**, pinned to revision `02ff001ca206997229766256af0d0a096e26fb39`. [Firmware source](https://github.com/jyapayne/switch-pico/tree/02ff001ca206997229766256af0d0a096e26fb39)
 
-1. Download [switch-pico.uf2](https://raw.githubusercontent.com/jyapayne/switch-pico/02ff001ca206997229766256af0d0a096e26fb39/firmware/switch-pico.uf2) to your computer. Keep the filename ending in `.uf2`.
-2. Check the download if possible. It should be **90,112 bytes**, with SHA-256 `09624715fe5e78261936e0853086a236a93d11c30268965ac35c7f0325435901`.
+**Choose exactly one file:**
+
+| Board printed on your device | Firmware | Drive shown while holding BOOTSEL |
+| --- | --- | --- |
+| Raspberry Pi Pico — RP2040 | Download the upstream [switch-pico.uf2](https://raw.githubusercontent.com/jyapayne/switch-pico/02ff001ca206997229766256af0d0a096e26fb39/firmware/switch-pico.uf2). Size: 90,112 bytes. SHA-256: `09624715fe5e78261936e0853086a236a93d11c30268965ac35c7f0325435901`. | `RPI-RP2` |
+| Raspberry Pi Pico 2 W — RP2350 | Use [firmware/pico2w/switch-pico2w-uart.uf2](../firmware/pico2w/switch-pico2w-uart.uf2) from this installer folder. Size: 136,192 bytes. SHA-256: `bd571a3dfd1abbf3a9efdd8fbdeece20c43abec2a07dad98f80682e99b11e5cf`. | `RP2350` |
+
+The Pico 2 W image is built for `pico2_w`, ARM Secure, with **one** USB controller and the existing UART v3 protocol. Compilation and image inspection passed; it has **not** yet passed a physical console test. Its onboard LED is not used as a readiness indicator. Keep the included [build record and notices](../firmware/pico2w/README.md) with the file.
+
+1. Find or download the correct `.uf2` file in the table. If you downloaded the installer as a ZIP, extract the whole folder first.
+2. Check its size and checksum. On Windows, open PowerShell in the installer folder. For Pico 2 W run `Get-FileHash -Algorithm SHA256 .\firmware\pico2w\switch-pico2w-uart.uf2` and compare with the table. The other board uses the other file; changing a filename does not convert firmware between chips.
 3. Unplug the Pico. Hold its **BOOTSEL** button while connecting it to the computer with a USB data cable, then release BOOTSEL.
-4. Open the **RPI-RP2** drive that appears and copy `switch-pico.uf2` onto it.
+4. Open **File Explorer → This PC**. Find the BOOTSEL drive listed for your board in the table and copy **your chosen `.uf2`** onto that drive. Copy it to the drive itself, not into another folder.
 5. Wait for the drive to disappear as the board restarts. Unplug it before wiring.
 
-This replaces the firmware already on the board. Keep the previous firmware file if you want to flash it back later. The separate AIO/Bluetooth firmware uses a different input arrangement from this guide.
+This replaces the firmware already on the board. Keep the previous firmware file if you want to flash it back later. These steps flash only the Pico; connect it to the PC for this step. The separate AIO/Bluetooth firmware uses a different input arrangement from this guide.
 
 ### 3. Wire the adapter
 
@@ -39,7 +48,7 @@ Disconnect power from both devices first. Check the adapter’s documentation an
 | **GP5**, physical pin **7**, RX | TX or TXD |
 | **GND**, for example physical pin **8** | GND |
 
-Leave the adapter’s **VCC/5V/3V3 power pin disconnected**. The console powers the Pico over USB. TX connects to RX in each direction. [Upstream wiring reference](https://github.com/jyapayne/switch-pico/blob/02ff001ca206997229766256af0d0a096e26fb39/README.md)
+This table applies to both supported boards, including **Pico 2 W**. Count physical pins from the board's official pinout; GP4 does not mean physical pin 4. Leave the adapter’s **VCC/5V/3V3 power pin disconnected**. The console powers the Pico over USB. TX connects to RX in each direction. [Upstream wiring reference](https://github.com/jyapayne/switch-pico/blob/02ff001ca206997229766256af0d0a096e26fb39/README.md)
 
 1. Plug the Pico’s USB cable into the console dock.
 2. Plug the UART adapter into your computer.

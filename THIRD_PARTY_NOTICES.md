@@ -36,6 +36,9 @@ bridge or a serial adapter.
 The wired serial backend targets [jyapayne/switch-pico](https://github.com/jyapayne/switch-pico)
 at revision `02ff001ca206997229766256af0d0a096e26fb39`, using the documented
 UART v3 report format. Its firmware, SDK dependencies, and upstream Python
-package remain separate downloads with their own licenses. No firmware source
-or binary is bundled here. pyserial 3.5 is an optional dependency for the wired
+package remain separate downloads with their own licenses. The original RP2040
+firmware remains a separate download. A board-specific Pico 2 W UART binary is
+included under `firmware/pico2w/`, with source revisions, build instructions,
+and dependency license notices in that directory. It retains upstream licensing;
+the project's 0BSD license does not replace those terms. pyserial 3.5 is an optional dependency for the wired
 path and is distributed under its own BSD license.

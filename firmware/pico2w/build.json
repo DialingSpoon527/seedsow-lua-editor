@@ -1,0 +1,30 @@
+{
+  "file": "switch-pico2w-uart.uf2",
+  "bytes": 136192,
+  "sha256": "bd571a3dfd1abbf3a9efdd8fbdeece20c43abec2a07dad98f80682e99b11e5cf",
+  "embeddedPathPrefix": "/workspace",
+  "source": "https://github.com/jyapayne/switch-pico",
+  "revision": "02ff001ca206997229766256af0d0a096e26fb39",
+  "sourceModified": false,
+  "picoSdkRevision": "a1438dff1d38bd9c65dbd693f0e5db4b9ae91779",
+  "tinyusbRevision": "86ad6e56c1700e85f1c5678607a762cfe3aa2f47",
+  "compiler": "Arm GNU Toolchain 14.2.Rel1 (14.2.1 20241119)",
+  "picotool": "2.2.0-a4",
+  "cmake": "3.29.0-rc3",
+  "ninja": "1.13.0",
+  "configuration": {
+    "PICO_BOARD": "pico2_w",
+    "PICO_PLATFORM": "rp2350-arm-s",
+    "SWITCH_PICO_INPUT_BACKEND": "UART",
+    "SWITCH_PICO_UART_CONTROLLERS": 1,
+    "SWITCH_PICO_SYS_CLOCK_MHZ": 150,
+    "CMAKE_BUILD_TYPE": "Release"
+  },
+  "uart": {"instance": 1, "txGpio": 4, "rxGpio": 5, "baud": 921600, "protocol": 3},
+  "evidence": {
+    "compiled": true,
+    "picotoolBoardAndImageVerified": true,
+    "hardwareTested": false,
+    "consoleTransferTested": false
+  }
+}

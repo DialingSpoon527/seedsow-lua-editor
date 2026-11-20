@@ -31,6 +31,17 @@ The new Pico path still requires a physical button test, calibration, and a
 complete file transfer on the console. Its pinned RP2040 UF2 is identified in
 the Pico guide. Serial writes alone provide no console acknowledgement.
 
+The November 20 Pico 2 W addition builds that same pinned UART source with
+Pico SDK 2.2.0, board `pico2_w`, platform `rp2350-arm-s`, 150 MHz stock clock,
+and one controller interface. No upstream firmware source changes or sender
+wire-format changes were needed. The included UF2 passes picotool image/board
+inspection and the structural checker in `tools/check_pico2w_firmware.py`.
+Its build recipe and dependency notices are in `firmware/pico2w/`. This is an
+offline build result; no board was flashed and no console was contacted for it.
+The AIO Bluetooth backend and Wi-Fi HTTP service are not included in this build.
+All 29 tests passed after this addition, including Lua 5.1 installation
+simulations, UART packet reconstruction, and malformed/wrong-chip UF2 rejection.
+
 ## Scope and provenance
 
 The installer prepends your computer address, TCP port and destination slot to
